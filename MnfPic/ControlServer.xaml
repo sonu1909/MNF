@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MnfPic"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" Width="400">
     <Grid>
 
         <GroupBox x:Name="groupBox" Header="Server">
@@ -13,6 +13,10 @@
                 <ComboBox x:Name="comboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120"/>
                 <Button x:Name="button" Content="Go to Area" HorizontalAlignment="Left" Margin="125,2,0,0" VerticalAlignment="Top" Width="75" Click="button_Click" />
                 <Button x:Name="button1" Content="Download Image" HorizontalAlignment="Left" Margin="0,27,0,0" VerticalAlignment="Top" Width="200" Click="button1_Click"/>
+                <Button Content="Beach Game" HorizontalAlignment="Left" Margin="0,52,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+                <GroupBox Header="PotkanePostavy" HorizontalAlignment="Right" Margin="0,0,0,3" Width="147">
+                    <ListBox DisplayMemberPath="Name" ItemsSource="{Binding PotkanePostavy}"/>
+                </GroupBox>
             </Grid>
         </GroupBox>
     </Grid>

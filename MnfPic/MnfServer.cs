@@ -1,5 +1,7 @@
-﻿using System;
+﻿using App;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
@@ -7,12 +9,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace MnfPic
 {
-    public class MnfServer
+    public class MnfServer:ANotify
     {
         //<server name="Beaver Bash" ip="93.190.138.189" males="111" females="114" capacity="220" top_socket="2020" area_socket="2021" game_socket="2022" chat_socket="2023" policy_socket="843" />
         public string Jmeno = "";
@@ -36,7 +39,19 @@ namespace MnfPic
         TcpClient TC_game = new TcpClient();
         TcpClient TC_area = new TcpClient();
         TcpClient TC_chat = new TcpClient();
+        TcpClient TC_policy = new TcpClient();
         MnfArea mnfArea = new MnfArea();
+        private ObservableCollection<ParserMnfAvatar> _PotkanePostavy = new ObservableCollection<ParserMnfAvatar>();
+        public ObservableCollection<ParserMnfAvatar> PotkanePostavy
+        {
+            get { return _PotkanePostavy; }set { _PotkanePostavy = value; OnPropertyChanged("PotkanePostavy"); }
+        }
+        private ObservableCollection<string> _AktualniPostavy = new ObservableCollection<string>();
+        public ObservableCollection<string> AktualniPostavy
+        {
+            get { return _AktualniPostavy; }
+            set { _AktualniPostavy = value; OnPropertyChanged("AktualniPostavy"); }
+        }
 
         public MnfServer(MnfAvatar avatar)
         {
@@ -50,7 +65,9 @@ namespace MnfPic
         /// <returns>true = error</returns>
         public bool StringParse(string s)
         {
+            if (s == null || s == "") throw new Exception("Prazdny retezec");
             string[] ss = s.Split('=');
+            if (ss.Length < 10) throw new Exception("Kratky retezec");
             Jmeno = ss[1].Split('\"')[1];
             AdresaIP = ss[2].Split('\"')[1];
             PocetMuzu = int.Parse(ss[3].Split('\"')[1]);
@@ -70,7 +87,7 @@ namespace MnfPic
             string s;
 
             //get policy
-            TcpClient TC_policy = new TcpClient();
+            TC_policy = new TcpClient();
             TC_policy.Connect(AdresaIP, policy_socket);
             NetworkStream ns = TC_policy.GetStream();
             byte[] b = new byte[65535];
@@ -89,16 +106,24 @@ namespace MnfPic
             string[] ss = s.Split('&');
             if (ss[1].Split('=')[1] != "1") { throw new Exception("nelze se pripojit!!\n" + s); }
         }
+        public void DeAktivujAvatar()
+        {
+            if (TC_chat.Connected) TC_chat.Close();
+            if (TC_area.Connected) TC_area.Close();
+            if (TC_game.Connected) TC_game.Close();
+            if (TC_top.Connected) TC_top.Close();
+        }
         Random r = new Random();
         public void VyberServery()
         {
             string s;
             if (!TC_top.Connected) TC_top.Connect(AdresaIP, top_socket);
             s = "<data avatar_id=\"" + Avatar.AvatarID + "\" password=\"" + Avatar.User.LoginPaswCrypted + "\" />";
-            NetworkStream ns = TC_top.GetStream();
-            ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
             try
             {
+                NetworkStream ns = TC_top.GetStream();
+                ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+                ns.ReadTimeout = 1000;
                 byte[] b = new byte[65535];
                 int i = ns.Read(b, 0, b.Length);
                 s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
@@ -111,10 +136,111 @@ namespace MnfPic
                 GoToArea(25);
                 //bw.RunWorkerAsync();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
+        }
+        public bool Game(int id)
+        {
+            string s;
+            if (TC_game.Connected) TC_game.Close();
+
+            TC_game = new TcpClient();
+            if (!TC_game.Connected) TC_game.Connect(AdresaIP, game_socket);
+
+            s = "<data avatar_id=\"" + Avatar.AvatarID + "\" password=\"" + Avatar.User.LoginPaswCrypted + "\" game_id=\"" + id + "\" session_id=\"" + session_id + "\" />";
+            NetworkStream ns = TC_game.GetStream();
+            ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+            
+            s = "<data cash_display = '1' />";
+            ns = TC_top.GetStream();
+            ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+            ns.ReadTimeout = 1000;
+            byte[] b = new byte[65535];
+            int i = ns.Read(b, 0, b.Length);
+            s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
+
+            string[] ss = s.Split('\"');
+            Console.WriteLine("Cash " + ss[1]);
+
+            try
+            {
+                s = "<data status=\"start\" />";
+                ns = TC_game.GetStream();
+                ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+                ns.ReadTimeout = 1000;
+                b = new byte[65535];
+                i = ns.Read(b, 0, b.Length);
+                s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
+            }
+            catch { return true; }
+            ss = s.Split('\"');
+            if (ss[1] != "1") return true; 
+            //hra zacala
+            List<int> body = new List<int>() { 10, 15 };//, 20, 30 };//, 30, 45, 60, 80, 90, 100 };
+            Random r = new Random();
+            //h==75
+            int h = 0;
+            int multiple = 1;
+            while (true)
+            {
+                //    s = "<clean_area area_id=\"2000400000\" />";
+                //    s = "<clean_area area_id=\"1800900000\" />";
+                //    s = "<clean_area area_id=\"4600300000\" />";
+                //    s = "<clean_area area_id=\"2200600000\" />";
+                //    s = "<clean_area area_id=\"4900700000\" />";
+                //    s = "<clean_area area_id=\"4900100000\" />";
+                //    s = "<clean_area area_id=\"2000100000\" />";
+                //    s = "<clean_area area_id=\"2000300000\" />";
+                //    s = "<clean_area area_id=\"4800800000\" />";
+
+                ns = TC_top.GetStream();
+                ns.ReadTimeout = 1000;
+                b = new byte[65535];
+                try
+                {
+                    i = ns.Read(b, 0, b.Length);
+                    s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
+                    Console.WriteLine(s);
+                }
+                catch (Exception ex)
+                {
+                    //Console.WriteLine(ex.Message);
+                }
+                int rn = r.Next(0, 101);
+                if (rn > 60) multiple += multiple >= 4 ? 0 : 1;
+                else if (rn < 40) multiple -= multiple <= 1 ? 0 : 1;
+                s = "<data scores=\"" + body[r.Next(body.Count)] * multiple + "\" />";
+                Console.WriteLine(h++ + " " + s);
+                if (h == 10) body.Add(20);
+                else if (h == 30) body.Add(30);
+                ns = TC_game.GetStream();
+                ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+                ns.ReadTimeout = 1000;
+                b = new byte[65535];
+                try
+                {
+                    i = ns.Read(b, 0, b.Length);
+                }
+                catch (Exception ex)
+                {
+                    //Console.WriteLine(ex.Message);
+                }
+                s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
+
+                //if (h == 45) body.Add(30);
+
+                ss = s.Split(' ');
+                if (ss[0] == "<game_over") break;
+                Thread.Sleep(r.Next(3000, 4000));
+            }
+            //TC_top.Close();
+            //TC_game.Close();
+            ss = s.Split('\'');
+            Console.WriteLine("result " + ss[1]);
+
+            return false;
         }
         public bool PoSlozkach = true;
         public bool GoToArea(int area)
@@ -153,72 +279,119 @@ namespace MnfPic
             ns.ReadTimeout = 500;
             byte[] b = new byte[65535];
             int i = 0;
-            try
+            do
             {
-              i = ns.Read(b, 0, b.Length);
-            }
-            catch { return false; }
-            if (i > 0)
-            {
-                s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
-                if (s.Contains("pictures"))
+                try
                 {
-                    int stazeno = 0;
-                    string[] ss = s.Split('\'');
-                    List<string> obrazky = new List<string>();
-                    for (int a = 0; a < ss.Length; a++)
+                    i = ns.Read(b, 0, b.Length);
+                }
+                catch { return false; }
+                if (i > 0)//smycka pro cteni ... data o lidech a pak fotky ...
+                {
+                    s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
+                    if (s.Contains("pictures"))
                     {
-                        if (a % 2 == 1) obrazky.Add(ss[a]);
-                    }
-                    foreach (string o in obrazky)
-                    {
-                        if (NastaveniMnfPic.MainFile == "")
+                        int stazeno = 0;
+                        string[] ss = s.Split('\'');
+                        List<string> obrazky = new List<string>();
+                        for (int a = 0; a < ss.Length; a++)
                         {
-                            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-                            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                            {
-                                NastaveniMnfPic.MainFile = fbd.SelectedPath + "\\";
-                            }
+                            if (a % 2 == 1) obrazky.Add(ss[a]);
                         }
-                        string oo = NastaveniMnfPic.MainFile + o.Split('/')[5];
-                        //<data get_picture_info='bb1828fc60e44e63ea6889a392b23097'/>//port2030
-                        //<picture_info poster_name='PaulinaLira' rating='4.3' is_voted='0' />//resp
-                        if (PoSlozkach)
+                        foreach (string o in obrazky)
                         {
-                            s = "<data get_picture_info='" + Path.GetFileNameWithoutExtension(oo) + "'/>";
-                            ns = TC_top.GetStream();
-                            ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
-
-                            ns.ReadTimeout = 500;
-                            byte[] bb = new byte[65535];
-                            int ii = 0;
-                            try
+                            if (NastaveniMnfPic.MainFile == "")
                             {
-                                ii = ns.Read(bb, 0, bb.Length);
-                            }
-                            catch { }
-                            if (ii != 0)
-                            {
-                                s = Encoding.UTF8.GetString(Array.ConvertAll(bb, x => (byte)x), 0, ii);
-                                if (s.Contains("poster_name"))
+                                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+                                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                                 {
-                                    string[] sss = s.Split('\'');
-                                    string d = NastaveniMnfPic.MainFile + sss[1];
-                                    if (!Directory.Exists(d)) Directory.CreateDirectory(d);
-                                    oo = d + "\\" + o.Split('/')[5];
+                                    NastaveniMnfPic.MainFile = fbd.SelectedPath + "\\";
                                 }
                             }
+                            string oo = NastaveniMnfPic.MainFile + o.Split('/')[5];
+                            //<data get_picture_info='bb1828fc60e44e63ea6889a392b23097'/>//port2030
+                            //<picture_info poster_name='PaulinaLira' rating='4.3' is_voted='0' />//resp
+                            if (PoSlozkach)
+                            {
+                                s = "<data get_picture_info='" + Path.GetFileNameWithoutExtension(oo) + "'/>";
+                                ns = TC_top.GetStream();
+                                ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+
+                                ns.ReadTimeout = 1000;
+                                byte[] bb = new byte[65535*8];
+                                int ii = 0;
+                                try
+                                {
+                                    ii = ns.Read(bb, 0, bb.Length);
+                                }
+                                catch { }
+                                if (ii != 0)
+                                {
+                                    s = Encoding.UTF8.GetString(Array.ConvertAll(bb, x => (byte)x), 0, ii);
+                                    if (s.Contains("poster_name"))
+                                    {
+                                        string[] sss = s.Split('\'');
+                                        string d = NastaveniMnfPic.MainFile + sss[1];
+                                        if (!Directory.Exists(d)) Directory.CreateDirectory(d);
+                                        oo = d + "\\" + o.Split('/')[5];
+                                    }
+                                }
+                            }
+                            if (!File.Exists(oo))
+                            {
+                                try
+                                {
+                                    wc.DownloadFile(new Uri(o.Replace(".jpg", "_.jpg")), oo);
+                                    stazeno++;
+                                }
+                                catch (Exception e) { Console.WriteLine(e); Console.WriteLine("nestazeno vse"); }
+                            }
                         }
-                        if (!File.Exists(oo))
+                        Console.WriteLine(stazeno);
+                    }
+                    //MessageBox.Show(s);
+                }
+                if(s.Contains("avatar data"))
+                {
+                    //
+                    // <avatar data="8648807,AureliaMoon2,2,3,3,48,2,10,24,3,3,2,1,2,5,2,1,1,2,3,2,1,2,9,252/219/176,10637,137,31,Lolly,0,1,1,0,0,1,0,0,1,1" points="816,673" />
+                    string[] ss = s.Split('<');
+                    foreach(var v in ss)
+                    {
+                        if (v.Contains("avatar data"))
                         {
-                            wc.DownloadFile(new Uri(o.Replace(".jpg", "_.jpg")), oo);
-                            stazeno++;
+                            var postava = new ParserMnfAvatar(v);
+                            int IDpostavy = -1;
+                            for (int p = 0; p < PotkanePostavy.Count; p++)
+                            {
+                                if (PotkanePostavy[p].Name == postava.Name)
+                                {
+                                    IDpostavy = p;
+                                    break;
+                                }
+                            }
+                            if (IDpostavy >= 0)
+                            {
+                                //aktualizuj pole
+                                PotkanePostavy[IDpostavy] = postava;
+                            }
+                            else PotkanePostavy.Add(postava);
                         }
                     }
-                    Console.WriteLine(stazeno);
+
                 }
-                //MessageBox.Show(s);
-            }
+                if (s.Contains("avatar id"))
+                {
+                    //<avatar id="1451409" points="1341,953,1196.1,1137.25,1196.1,1137.25,1047,1147" />
+                    string[] ss = s.Split(' ');
+                    int postavaID = int.Parse(ss[1].Replace("\"", "").Split('=')[1]);
+                    var postava = (from f in PotkanePostavy where f.AvatarID==postavaID select f).ToList();
+                    if(postava.Count()>0)
+                    {
+                        //Console.WriteLine(postava[0].Name + " se pohla");
+                    }
+                }
+            } while (i != 0);
             return true;
         }
         public Point LastPoint;

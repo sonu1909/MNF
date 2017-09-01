@@ -18,19 +18,13 @@ namespace MnfPic
             InitializeComponent();
             Closed += MainWindow_Closed;
             Loaded += MainWindow_Loaded;
-            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-            //if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            //{
-            //    mainFile = fbd.SelectedPath + "\\";
-            //}
-            //else Close();
-            NastaveniMnfPic.LoginPaswCrypted = NastaveniMnfPic.LoginPaswCrypted.ToLower();
+            NastaveniMnfPic.LoginPaswCrypted = NastaveniMnfPic.LoginPaswCrypted?.ToLower();
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            PrihlasSe();
-            controlUser.Init(Uzivatel);
+            if (!PrihlasSe()) controlUser.Init(Uzivatel);
+            else MessageBox.Show("Log In Error");
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
@@ -84,6 +78,12 @@ namespace MnfPic
                 sb.Append(hash[i].ToString("X2"));
             }
             return sb.ToString();
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            if (!PrihlasSe()) controlUser.Init(Uzivatel);
+            else throw new Exception("Log In Error");
         }
     }
 }

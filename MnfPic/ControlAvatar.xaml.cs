@@ -46,5 +46,22 @@ namespace MnfPic
             }
             Avatar = avatar;
         }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (MnfServer ms in Avatar.Servery)
+            {
+                try
+                {
+                    Console.WriteLine("Try server " + ms.Jmeno);
+                    controlServer.Init(ms);
+                    controlServer.DownloadAll();
+                }
+                catch
+                {
+
+                }
+            }
+        }
     }
 }

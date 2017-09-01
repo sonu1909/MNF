@@ -51,6 +51,10 @@ namespace MnfPic
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
+            DownloadAll();
+        }
+        public void DownloadAll()
+        {
             Ms.GoToArea(25);
             Thread.Sleep(200);
             Ms.GoToArea(26);
@@ -63,6 +67,17 @@ namespace MnfPic
             Thread.Sleep(200);
             Ms.GoToArea(30);
             Thread.Sleep(200);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+            Ms.GoToArea(4);
+            while (true)
+            {
+                Ms.Game(2);
+                Thread.Sleep(5000);
+            }
         }
     }
 }

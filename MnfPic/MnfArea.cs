@@ -43,14 +43,14 @@ namespace MnfPic
                 new Point(629.55, 238.55),//Sacred Mountain / Sexual Wisdom Temple//
                 new Point(629.55, 238.55),//Wild West / Saloon / Cabaret
                 new Point(1055, 707),//Meadows Park
-                new Point(752, 1080),//Meadows Park / Museum of Sex Art
+                new Point(752, 1090),//Meadows Park / Museum of Sex Art
                 new Point(218, 584),//Meadows Park / Museum of Sex Art / Recent Exposition 1
                 new Point(208, 600),//Meadows Park / Museum of Sex Art / Recent Exposition 2
-                new Point(200, 570),//Meadows Park / Museum of Sex Art / Recent Exposition 3
+                new Point(210, 610),//Meadows Park / Museum of Sex Art / Recent Exposition 3
                 new Point(215, 593),//Meadows Park / Museum of Sex Art / Recent Exposition 4
-                new Point(236.95, 247.05),//Meadows Park / Museum of Sex Art / Weekly Best
-                new Point(1144.15, 257.55),//Meadows Park / Museum of Sex Art / Monthly Best
-                new Point(629.55, 238.55),//Meadows Park / Museum of Sex Art / All Time Best
+                new Point(230, 515),//Meadows Park / Museum of Sex Art / Weekly Best
+                new Point(219, 509),//Meadows Park / Museum of Sex Art / Monthly Best
+                new Point(222, 570),//Meadows Park / Museum of Sex Art / All Time Best
                 new Point(629.55, 238.55),//Petnis Forest
                 new Point(629.55, 238.55),//Petnis Forest / Petnis Shack
                 new Point(215.9, 1011.6),//Sacred Mountain / Cave

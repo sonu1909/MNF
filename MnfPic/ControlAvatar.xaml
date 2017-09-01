@@ -13,8 +13,9 @@
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ListBox x:Name="listBox"/>
+                <ListBox x:Name="listBox" Margin="0,0,0,21"/>
                 <local:ControlServer x:Name="controlServer" Grid.Column="1"/>
+                <Button x:Name="button" Content="Download All" VerticalAlignment="Bottom" Click="button_Click"/>
             </Grid>
         </GroupBox>
     </Grid>

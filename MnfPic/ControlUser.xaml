@@ -17,6 +17,5 @@
                 <local:ControlAvatar x:Name="controlAvatar" Grid.Column="1"/>
             </Grid>
         </GroupBox>
-        <Button x:Name="button" Content="Přehlasit" HorizontalAlignment="Right" Margin="0,-1,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </UserControl>

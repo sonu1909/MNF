@@ -1,0 +1,21 @@
+﻿<Window x:Class="MnfPicReader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MnfPicReader"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120*"/>
+            <ColumnDefinition Width="370*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="LB" Margin="0,0,0,23"/>
+        <Grid Grid.Column="1" x:Name="showGrid"/>
+        <ScrollBar x:Name="scrollBar" Grid.Column="2" SmallChange="1" Maximum="10"/>
+        <TextBox x:Name="textBox" Height="23" Margin="0,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom"/>
+
+    </Grid>
+</Window>

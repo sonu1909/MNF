@@ -1,4 +1,5 @@
-﻿using System;
+﻿using App;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -55,6 +56,7 @@ namespace MnfPic
         public int glasses_color1 = 1;
         public int glasses_color2 = 10;
         public int hide_petnis = 0;
+        public int novaHodnota = 0;
         public MnfUser User;
         
         public List<MnfServer> Servery = new List<MnfServer>();
@@ -64,6 +66,7 @@ namespace MnfPic
         WebClient wc = new WebClient();
         /// <summary>
         /// avatar_datas=2844033,YourSexDreams,2,1,2,8,3,26,33,2,3,2,2,1,6,2,1,5,3,2,2,2,4,2,252/201/176,0,0,-1,,0,0,1,0,0,1,0,0,0
+        /// avatar_datas=2844033,YourSexDreams,2,1,2,8,3,26,33,2,3,2,2,1,6,2,1,5,3,2,2,2,4,2,176/252/250,225,225,-1,,0,0,1,0,0,1,0,0,0,1
         /// </summary>
         /// <param name="s"></param>
         /// <returns>true = error</returns>
@@ -117,6 +120,7 @@ namespace MnfPic
                 glasses_color1 = int.Parse(ss[35]);
                 glasses_color2 = int.Parse(ss[36]);
                 hide_petnis = int.Parse(ss[37]);
+                novaHodnota = int.Parse(ss[38]);
             }
             catch(Exception e)
             {

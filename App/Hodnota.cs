@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MnfPic
+namespace App
 {
     public abstract class Hodnota
     {

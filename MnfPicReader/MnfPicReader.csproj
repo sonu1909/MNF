@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9C7A826C-25AC-4C83-88DC-C5CFD4ED5DDC}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{D930A724-6C09-412F-87FA-F6C2E83C8814}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MnfPic</RootNamespace>
-    <AssemblyName>MnfPic</AssemblyName>
+    <RootNamespace>MnfPicReader</RootNamespace>
+    <AssemblyName>MnfPicReader</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -33,9 +33,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Nini">
@@ -62,40 +59,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ControlAvatar.xaml.cs">
-      <DependentUpon>ControlAvatar.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ControlServer.xaml.cs">
-      <DependentUpon>ControlServer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ControlUser.xaml.cs">
-      <DependentUpon>ControlUser.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MnfArea.cs" />
-    <Compile Include="MnfLogin.xaml.cs">
-      <DependentUpon>MnfLogin.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MnfAddress.cs" />
-    <Compile Include="NastaveniMnfPic.cs" />
-    <Compile Include="Parsers.cs" />
-    <Compile Include="ShowSelectServer.xaml.cs">
-      <DependentUpon>ShowSelectServer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ShowSelectAvatar.xaml.cs">
-      <DependentUpon>ShowSelectAvatar.xaml</DependentUpon>
-    </Compile>
-    <Page Include="ControlAvatar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ControlServer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ControlUser.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -108,23 +71,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MnfLogin.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ShowSelectServer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ShowSelectAvatar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MnfAvatar.cs" />
-    <Compile Include="MnfServer.cs" />
-    <Compile Include="MnfUser.cs" />
+    <Compile Include="NastaveniMnfPicReader.cs" />
+    <Compile Include="Obrazek.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -155,10 +105,6 @@
     <ProjectReference Include="..\App\App.csproj">
       <Project>{3727d78d-17e4-47f2-9ba0-9648a18b6911}</Project>
       <Name>App</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MnfPicReader\MnfPicReader.csproj">
-      <Project>{d930a724-6c09-412f-87fa-f6c2e83c8814}</Project>
-      <Name>MnfPicReader</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

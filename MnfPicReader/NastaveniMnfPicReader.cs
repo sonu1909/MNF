@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MnfPic
+namespace MnfPicReader
 {
-    public static class NastaveniMnfPic
+    public static class NastaveniMnfPicReader
     {
         static MujInitSoubor Ini = new MujInitSoubor("NastaveniMnfPic");
 
@@ -25,29 +25,15 @@ namespace MnfPic
             }
         }
 
-        static Hodnota _LoginUser = new HodnotaString() { Sekce = "Common", Jmeno = "LoginUser", Value = "" };
-        public static string LoginUser
+        static Hodnota _ImgSize = new HodnotaInt() { Sekce = "Common", Jmeno = "ImgSize", Value = 200 };
+        public static int ImgSize
         {
-            get { return (string)_LoginUser.Value; }
+            get { return (int)_ImgSize.Value; }
             set
             {
-                if ((string)_LoginUser.Value != value)
+                if ((int)_ImgSize.Value != value)
                 {
-                    _LoginUser.Value = value;
-                    Save();
-                }
-            }
-        }
-
-        static Hodnota _LoginPaswCrypted = new HodnotaString() { Sekce = "Common", Jmeno = "LoginPaswCrypted", Value = "" };
-        public static string LoginPaswCrypted
-        {
-            get { return (string)_LoginPaswCrypted.Value; }
-            set
-            {
-                if ((string)_LoginPaswCrypted.Value != value)
-                {
-                    _LoginPaswCrypted.Value = value;
+                    _ImgSize.Value = value;
                     Save();
                 }
             }
@@ -63,7 +49,7 @@ namespace MnfPic
         /// <summary>
         /// PRIDAT VSECHNY PROMENE .. pro ukladani a nacitani
         /// </summary>
-        static List<Hodnota> Hodnoty = new List<Hodnota>() { _MainFile, _LoginUser, _LoginPaswCrypted };
+        static List<Hodnota> Hodnoty = new List<Hodnota>() { _MainFile, };
 
         /// <summary>
         /// Uloží Hodnoty

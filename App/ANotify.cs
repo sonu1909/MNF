@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace MnfPic
+namespace App
 {
     public abstract class ANotify : INotifyPropertyChanged
     {

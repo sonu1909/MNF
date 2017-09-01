@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MnfPic
+namespace App
 {
     /// <summary>
     /// mela by byt abstract, ale neni :D
