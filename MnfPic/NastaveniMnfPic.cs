@@ -24,36 +24,19 @@ namespace MnfPic
                 }
             }
         }
-
-        static Hodnota _LoginUser = new HodnotaString() { Sekce = "Common", Jmeno = "LoginUser", Value = "" };
-        public static string LoginUser
+        static Hodnota _UserFile = new HodnotaString() { Sekce = "Common", Jmeno = "UserFile", Value = "Users.txt" };
+        public static string UserFile
         {
-            get { return (string)_LoginUser.Value; }
+            get { return (string)_UserFile.Value; }
             set
             {
-                if ((string)_LoginUser.Value != value)
+                if ((string)_UserFile.Value != value)
                 {
-                    _LoginUser.Value = value;
+                    _UserFile.Value = value;
                     Save();
                 }
             }
         }
-
-        static Hodnota _LoginPaswCrypted = new HodnotaString() { Sekce = "Common", Jmeno = "LoginPaswCrypted", Value = "" };
-        public static string LoginPaswCrypted
-        {
-            get { return (string)_LoginPaswCrypted.Value; }
-            set
-            {
-                if ((string)_LoginPaswCrypted.Value != value)
-                {
-                    _LoginPaswCrypted.Value = value;
-                    Save();
-                }
-            }
-        }
-
-
 
 
 
@@ -63,7 +46,7 @@ namespace MnfPic
         /// <summary>
         /// PRIDAT VSECHNY PROMENE .. pro ukladani a nacitani
         /// </summary>
-        static List<Hodnota> Hodnoty = new List<Hodnota>() { _MainFile, _LoginUser, _LoginPaswCrypted };
+        static List<Hodnota> Hodnoty = new List<Hodnota>() { _MainFile, _UserFile };
 
         /// <summary>
         /// Uloží Hodnoty

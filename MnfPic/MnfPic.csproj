@@ -28,7 +28,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -62,40 +62,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ControlAvatar.xaml.cs">
-      <DependentUpon>ControlAvatar.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ControlServer.xaml.cs">
-      <DependentUpon>ControlServer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ControlUser.xaml.cs">
-      <DependentUpon>ControlUser.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MnfArea.cs" />
+    <Compile Include="MnfGame.xaml.cs">
+      <DependentUpon>MnfGame.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MnfLogger.xaml.cs">
+      <DependentUpon>MnfLogger.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MnfLogin.xaml.cs">
       <DependentUpon>MnfLogin.xaml</DependentUpon>
     </Compile>
     <Compile Include="MnfAddress.cs" />
     <Compile Include="NastaveniMnfPic.cs" />
-    <Compile Include="Parsers.cs" />
-    <Compile Include="ShowSelectServer.xaml.cs">
-      <DependentUpon>ShowSelectServer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ShowSelectAvatar.xaml.cs">
-      <DependentUpon>ShowSelectAvatar.xaml</DependentUpon>
-    </Compile>
-    <Page Include="ControlAvatar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ControlServer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ControlUser.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="MnfClasses.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -108,23 +87,20 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MnfGame.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MnfLogger.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MnfLogin.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ShowSelectServer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ShowSelectAvatar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MnfAvatar.cs" />
-    <Compile Include="MnfServer.cs" />
-    <Compile Include="MnfUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

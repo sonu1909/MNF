@@ -7,8 +7,16 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="640">
     <Grid>
-        <local:ControlUser x:Name="controlUser"/>
-        <Button x:Name="button" Content="ReLog" HorizontalAlignment="Right" Margin="0,-1,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
-
+        <TabControl x:Name="TC">
+            <TabItem Header="LogIn">
+               <local:MnfLogger x:Name="mnfLogger" />
+            </TabItem>
+            <TabItem Header="Game">
+                <local:MnfGame x:Name="mnfGame" />
+            </TabItem>
+            <TabItem Header="Settings">
+                
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

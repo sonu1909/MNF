@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="MnfPic.MnfLogger"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MnfPic"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="User">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <ListBox x:Name="LB" ItemsSource="{Binding Uzivatele}" DisplayMemberPath="JmenoUzivatele" SelectionChanged="LB_SelectionChanged" Margin="0,0,0,5.853" Grid.ColumnSpan="2"/>
+                <Button Content="ADD" Grid.Row="1" Click="AddUser"/>
+                <Button Content="REM" Grid.Row="1" Grid.Column="1" Click="RemUser"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Avatar" Grid.Column="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <ListBox x:Name="LBA" ItemsSource="{Binding Avatars}" DisplayMemberPath="JmenoPostavy" SelectionChanged="LBA_SelectionChanged" Margin="0,0,0,5.853" Grid.ColumnSpan="2"/>
+                <Button Content="ADD" Grid.Row="1" Click="AddUser" IsEnabled="False"/>
+                <Button Content="REM" Grid.Row="1" Grid.Column="1" Click="RemUser" IsEnabled="False"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Server" Grid.Column="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <ListBox x:Name="LBS" ItemsSource="{Binding Servers}" DisplayMemberPath="JmenoServeru" SelectionChanged="LBS_SelectionChanged" Margin="0,0,0,5.853" Grid.ColumnSpan="2"/>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

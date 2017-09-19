@@ -22,13 +22,12 @@ namespace MnfPic
         public MnfLogin()
         {
             InitializeComponent();
+            User = new Uzivatel();
+            DataContext = User;
         }
-        public string Email = "";
-        public string Password = "";
+        public Uzivatel User;
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            Email = TBEmail.Text;
-            Password = TBPass.Text;
             DialogResult = true;
             Close();
         }
