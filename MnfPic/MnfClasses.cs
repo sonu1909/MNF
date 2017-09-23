@@ -40,46 +40,85 @@ namespace MnfPic
     /// </summary>
     public class Avatar : ANotify
     {
-        public int AvatarID { get; set; }
-        public string JmenoPostavy { get; set; }
-        public string petnis_name { get; set; }
-        public int sex { get; set; }
-        public int sexual_orientation { get; set; }
-        public int skin_color { get; set; }
-        public int hair_color { get; set; }
-        public int eyes_color { get; set; }
-        public int cloth_color1 { get; set; }
-        public int cloth_color2 { get; set; }
-        public int petnis_color { get; set; }
-        public int torso { get; set; }
-        public int breast { get; set; }
-        public int nipples { get; set; }
-        public int chest_hair { get; set; }
-        public int pubic_hair { get; set; }
-        public int hair_style { get; set; }
-        public int jaw { get; set; }
-        public int ears { get; set; }
-        public int nose { get; set; }
-        public int lips { get; set; }
-        public int eyes { get; set; }
-        public int eye_brows { get; set; }
-        public int moustaches { get; set; }
-        public int beard { get; set; }
-        public int outfit { get; set; }
-        public string userCT { get; set; }
-        public int exp_gross { get; set; }
-        public int exp_available { get; set; }
-        public int deleted { get; set; }
-        public int premium { get; set; }
-        public int hat { get; set; }
-        public int hat_color1 { get; set; }
-        public int hat_color2 { get; set; }
-        public int glasses { get; set; }
-        public int glasses_color1 { get; set; }
-        public int glasses_color2 { get; set; }
-        public int hide_petnis { get; set; }
-        public int novaHodnota { get; set; }
+        public int AvatarID {get{return _AvatarID;}set{ _AvatarID = value; OnPropertyChanged("AvatarID");}}
+        public string JmenoPostavy { get { return _JmenoPostavy; } set { _JmenoPostavy = value; OnPropertyChanged("_JmenoPostavy"); } }
+        public string petnis_name {get{return _petnis_name; }set{ _petnis_name = value; OnPropertyChanged("petnis_name");}}
+        public int sex {get{return _sex; }set{ _sex = value; OnPropertyChanged("sex");}}
+        public int sexual_orientation {get{return _sexual_orientation; }set{ _sexual_orientation = value; OnPropertyChanged("sexual_orientation");}}
+        public int skin_color {get{return _skin_color; }set{ _skin_color = value; OnPropertyChanged("skin_color");}}
+        public int hair_color {get{return _hair_color; }set{ _hair_color = value; OnPropertyChanged("hair_color");}}
+        public int eyes_color {get{return _eyes_color; }set{ _eyes_color = value; OnPropertyChanged("eyes_color");}}
+        public int cloth_color1 {get{return _cloth_color1; }set{ _cloth_color1 = value; OnPropertyChanged("cloth_color1");}}
+        public int cloth_color2 {get{return _cloth_color2; }set{ _cloth_color2 = value; OnPropertyChanged("cloth_color2");}}
+        public int petnis_color {get{return _petnis_color; }set{ _petnis_color = value; OnPropertyChanged("petnis_color");}}
+        public int torso {get{return _torso; }set{ _torso = value; OnPropertyChanged("torso");}}
+        public int breast {get{return _breast; }set{ _breast = value; OnPropertyChanged("breast");}}
+        public int nipples {get{return _nipples; }set{ _nipples = value; OnPropertyChanged("nipples");}}
+        public int chest_hair {get{return _chest_hair; }set{ _chest_hair = value; OnPropertyChanged("chest_hair");}}
+        public int pubic_hair {get{return _pubic_hair; }set{ _pubic_hair = value; OnPropertyChanged("pubic_hair");}}
+        public int hair_style {get{return _hair_style; }set{ _hair_style = value; OnPropertyChanged("hair_style");}}
+        public int jaw {get{return _jaw; }set{ _jaw = value; OnPropertyChanged("jaw");}}
+        public int ears {get{return _ears; }set{ _ears = value; OnPropertyChanged("ears");}}
+        public int nose {get{return _nose; }set{ _nose = value; OnPropertyChanged("nose");}}
+        public int lips {get{return _lips; }set{ _lips = value; OnPropertyChanged("lips");}}
+        public int eyes {get{return _eyes; }set{ _eyes = value; OnPropertyChanged("eyes");}}
+        public int eye_brows {get{return _eye_brows; }set{ _eye_brows = value; OnPropertyChanged("eye_brows");}}
+        public int moustaches {get{return _moustaches; }set{ _moustaches = value; OnPropertyChanged("moustaches");}}
+        public int beard {get{return _beard; }set{ _beard = value; OnPropertyChanged("beard");}}
+        public int outfit {get{return _outfit; }set{ _outfit = value; OnPropertyChanged("outfit");}}
+        public string userCT {get{return _userCT; }set{ _userCT = value; OnPropertyChanged("userCT");}}
+        public int exp_gross {get{return _exp_gross; }set{ _exp_gross = value; OnPropertyChanged("exp_gross");}}
+        public int exp_available {get{return _exp_available; }set{ _exp_available = value; OnPropertyChanged("exp_available");}}
+        public int deleted {get{return _deleted; }set{ _deleted = value; OnPropertyChanged("deleted");}}
+        public int premium {get{return _premium; }set{ _premium = value; OnPropertyChanged("premium");}}
+        public int hat {get{return _hat; }set{ _hat = value; OnPropertyChanged("hat");}}
+        public int hat_color1 {get{return _hat_color1; }set{ _hat_color1 = value; OnPropertyChanged("hat_color1");}}
+        public int hat_color2 {get{return _hat_color2; }set{ _hat_color2 = value; OnPropertyChanged("hat_color2");}}
+        public int glasses {get{return _glasses; }set{ _glasses = value; OnPropertyChanged("glasses");}}
+        public int glasses_color1 {get{return _glasses_color1; }set{ _glasses_color1 = value; OnPropertyChanged("glasses_color1");}}
+        public int glasses_color2 {get{return _glasses_color2; }set{ _glasses_color2 = value; OnPropertyChanged("glasses_color2");}}
+        public int hide_petnis {get{return _hide_petnis; }set{ _hide_petnis = value; OnPropertyChanged("hide_petnis");}}
+        public int icon_id {get{return _icon_id; }set{ _icon_id = value; OnPropertyChanged("icon_id");}}
 
+        private int _AvatarID = 0;
+        private string _JmenoPostavy = "";
+        private string _petnis_name = "";
+        private int _sex = 0;
+        private int _sexual_orientation = 0;
+        private int _skin_color = 0;
+        private int _hair_color = 0;
+        private int _eyes_color = 0;
+        private int _cloth_color1 = 0;
+        private int _cloth_color2 = 0;
+        private int _petnis_color = 0;
+        private int _torso = 0;
+        private int _breast = 0;
+        private int _nipples = 0;
+        private int _chest_hair = 0;
+        private int _pubic_hair = 0;
+        private int _hair_style = 0;
+        private int _jaw = 0;
+        private int _ears = 0;
+        private int _nose = 0;
+        private int _lips = 0;
+        private int _eyes = 0;
+        private int _eye_brows = 0;
+        private int _moustaches = 0;
+        private int _beard = 0;
+        private int _outfit = 0;
+        private string _userCT = "";
+        private int _exp_gross = 0;
+        private int _exp_available = 0;
+        private int _deleted = 0;
+        private int _premium = 0;
+        private int _hat = 0;
+        private int _hat_color1 = 0;
+        private int _hat_color2 = 0;
+        private int _glasses = 0;
+        private int _glasses_color1 = 0;
+        private int _glasses_color2 = 0;
+        private int _hide_petnis = 0;
+        private int _icon_id = 0;
         /// <summary>
         /// avatar_datas=2844033,YourSexDreams,2,1,2,8,3,26,33,2,3,2,2,1,6,2,1,5,3,2,2,2,4,2,252/201/176,0,0,-1,,0,0,1,0,0,1,0,0,0
         /// avatar_datas=2844033,YourSexDreams,2,1,2,8,3,26,33,2,3,2,2,1,6,2,1,5,3,2,2,2,4,2,176/252/250,225,225,-1,,0,0,1,0,0,1,0,0,0,1
@@ -136,7 +175,60 @@ namespace MnfPic
                 glasses_color1 = int.Parse(ss[35]);
                 glasses_color2 = int.Parse(ss[36]);
                 hide_petnis = int.Parse(ss[37]);
-                novaHodnota = int.Parse(ss[38]);
+                icon_id = int.Parse(ss[38]);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return true;
+            }
+            return false;
+        }
+
+        public bool ParseAvatarCutted(string s)
+        {
+            try
+            {
+                string[] ss = s.Split(',');
+                AvatarID = int.Parse(ss[0]);
+                JmenoPostavy = ss[1];
+                sex = int.Parse(ss[2]);
+                sexual_orientation = int.Parse(ss[3]);
+                skin_color = int.Parse(ss[4]);
+                hair_color = int.Parse(ss[5]);
+                eyes_color = int.Parse(ss[6]);
+                cloth_color1 = int.Parse(ss[7]);
+                cloth_color2 = int.Parse(ss[8]);
+                torso = int.Parse(ss[9]);
+                breast = int.Parse(ss[10]);
+                nipples = int.Parse(ss[11]);
+                chest_hair = int.Parse(ss[12]);
+                pubic_hair = int.Parse(ss[13]);
+                hair_style = int.Parse(ss[14]);
+                jaw = int.Parse(ss[15]);
+                ears = int.Parse(ss[16]);
+                nose = int.Parse(ss[17]);
+                lips = int.Parse(ss[18]);
+                eyes = int.Parse(ss[19]);
+                eye_brows = int.Parse(ss[20]);
+                moustaches = int.Parse(ss[21]);
+                beard = int.Parse(ss[22]);
+                outfit = int.Parse(ss[23]);
+                userCT = ss[24];
+                exp_gross = int.Parse(ss[25]);
+                exp_available = int.Parse(ss[26]);
+                petnis_color = int.Parse(ss[27]);
+                petnis_name = ss[28];
+                deleted = int.Parse(ss[29]);
+                premium = int.Parse(ss[30]);
+                hat = int.Parse(ss[31]);
+                hat_color1 = int.Parse(ss[32]);
+                hat_color2 = int.Parse(ss[33]);
+                glasses = int.Parse(ss[34]);
+                glasses_color1 = int.Parse(ss[35]);
+                glasses_color2 = int.Parse(ss[36]);
+                hide_petnis = int.Parse(ss[37]);
+                icon_id = int.Parse(ss[38]);
             }
             catch (Exception e)
             {
@@ -195,7 +287,7 @@ namespace MnfPic
             glasses_color1 = a.glasses_color1;
             glasses_color2 = a.glasses_color2;
             hide_petnis = a.hide_petnis;
-            novaHodnota = a.novaHodnota;
+            icon_id = a.icon_id;
         }
         public int PoziceX { get; set; }
         public int PoziceY { get; set; }
@@ -249,7 +341,7 @@ namespace MnfPic
                 glasses_color1 = int.Parse(data[i++]);
                 glasses_color2 = int.Parse(data[i++]);
                 hide_petnis = int.Parse(data[i++]);
-                novaHodnota = int.Parse(data[i++]);
+                icon_id = int.Parse(data[i++]);
 
                 string[] pozice = ss[2].Replace("\"", "").Split(',');
                 PoziceX = int.Parse(pozice[0].Split('=')[1]);
@@ -323,6 +415,11 @@ namespace MnfPic
         public DateTime Server_time = DateTime.Now;
         public string Session_id = "";
 
+        public object LockerTop = new object();
+        public object LockerGame = new object();
+        public object LockerArea = new object();
+        public object LockerChat = new object();
+        public object LockerPolicy = new object();
         public TcpClient TC_top = new TcpClient();
         public TcpClient TC_game = new TcpClient();
         public TcpClient TC_area = new TcpClient();
@@ -342,16 +439,25 @@ namespace MnfPic
         public MnfAvatar Avatar;
         public MnfServer Server;
     }
-    public class MnfLocation
+    public class MnfLocation:ANotify
     {
-        public string JmenoLokace = "";
+        string _JmenoLokace = "";
+        public string JmenoLokace
+        {
+            get { return _JmenoLokace; }
+            set
+            {
+                _JmenoLokace = value;
+                OnPropertyChanged("JmenoLokace");
+            }
+        }
         public Point PortLokace;
-        public int IdLokace = 0;
+        public long IdLokace = 0;
         public MnfLocation()
         {
 
         }
-        public MnfLocation(string j, Point p, int id)
+        public MnfLocation(string j, Point p, long id)
         {
             JmenoLokace = j;PortLokace = p;IdLokace = id;
         }

@@ -7,6 +7,43 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            
+        <TabControl>
+            <TabItem Header="Location">
+                <Grid>
+                    <Label Content="Location" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{Binding ActualArea.JmenoLokace}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="55,0,0,0"/>
+                    <ComboBox x:Name="comboBoxArea" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" SelectionChanged="comboBoxArea_SelectionChanged"/>
+                    <GroupBox Header="Avatars in area" Margin="0,26,0,0" HorizontalAlignment="Left" Width="200">
+                        <ListBox ItemsSource="{Binding AktualniPostavy}" DisplayMemberPath="JmenoPostavy" SelectionChanged="AvatarInAreaSelected"/>
+                    </GroupBox>                    
+                </Grid>
+            </TabItem>
+            <TabItem Header="Chat">
+                <Grid>
+                    <GroupBox Header="Avatars" HorizontalAlignment="Left" Width="100">
+                        <ListBox x:Name="lbChatPostavy" ItemsSource="{Binding ChatPostavy}" DisplayMemberPath="JmenoPostavy" SelectionChanged="ListBox_SelectionChanged"/>
+                    </GroupBox>
+
+                    <Button Content="Send" Width="50" HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="SendClick"/>
+                    <TextBox x:Name="tbChat" Height="25" Margin="100,0,50,0" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom"/>
+                    <ScrollViewer Margin="100,0,0,25">
+                        <StackPanel x:Name="spHistory"/>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+            <TabItem Header="People">
+                <Grid>
+                    <GroupBox Header="Avatars" HorizontalAlignment="Left" Width="200">
+                        <ListBox x:Name="lbPotkanePostavy" ItemsSource="{Binding PotkanePostavy}" DisplayMemberPath="JmenoPostavy" SelectionChanged="ListBoxAll_SelectionChanged"/>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Games">
+                <Grid>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+
     </Grid>
 </UserControl>

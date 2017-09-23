@@ -62,10 +62,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MnfAct.cs" />
     <Compile Include="MnfArea.cs" />
+    <Compile Include="MnfColors.cs" />
+    <Compile Include="MnfFlag.cs" />
     <Compile Include="MnfGame.xaml.cs">
       <DependentUpon>MnfGame.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MnfItem.cs" />
     <Compile Include="MnfLogger.xaml.cs">
       <DependentUpon>MnfLogger.xaml</DependentUpon>
     </Compile>
@@ -136,6 +140,9 @@
       <Project>{d930a724-6c09-412f-87fa-f6c2e83c8814}</Project>
       <Name>MnfPicReader</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pzn.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

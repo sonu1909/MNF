@@ -28,6 +28,7 @@ namespace MnfPic
 
         private void MnfLogger_NewUser(object sender, MnfPlayer e)
         {
+            mnfGame.Close();
             mnfGame.Init(e);
         }
 
@@ -39,6 +40,7 @@ namespace MnfPic
         private void MainWindow_Closed(object sender, EventArgs e)
         {
             mnfLogger.Close();
+            mnfGame.Close();
         }
 
     }

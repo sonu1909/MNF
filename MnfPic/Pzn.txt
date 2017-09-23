@@ -1,0 +1,66 @@
+﻿
+   gotoArea(6300000000 + int((id_0 + id_1) / 2),0,WalkPort.TYPE_SHOWER_SEX);
+   top_socket.send("<data start_shower_sex=\"1\" id_0=\"" + id_0 + "\" id_1=\"" + id_1 + "\"/> ");
+
+   if(_parent.bed_mode == _parent.MODE_SINGLE_PLAYER)
+   {
+      SetAct_(act_line_id);
+      _root.top_socket.send("<data ping=\"1\" />");
+   }
+   else if(_parent.bed_mode == _parent.MODE_MASTER)
+   {
+      if(_root.type_id == WalkPort.TYPE_POLEDANCE)
+      {
+         _root.pole_mouth = random(4) + 1;
+         _root.pole_brows = random(3) + 1;
+         _root.polerod_mirror = random(2) == 1;
+         _parent.socket.send("<data act_selector_set_id=\"" + act_line_id + "\" mouth=\"" + _root.pole_mouth + "\" brows=\"" + _root.pole_brows + "\" mirror=\"" + (!_root.polerod_mirror?0:1) + "\" />");
+      }
+      else
+      {
+         _parent.socket.send("<data act_selector_set_id=\"" + act_line_id + "\" />");
+      }
+
+
+	  PowerShell Invoke-WebRequest http://www.mnfclub.com/swf/jmeno.swf -OutFile C:\Users\Legomaniak\Desktop\MnfSwf\jmeno.swf
+	  For ($i=0; $i -le 70; $i++) {PowerShell Invoke-WebRequest http://www.mnfclub.com/swf/area$i.swf -OutFile C:\Users\Legomaniak\Desktop\MnfSwf\area$i.swf}
+
+	  <invite type="visit" invitor_data="8823727,hotsexmachene,1,2,5,8,2,6,29,1,3,3,1,1,4,2,1,1,1,3,3,2,4,2,252/176/224,264,264,-1,,0,0,1,0,0,1,0,0,0,1" area_name="WW Motel Room A-12" area_id="1800100000" swf_id="18" type_id="0" is_invitor_friend="0" />
+<invite_canceled invitor_id="8823727" />
+
+
+
+T: <base_data server_time="1506026682000" session_id="00016a4ab1c0ee72098bca485a6c4a87" ignore_ids="" avatar_data="2844033,YourSexDreams,2,1,2,8,3,26,33,2,3,2,2,1,6,2,1,5,3,2,2,2,4,2,195/176/252,225,225,-1,,0,0,1,0,0,1,0,0,0,1"><unread_msgs_data avatar_id="99742" msgs_num="1" /></base_data><items_list></items_list>
+Server_time: 2.1.0001 17:50:02
+Session_id: 00016a4ab1c0ee72098bca485a6c4a87
+A: <avatar data="99742,VzoreCZEk,1,2,2,8,1,38,1,2,2,1,1,2,6,3,1,4,3,1,3,1,1,9,252/221/176,18686,2686,38,GirlsTrueLove,0,1,1,0,0,3,38,38,0,1" points="892,719,953,644" />
+A: <avatar id="99742" points="953,644,902,691" />
+A: <avatar id="99742" points="902,691,866,774" />
+T: <delivery_approve id_to="99742" />
+T: <private_msg id="1148958891" id_from="99742" id_to="2844033" name_from="VzoreCZEk" name_to="YourSexDreams" date_time="09/21/17 8:45 pm" read="0" type="" text="cak kocko" />
+
+T: <base_data server_time="1506115023000" session_id="f7aff942cf6b250b6bb547022b9c2395" ignore_ids="" avatar_data="2844033,YourSexDreams,2,1,2,8,3,26,33,2,3,2,2,1,6,2,1,5,3,2,2,2,4,2,195/176/252,225,225,-1,,0,0,1,0,0,1,0,0,0,1"><unread_msgs_data avatar_id="99742" msgs_num="2" /></base_data><items_list></items_list>
+Server_time: 2.1.0001 17:50:11
+Session_id: f7aff942cf6b250b6bb547022b9c2395
+A: <avatar data="9034523,DrDodinger,1,1,7,8,3,26,28,1,2,2,2,1,4,1,1,1,1,4,1,1,2,3,176/177/252,0,0,-1,,0,0,1,0,0,1,0,0,0,1" points="1127,727,903,718" />
+A: <avatar data="2427633,elizabeth_h,2,2,1,8,0,2,2,1,3,2,2,2,2,2,1,2,2,2,2,3,3,7,252/176/185,14135,13385,-1,,0,0,11,2,2,2,40,38,0,1" points="503,384,506,387" /><avatar data="8955063,LesboWhoreforFuta,2,2,9,0,2,25,38,1,3,1,1,2,4,1,3,3,2,2,2,2,1,2,176/236/252,4062,4062,-1,,0,0,1,0,0,1,0,0,0,1" points="488,470" /><avatar data="5232172,BBCForanyone,1,2,9,9,1,38,39,1,2,2,2,1,4,3,1,5,1,3,2,1,2,2,252/176/194,8429,7679,-1,,0,0,1,0,0,1,0,0,0,1" points="630,387" /><avatar data="561033,Jess_,2,2,0,7,1,38,1,3,2,3,1,2,7,3,2,5,3,2,2,3,3,2,252/213/176,7280,4030,-1,,0,0,1,0,0,2,40,38,0,1" points="653,367" /><avatar data="531253,Ivanich,1,1,2,3,1,25,39,3,1,1,1,1,8,3,1,3,3,1,3,3,4,3,176/252/197,27127,26377,-1,,0,0,1,0,0,12,38,40,0,1" points="612,372" /><avatar data="8711583,Lolita_horny,2,3,0,5,1,39,39,2,3,1,2,2,8,1,1,2,2,3,2,1,4,11,176/248/252,6954,2454,12,LynDick,0,1,1,0,0,1,0,0,1,1" points="381,484" /><avatar data="7939655,Jeal84,1,1,8,0,1,7,23,1,2,3,2,1,1,1,1,5,1,5,1,1,3,8,198/252/176,23926,23176,-1,,0,0,1,0,0,1,0,0,0,1" points="625,775,628,474" /><avatar data="5738678,aftab_the_king,1,2,0,8,2,35,38,1,2,3,2,2,6,2,1,1,1,2,3,1,3,9,176/252/218,22708,6708,38,HUNTER-,0,1,1,0,0,7,38,39,1,1" points="576,479" />
+A: <avatar id="531253" points="612,372,454,563" /> <avatar id="531253" points="549.46,447.6,410,603" /> <avatar id="531253" points="410,603,264.1,666.6,238,678.35,131,577" /> <avatar_out id="531253" /> <avatar id="5738678" points="576,479,553,441" />
+T: <delivery_approve id_to="8946383" />
+T: <private_msg id="1151074399" id_from="8946383" id_to="2844033" name_from="Tibik" name_to="YourSexDreams" date_time="09/22/17 9:19 pm" read="0" type="" text="hi" />
+A: <avatar id="7939655" points="628,474,837,355" /> <avatar_out id="7939655" /> <avatar data="9013187,-_69_-,2,2,3,3,2,5,22,2,2,3,1,2,5,3,2,5,1,5,2,1,1,9,252/189/176,1247,1247,-1,,0,1,1,0,0,9,34,5,0,1" points="543,460" /> <avatar data="8946383,Tibik,1,2,0,6,1,11,7,1,2,1,2,1,4,3,1,5,3,3,1,1,1,2,179/252/176,2140,1390,-1,,0,0,1,0,0,1,0,0,0,1" points="551,413" /> <avatar data="3586824,Sheeva69,2,3,7,31,1,32,40,2,3,1,2,1,4,3,1,4,2,5,2,1,2,12,176/234/252,22832,5332,5,Bad_Hombre,0,1,18,33,40,1,0,0,1,1" points="626,466" /> <avatar_out id="3586824" /> <avatar data="9034279,Saurav999,1,1,3,8,4,16,15,3,2,2,1,1,4,1,1,3,1,2,1,2,4,3,252/176/190,0,0,-1,,0,0,1,0,0,1,0,0,0,1" points="728,769" /> <avatar id="9034279" points="728,769,680,551" /> <avatar id="9034279" points="680,551,392,350" /> <avatar id="9034279" points="392,350,319,190" /> <avatar id="9013187" points="543,460,393,413" /> <avatar id="9034279" points="333.91,222.68,502.4,289.25,502.4,289.25,586,227" /> <avatar id="9034279" points="359.93,232.96,477,337" /> <avatar id="9034279" points="391.95,261.42,463,362" /> <avatar id="9013187" points="403.53,416.3,316,384" /> <avatar id="9034279" points="463,362,296,249" /> <avatar id="9034279" points="404.05,326.82,282,214" /> <avatar id="9034279" points="282,214,308,195" /> <avatar_out id="9034279" /> <avatar data="5297028,69Lady,2,3,9,10,2,37,37,3,2,3,2,2,6,3,2,4,1,5,1,1,2,7,196/252/176,5913,5163,-1,,0,0,1,0,0,1,0,0,0,1" points="569,
+A: 486" /> <avatar_out id="9013187" /> <avatar data="8481231,Thedreamer,1,1,3,2,1,23,13,1,3,2,2,1,6,1,1,1,1,1,3,1,1,2,176/252/243,9445,1945,-1,,0,1,9,40,40,6,38,38,0,1" points="400,420" /> <avatar_out id="8481231" /> <avatar_out id="2427633" /> <avatar id="8946383" points="551,413,605,211" /> <avatar_out id="5297028" /> <avatar_out id="8946383" /> <avatar data="8946383,Tibik,1,2,0,6,1,11,7,1,2,1,2,1,4,3,1,5,3,3,1,1,1,2,179/252/176,2140,1390,-1,,0,0,1,0,0,1,0,0,0,1" points="647,257" /> <avatar_out id="8946383" /> <avatar data="9032487,deSanta_isback,1,1,4,4,0,6,10,1,3,1,2,1,1,3,2,5,3,6,2,1,1,3,187/252/176,0,0,-1,,0,0,1,0,0,1,0,0,0,1" points="527,350" /> <avatar data="8102439,Elhadaba15,1,2,4,2,2,21,2,1,1,2,2,2,4,2,2,3,2,5,3,1,2,2,252/176/247,7244,6494,-1,,0,0,1,0,0,1,0,0,0,1" points="526,326" /> <avatar data="3440068,Poliux,1,1,9,1,2,3,13,1,2,3,1,1,4,1,1,5,1,5,3,1,4,3,176/252/215,3823,3073,-1,,0,0,1,0,0,1,0,0,0,1" points="477,462" /> <avatar_out id="9032487" /> <avatar data="2292397,Lucy_Heartfilia68,2,3,3,2,4,21,27,1,3,3,1,2,2,2,1,5,1,1,1,2,2,3,176/252/208,21192,5692,24,Happy,0,0,1,0,0,1,0,0,1,1" points="449,422" /> <avatar_out id="2292397" /> <avatar id="3440068" points="477,462,355.05,606.35,238,678.35,131,577" /> <avatar_out id="3440068" /> <avatar data="7847155,95Jack,1,1,0,8,1,24,38,1,3,2,1,1,8,1,1,5,1,1,3,1,1,2,176/252/209,3030,2280,-1,,0,0,1,0,0,3,38,38,0,1" points="642,434" />
+A: <avatar_out id="7847155" />
+
+
+
+T: <base_data server_time="1506156808000" session_id="6a04df824a427ee3bacc77fafc0f0d7f" ignore_ids="" avatar_data="2844033,YourSexDreams,2,1,2,8,3,26,33,2,3,2,2,1,6,2,1,5,3,2,2,2,4,2,195/176/252,225,225,-1,,0,0,1,0,0,1,0,0,0,1"><unread_msgs_data avatar_id="99742" msgs_num="3" /><unread_msgs_data avatar_id="1336109" msgs_num="1" /><unread_msgs_data avatar_id="7847155" msgs_num="1" /><unread_msgs_data avatar_id="8102439" msgs_num="1" /><unread_msgs_data avatar_id="8946383" msgs_num="1" /><unread_msgs_data avatar_id="9034523" msgs_num="1" /></base_data><items_list></items_list>
+Server_time: 2.1.0001 17:50:15
+Session_id: 6a04df824a427ee3bacc77fafc0f0d7f
+A: <avatar data="4063024,-Marcus-,1,2,5,49,1,38,23,2,3,2,2,2,2,1,1,1,3,1,1,1,3,3,176/252/224,7028,528,-1,,0,0,1,0,0,2,16,38,0,1" points="924,706" />
+T: <private_msg id="1152018347" id_from="99742" id_to="2844033" name_from="VzoreCZEk" name_to="YourSexDreams" date_time="09/23/17  8:53 am" read="0" type="" text="neignoruj me !!" />
+T: <private_msg id="1152019023" id_from="2844033" id_to="99742" name_from="YourSexDreams" name_to="VzoreCZEk" date_time="09/23/17 8:54 am" read="0" type="" text="ahojik" />
+T: <delivery_approve id_to="99742" />
+
+avatar_details data="99742,VzoreCZEk,1,2,2,8,1,38,1,2,2,1,1,2,6,3,1,4,3,1,3,1,1,9,227/252/176,18686,2686,38,GirlsTrueLove,0,1,1,0,0,3,38,38,0,1" friend="false" status="offline" info="" is_ignoring_you="0" cash="0" dont_disturb="0" from="Czech Republic" about="I like sEXP! and chat
+26, M 
+looking for friends" /
