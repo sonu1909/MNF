@@ -12,10 +12,13 @@
                 <Grid>
                     <Label Content="Location" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Label Content="{Binding ActualArea.JmenoLokace}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="55,0,0,0"/>
-                    <ComboBox x:Name="comboBoxArea" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" SelectionChanged="comboBoxArea_SelectionChanged"/>
+                    <ComboBox x:Name="comboBoxArea" SelectedItem="{Binding ActualArea.JmenoLokace,Mode=OneWay}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" SelectionChanged="comboBoxArea_SelectionChanged"/>
                     <GroupBox Header="Avatars in area" Margin="0,26,0,0" HorizontalAlignment="Left" Width="200">
-                        <ListBox ItemsSource="{Binding AktualniPostavy}" DisplayMemberPath="JmenoPostavy" SelectionChanged="AvatarInAreaSelected"/>
-                    </GroupBox>                    
+                        <ListBox x:Name="lbAktualniPostavy" ItemsSource="{Binding AktualniPostavy}" DisplayMemberPath="JmenoPostavy" SelectionChanged="AvatarInAreaSelected"/>
+                    </GroupBox>
+                    <GroupBox Header="Avatar info" Margin="200,26,0,0">
+                        <TextBox x:Name="tbInfoL" Text="{Binding InfoAvatar.Popis}"/>
+                    </GroupBox>
                 </Grid>
             </TabItem>
             <TabItem Header="Chat">
@@ -36,6 +39,10 @@
                     <GroupBox Header="Avatars" HorizontalAlignment="Left" Width="200">
                         <ListBox x:Name="lbPotkanePostavy" ItemsSource="{Binding PotkanePostavy}" DisplayMemberPath="JmenoPostavy" SelectionChanged="ListBoxAll_SelectionChanged"/>
                     </GroupBox>
+                    <GroupBox Header="Avatar info" Margin="200,0,0,25">
+                        <TextBox x:Name="tbInfoP" Text="{Binding InfoAvatar.Popis}"/>
+                    </GroupBox>
+                    <Button Content="Add to Chat" VerticalAlignment="Bottom" Click="addToChat" Height="25" Margin="200,0,0,0"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Games">

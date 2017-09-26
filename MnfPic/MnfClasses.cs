@@ -243,6 +243,9 @@ namespace MnfPic
     /// </summary>
     public class MnfAvatar : Avatar
     {
+        private string _Popis = "";
+        public string Popis { get { return _Popis; } set { _Popis = value; OnPropertyChanged("Popis"); } }
+
         public MnfAvatar()
         {
 

@@ -38,11 +38,12 @@ namespace MnfPic
         {
             InitializeComponent();
             DataContext = this;
-            foreach(var v in MnfArea.Lokace )
+            foreach (var v in MnfArea.Lokace)
             {
                 comboBoxArea.Items.Add(v.JmenoLokace);
             }
             if (!File.Exists("MeetPPL.txt")) File.Create("MeetPPL.txt").Close();
+            if (!File.Exists("ChatPPL.txt")) File.Create("ChatPPL.txt").Close();
             try
             {
                 StreamReader sr = new StreamReader("MeetPPL.txt");
@@ -62,8 +63,25 @@ namespace MnfPic
                     radek = sr.ReadLine();
                 }
                 sr.Close();
+                sr = new StreamReader("ChatPPL.txt");
+                radek = sr.ReadLine();
+                while (radek != null)
+                {
+                    var s = radek.Split(' ');
+                    MnfAvatar a = new MnfAvatar();
+                    try
+                    {
+                        a.AvatarID = int.Parse(s[0]);
+                        a.JmenoPostavy = s[1];
+                    }
+                    catch { }
+                    //neuplne info o postave
+                    ChatPostavy.Add(a);
+                    radek = sr.ReadLine();
+                }
+                sr.Close();
             }
-            catch(Exception e) { Console.WriteLine("Load PPL file error"); Console.WriteLine(e.Message); }
+            catch (Exception e) { Console.WriteLine("Load file error"); Console.WriteLine(e.Message); }
         }
         Stopwatch sw = new Stopwatch();
         Random r = new Random();
@@ -83,6 +101,15 @@ namespace MnfPic
             }
         }
         MnfAvatar ActivChatAvatar;
+        MnfAvatar _InfoAvatar;
+        public MnfAvatar InfoAvatar
+        {
+            get { return _InfoAvatar; }
+            set
+            {
+                if (value != _InfoAvatar) { _InfoAvatar = value; OnPropertyChanged("InfoAvatar"); }
+            }
+        }
         WebClient wc = new WebClient();
         private ObservableCollection<MnfAvatar> _PotkanePostavy = new ObservableCollection<MnfAvatar>();
         public ObservableCollection<MnfAvatar> PotkanePostavy
@@ -95,6 +122,12 @@ namespace MnfPic
         {
             get { return _AktualniPostavy; }
             set { _AktualniPostavy = value; OnPropertyChanged("AktualniPostavy"); }
+        }
+        private ObservableCollection<MnfAvatar> _ChatPostavy = new ObservableCollection<MnfAvatar>();
+        public ObservableCollection<MnfAvatar> ChatPostavy
+        {
+            get { return _ChatPostavy; }
+            set { _ChatPostavy = value; OnPropertyChanged("ChatPostavy"); }
         }
         bool Disconect = false;
         bool Disconect2 = false;
@@ -154,14 +187,26 @@ namespace MnfPic
                 sr.WriteLine(v.AvatarID + " " + v.JmenoPostavy);
             }
             sr.Close();
+            sr = new StreamWriter("ChatPPL.txt");
+            foreach (var v in ChatPostavy)
+            {
+                sr.WriteLine(v.AvatarID + " " + v.JmenoPostavy);
+            }
+            sr.Close();
 
             Disconect = true;
+            Disconect2 = true;
             if (MP == null) return;
+            lock(MP.Server.LockerChat)
             if (MP.Server.TC_chat.Connected) MP.Server.TC_chat.Close();
-            if (MP.Server.TC_area.Connected) MP.Server.TC_area.Close();
-            if (MP.Server.TC_game.Connected) MP.Server.TC_game.Close();
-            if (MP.Server.TC_top.Connected) MP.Server.TC_top.Close();
-            if (MP.Server.TC_policy.Connected) MP.Server.TC_policy.Close();
+            lock (MP.Server.LockerArea)
+                if (MP.Server.TC_area.Connected) MP.Server.TC_area.Close();
+            lock (MP.Server.LockerGame)
+                if (MP.Server.TC_game.Connected) MP.Server.TC_game.Close();
+            lock (MP.Server.LockerTop)
+                if (MP.Server.TC_top.Connected) MP.Server.TC_top.Close();
+            lock (MP.Server.LockerPolicy)
+                if (MP.Server.TC_policy.Connected) MP.Server.TC_policy.Close();
             sw.Stop();
             Console.WriteLine("Elapsed time " + sw.Elapsed);
             MP.Server.TC_chat = new TcpClient();
@@ -283,9 +328,17 @@ namespace MnfPic
                                         ma.ParseAvatar(vv[1].Replace("\"", "").Split('=')[1]);
                                         for (int p = 0; p < PotkanePostavy.Count; p++)
                                         {
-                                            if(PotkanePostavy[p].AvatarID==ma.AvatarID)
+                                            if (PotkanePostavy[p].AvatarID == ma.AvatarID)
                                             {
                                                 PotkanePostavy[p].ParseAvatar(vv[1].Replace("\"", "").Split('=')[1]);
+                                                int ind = 9;
+                                                if (!vv[ind].Contains("about=")) ind++;
+                                                var popis = vv[ind++].Replace("\"", "").Split('=')[1];
+                                                for (; ind < vv.Length-1; ind++)
+                                                {
+                                                    popis += " " + vv[ind].Replace("\"", "");
+                                                }
+                                                PotkanePostavy[p].Popis = popis;
                                                 //Dispatcher.BeginInvoke((Action)(() =>
                                                 //{
                                                 //    PotkanePostavy[p] = ma;
@@ -309,8 +362,14 @@ namespace MnfPic
                                         };
                                         if (ma.AvatarID == MP.Avatar.AvatarID)
                                         {
-                                            string text = vv[12].Replace("\"", "").Split('=')[1];
-                                            if (ActivChatAvatar.AvatarID == maTo.AvatarID)
+                                            int ind = 12;
+                                            string text = vv[ind++].Replace("\"", "").Split('=')[1];
+                                            for (; ind < vv.Length - 1; ind++)
+                                            {
+                                                text += " " + vv[ind].Replace("\"", "");
+                                            }
+                                            if (ActivChatAvatar != null)
+                                                if (ActivChatAvatar.AvatarID == maTo.AvatarID)
                                                 spHistory.Dispatcher.BeginInvoke((Action)(() =>
                                                 {
                                                     spHistory.Children.Add(new Label()
@@ -330,11 +389,12 @@ namespace MnfPic
                                                 case "":
                                                     int ind = 12;
                                                     string text = vv[ind++].Replace("\"", "").Split('=')[1];
-                                                    for (; ind < vv.Length; ind++)
+                                                    for (; ind < vv.Length-1; ind++)
                                                     {
                                                         text += " " + vv[ind].Replace("\"", "");
                                                     }
-                                                    if (ActivChatAvatar.AvatarID == ma.AvatarID)
+                                                    if (ActivChatAvatar != null)
+                                                        if (ActivChatAvatar.AvatarID == ma.AvatarID)
                                                         spHistory.Dispatcher.BeginInvoke((Action)(() =>
                                                         {
                                                             spHistory.Children.Add(new Label()
@@ -365,9 +425,15 @@ namespace MnfPic
                                         switch (type)
                                         {
                                             case "":
-                                                string text = vv[12].Replace("\"", "").Split('=')[1];
+                                                int ind = 12;
+                                                string text = vv[ind++].Replace("\"", "").Split('=')[1];
+                                                for (; ind < vv.Length - 1; ind++)
+                                                {
+                                                    text += " " + vv[ind].Replace("\"", "");
+                                                }
                                                 LogMsg(ma, text, true);
-                                                if (ActivChatAvatar.AvatarID == ma.AvatarID)
+                                                if (ActivChatAvatar != null)
+                                                    if (ActivChatAvatar.AvatarID == ma.AvatarID)
                                                     spHistory.Dispatcher.BeginInvoke((Action)(() =>
                                                     {
                                                         spHistory.Children.Add(new Label()
@@ -472,6 +538,7 @@ namespace MnfPic
 
     private void DataReaderArea()
         {
+            Disconect2 = false;
             try
             {
                 //lock (MP.Server.LockerArea)
@@ -496,14 +563,16 @@ namespace MnfPic
                         {
                             if (v.Contains(" "))
                             {
+                                int ind = 0;
                                 string[] vv = v.Split(' ');
-                                switch (vv[0])
+                                if (vv[ind] == "") ind++;
+                                switch (vv[ind++])
                                 {
                                     case "avatar":
-                                        if (vv[1].Contains("data"))
+                                        if (vv[ind].Contains("data"))
                                         {
                                             var avatar = new MnfAvatar();
-                                            avatar.ParseAvatar(vv[1].Replace("\"", "").Split('=')[1]);
+                                            avatar.ParseAvatar(vv[ind].Replace("\"", "").Split('=')[1]);
                                             var aap = (from f in PotkanePostavy where f.AvatarID == avatar.AvatarID select f).ToArray();
                                             if (aap.Length == 0)
                                             {
@@ -545,6 +614,7 @@ namespace MnfPic
         }
         private void DataReaderChat()
         {
+            Disconect2 = false;
             try
             {
                 //lock (MP.Server.LockerChat)
@@ -589,17 +659,12 @@ namespace MnfPic
                 }
             }
             catch { }
-            Disconect2 = false;
         }
 
         public void GoToArea(MnfLocation area)
         {
             Dispatcher.BeginInvoke((Action)(() => { AktualniPostavy.Clear(); }));
             Disconect2 = true;
-            if (MP.Server.TC_chat.Connected) MP.Server.TC_chat.Close();
-            if (MP.Server.TC_area.Connected) MP.Server.TC_area.Close();
-            MP.Server.TC_chat = new TcpClient();
-            MP.Server.TC_area = new TcpClient();
             string s;
             ActualArea = area;
             LastPoint = ActualArea.PortLokace;
@@ -608,9 +673,13 @@ namespace MnfPic
             s = "<data area_info=\"" + ActualArea.JmenoLokace + "\" />";
             NetworkStream ns = MP.Server.TC_top.GetStream();
             ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
-            
+
             lock (MP.Server.LockerChat)
+            {
+                if (MP.Server.TC_chat.Connected) MP.Server.TC_chat.Close();
+                MP.Server.TC_chat = new TcpClient();
                 if (!MP.Server.TC_chat.Connected) MP.Server.TC_chat.Connect(MP.Server.AdresaIP, MP.Server.chat_socket);
+            }
             s = MP.Avatar.AvatarID + "," + MP.Uzivatel.LoginPaswCrypted + "," + ActualArea.IdLokace + "," + MP.Server.Session_id + "," + MP.Avatar.userCT;
             //private s+= ",l";
             ns = MP.Server.TC_chat.GetStream();
@@ -618,7 +687,11 @@ namespace MnfPic
             new Thread(DataReaderChat).Start();
 
             lock (MP.Server.LockerArea)
+            {
+                if (MP.Server.TC_area.Connected) MP.Server.TC_area.Close();
+                MP.Server.TC_area = new TcpClient();
                 if (!MP.Server.TC_area.Connected) MP.Server.TC_area.Connect(MP.Server.AdresaIP, MP.Server.area_socket);
+            }
             s = "<data type=\"area\" avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" area_id=\"" + ActualArea.IdLokace + "\" points=\"" + (ActualArea.PortLokace.X + r.Next(-5, 5)) + "," + (ActualArea.PortLokace.Y + r.Next(-5, 5)) + "\" bed_ids =\"\" pole_ids=\"\" session_id=\"" + MP.Server.Session_id + "\" />";
             ns = MP.Server.TC_area.GetStream();
             ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
@@ -772,9 +845,9 @@ namespace MnfPic
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             spHistory.Children.Clear();
-            if (lbPotkanePostavy.SelectedIndex < 0)
+            if (lbChatPostavy.SelectedIndex < 0)
             { ActivChatAvatar = null; return; }
-            else ActivChatAvatar = PotkanePostavy[lbPotkanePostavy.SelectedIndex];
+            else ActivChatAvatar = ChatPostavy[lbChatPostavy.SelectedIndex];
             GetAvatarFullDetails(ActivChatAvatar.AvatarID);
             //if (!Directory.Exists("HistMsg")) Directory.CreateDirectory("HistMsg");
             //var fileName = "HistMsg\\" + ActivChatAvatar.AvatarID + "_" + ActivChatAvatar.JmenoPostavy + ".txt";
@@ -827,12 +900,29 @@ namespace MnfPic
 
         private void AvatarInAreaSelected(object sender, SelectionChangedEventArgs e)
         {
-
+            if (lbAktualniPostavy.SelectedIndex < 0) return;
+            MnfAvatar ma = AktualniPostavy[lbAktualniPostavy.SelectedIndex];
+            var v = (from f in PotkanePostavy where f.AvatarID == ma.AvatarID select f).ToArray();
+            if (v.Count() > 0)
+            {
+                InfoAvatar = v[0];
+                GetAvatarFullDetails(v[0].AvatarID);
+            }
         }
 
         private void ListBoxAll_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (lbPotkanePostavy.SelectedIndex < 0) return;
+            MnfAvatar ma = PotkanePostavy[lbPotkanePostavy.SelectedIndex];
+            InfoAvatar = ma;
+            GetAvatarFullDetails(ma.AvatarID);
+        }
 
+        private void addToChat(object sender, RoutedEventArgs e)
+        {
+            if (lbPotkanePostavy.SelectedIndex < 0) return;
+            MnfAvatar ma = PotkanePostavy[lbPotkanePostavy.SelectedIndex];
+            ChatPostavy.Add(ma);
         }
         //public bool Game(int id)
         //{
