@@ -252,15 +252,15 @@ namespace MnfPic
 
                         //ns = MP.Server.TC_top.GetStream();
                         ns.ReadTimeout = 500;
-                        byte[] b = new byte[65535];
+                        byte[] b = new byte[16777216];
                         int i = ns.Read(b, 0, b.Length);
                         s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
                         if (s != "") Console.WriteLine("T: " + s);
                         ss = s.Replace("\0","").Replace("<", "").Split('>');
                         foreach (var v in ss)
                         {
-                            if (v.Contains(" "))
-                            {
+                            //if (v.Contains(" "))
+                            //{
                                 string[] vv = v.Split(' ');
                                 switch (vv[0])
                                 {
@@ -316,6 +316,9 @@ namespace MnfPic
                                         break;
                                     case "friends_list":
                                     case "friends_page":
+                                        StreamWriter swfl = new StreamWriter("FriendList.txt");
+                                        swfl.WriteLine(s);
+                                        swfl.Close();
                                         break;
                                     case "invite":
                                         break;
@@ -370,15 +373,19 @@ namespace MnfPic
                                             }
                                             if (ActivChatAvatar != null)
                                                 if (ActivChatAvatar.AvatarID == maTo.AvatarID)
-                                                spHistory.Dispatcher.BeginInvoke((Action)(() =>
                                                 {
-                                                    spHistory.Children.Add(new Label()
+                                                    spHistory.Dispatcher.BeginInvoke((Action)(() =>
                                                     {
-                                                        Content = text,
-                                                        HorizontalAlignment = HorizontalAlignment.Right,
-                                                        Background = Brushes.LightBlue,
-                                                    });
-                                                }));
+                                                        spHistory.Children.Add(new Label()
+                                                        {
+                                                            Content = text,
+                                                            HorizontalAlignment = HorizontalAlignment.Right,
+                                                            Background = Brushes.LightBlue,
+                                                        });
+                                                    }));
+                                                    svHistory.ScrollToBottom();
+                                                    //DeliveryApprove(MP.Avatar.AvatarID);
+                                                }
                                         }
                                         else
                                         {
@@ -395,15 +402,19 @@ namespace MnfPic
                                                     }
                                                     if (ActivChatAvatar != null)
                                                         if (ActivChatAvatar.AvatarID == ma.AvatarID)
-                                                        spHistory.Dispatcher.BeginInvoke((Action)(() =>
                                                         {
-                                                            spHistory.Children.Add(new Label()
+                                                            spHistory.Dispatcher.BeginInvoke((Action)(() =>
                                                             {
-                                                                Content = text,
-                                                                HorizontalAlignment = HorizontalAlignment.Left,
-                                                                Background = Brushes.LightPink,
-                                                            });
-                                                        }));
+                                                                spHistory.Children.Add(new Label()
+                                                                {
+                                                                    Content = text,
+                                                                    HorizontalAlignment = HorizontalAlignment.Left,
+                                                                    Background = Brushes.LightPink,
+                                                                });
+                                                            }));
+                                                            svHistory.ScrollToBottom();
+                                                            //DeliveryApprove(MP.Avatar.AvatarID);
+                                                        }
                                                     break;
                                             }
                                         }
@@ -434,16 +445,20 @@ namespace MnfPic
                                                 LogMsg(ma, text, true);
                                                 if (ActivChatAvatar != null)
                                                     if (ActivChatAvatar.AvatarID == ma.AvatarID)
-                                                    spHistory.Dispatcher.BeginInvoke((Action)(() =>
                                                     {
-                                                        spHistory.Children.Add(new Label()
+                                                        spHistory.Dispatcher.BeginInvoke((Action)(() =>
                                                         {
-                                                            Content = text,
-                                                            HorizontalAlignment = HorizontalAlignment.Left,
-                                                            Background = Brushes.LightPink,
-                                                        });
-                                                    }));
-                                                break;
+                                                            spHistory.Children.Add(new Label()
+                                                            {
+                                                                Content = text,
+                                                                HorizontalAlignment = HorizontalAlignment.Left,
+                                                                Background = Brushes.LightPink,
+                                                            });
+                                                        }));
+                                                        svHistory.ScrollToBottom();
+                                                        DeliveryApprove(MP.Avatar.AvatarID);
+                                                    }
+                                                        break;
                                         }
                                         break;
                                     case "unread_msgs_data":
@@ -527,7 +542,7 @@ namespace MnfPic
                                 }
                             }
                         }
-                    }
+                    //}
                     catch { }
                 }
 
@@ -786,7 +801,7 @@ namespace MnfPic
             NetworkStream ns = MP.Server.TC_top.GetStream();
             ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
         }
-        public void RemoceFriend(int AvatarID)
+        public void RemoveFriend(int AvatarID)
         {
             //_root.top_socket.send("<data private_message=\"delivery_approve\" id_from=\"" + _loc4_.id + "\" />");
             lock (MP.Server.LockerTop)
@@ -923,6 +938,119 @@ namespace MnfPic
             if (lbPotkanePostavy.SelectedIndex < 0) return;
             MnfAvatar ma = PotkanePostavy[lbPotkanePostavy.SelectedIndex];
             ChatPostavy.Add(ma);
+        }
+
+        private void getList(object sender, RoutedEventArgs e)
+        {
+            string s;
+            lock (MP.Server.LockerTop)
+                if (!MP.Server.TC_top.Connected) MP.Server.TC_top.Connect(MP.Server.AdresaIP, MP.Server.top_socket);
+            //<data points="700.96,605.23,948,631" />
+            s = "<data friends_list=\"1\" />";
+            NetworkStream ns = MP.Server.TC_top.GetStream();
+            ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+        }
+        
+        private void BeachGameClick(object sender, RoutedEventArgs e)
+        {
+            int id = 2;
+            string s;
+            if (MP.Server.TC_game.Connected) MP.Server.TC_game.Close();
+
+            MP.Server.TC_game = new TcpClient();
+            if (!MP.Server.TC_game.Connected) MP.Server.TC_game.Connect(MP.Server.AdresaIP, MP.Server.game_socket);
+
+            s = "<data avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" game_id=\"" + id + "\" session_id=\"" + MP.Server.Session_id + "\" />";
+            NetworkStream ns = MP.Server.TC_game.GetStream();
+            ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+
+            s = "<data cash_display = '1' />";
+            ns = MP.Server.TC_top.GetStream();
+            ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+            ns.ReadTimeout = 1000;
+            byte[] b = new byte[65535];
+            int i = ns.Read(b, 0, b.Length);
+            s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
+
+            string[] ss = s.Split('\"');
+            Console.WriteLine("Cash " + ss[1]);
+
+            try
+            {
+                s = "<data status=\"start\" />";
+                ns = MP.Server.TC_game.GetStream();
+                ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+                ns.ReadTimeout = 1000;
+                b = new byte[65535];
+                i = ns.Read(b, 0, b.Length);
+                s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
+            }
+            catch {  }
+            ss = s.Split('\"');
+            if (ss[1] != "1") ;// return true;
+            //hra zacala
+            List<int> body = new List<int>() { 10, 15 };//, 20, 30 };//, 30, 45, 60, 80, 90, 100 };
+            Random r = new Random();
+            //h==75
+            int h = 0;
+            int multiple = 1;
+            while (true)
+            {
+                //    s = "<clean_area area_id=\"2000400000\" />";
+                //    s = "<clean_area area_id=\"1800900000\" />";
+                //    s = "<clean_area area_id=\"4600300000\" />";
+                //    s = "<clean_area area_id=\"2200600000\" />";
+                //    s = "<clean_area area_id=\"4900700000\" />";
+                //    s = "<clean_area area_id=\"4900100000\" />";
+                //    s = "<clean_area area_id=\"2000100000\" />";
+                //    s = "<clean_area area_id=\"2000300000\" />";
+                //    s = "<clean_area area_id=\"4800800000\" />";
+
+                ns = MP.Server.TC_top.GetStream();
+                ns.ReadTimeout = 1000;
+                b = new byte[65535];
+                try
+                {
+                    i = ns.Read(b, 0, b.Length);
+                    s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
+                    Console.WriteLine(s);
+                }
+                catch (Exception ex)
+                {
+                    //Console.WriteLine(ex.Message);
+                }
+                int rn = r.Next(0, 101);
+                if (rn > 60) multiple += multiple >= 4 ? 0 : 1;
+                else if (rn < 40) multiple -= multiple <= 1 ? 0 : 1;
+                s = "<data scores=\"" + body[r.Next(body.Count)] * multiple + "\" />";
+                Console.WriteLine(h++ + " " + s);
+                if (h == 10) body.Add(20);
+                else if (h == 30) body.Add(30);
+                ns = MP.Server.TC_game.GetStream();
+                ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+                ns.ReadTimeout = 1000;
+                b = new byte[65535];
+                try
+                {
+                    i = ns.Read(b, 0, b.Length);
+                }
+                catch (Exception ex)
+                {
+                    //Console.WriteLine(ex.Message);
+                }
+                s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
+
+                //if (h == 45) body.Add(30);
+
+                ss = s.Split(' ');
+                if (ss[0] == "<game_over") break;
+                Thread.Sleep(r.Next(3000, 4000));
+            }
+            //TC_top.Close();
+            //TC_game.Close();
+            ss = s.Split('\'');
+            Console.WriteLine("result " + ss[1]);
+
         }
         //public bool Game(int id)
         //{

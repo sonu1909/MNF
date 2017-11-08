@@ -18,16 +18,10 @@ namespace MnfPic
             new MnfLocation("MnF Alley",new Point(407.8,247.95),000000000),
             new MnfLocation("Wild West",new Point(341.05,297.1),100000000),
             new MnfLocation("MnF Alley / Mme Olivia`s Private Club",new Point(317.95,191.35),200000000),
-            new MnfLocation("MnF Alley / Hair Salon",new Point(629.55, 238.55),300000000),//portplace?
             new MnfLocation("Lagoon Beach",new Point(641,473.85),400000000),
             new MnfLocation("Sacred Mountain",new Point(356.2,1146.3),500000000),
-            new MnfLocation("Private Club / Room #1",new Point(629.55, 238.55),600000000),//portplace?
-            new MnfLocation("Private Club / Room #2",new Point(629.55, 238.55),700000000),//portplace?
-            new MnfLocation("Private Club / Room #3",new Point(629.55, 238.55),800000000),//portplace?
-            new MnfLocation("Private Club / Room #4",new Point(629.55, 238.55),900000000),//portplace?
             new MnfLocation("Wild West / Saloon",new Point(787.2,748.2),1000000000),
             new MnfLocation("Wild West / Motel Lobby",new Point(436.1,466.1),1100000000),
-            new MnfLocation("Lagoon Beach / Dr.Boobige`s Clinic",new Point(629.55, 238.55),1200000000),//portplace?
             new MnfLocation("Wild West / Motel / Block A",new Point(1306.3,490.9),1300000000),
             new MnfLocation("Wild West / Motel / Block B",new Point(1306.3,490.9),1400000000),
             new MnfLocation("Wild West / Motel / Block C",new Point(1306.3,490.9),1500000000),
@@ -50,7 +44,6 @@ namespace MnfPic
             new MnfLocation("Meadows Park / Museum of Sex Art / Monthly Best",new Point(165.25,498.4),3200000000),
             new MnfLocation("Meadows Park / Museum of Sex Art / All Time Best",new Point(165.25,498.4),3300000000),
             new MnfLocation("Petnis Forest",new Point(142.15,616.6),3400000000),
-            new MnfLocation("Petnis Forest / Petnis Shack",new Point(629.55, 238.55),3500000000),//portplace?
             new MnfLocation("Sacred Mountain / Cave",new Point(185.55,102.55),3600000000),
             new MnfLocation("Waterfall",new Point(1068,704.2),3700000000),
             new MnfLocation("MnF Metropolis",new Point(404.7,406.1),3800000000),
@@ -78,10 +71,19 @@ namespace MnfPic
             new MnfLocation("Southern MnF",new Point(740.8,452.9),6000000000),
             new MnfLocation("Southern MnF / Jail",new Point(519.15,953.25),6100000000),
             new MnfLocation("Southern MnF / MNF National Bank",new Point(416.2,726),6200000000),
-            new MnfLocation("Shower bed manager - virtual location",new Point(629.55, 238.55),6300000000),//portplace?
             new MnfLocation("Southern MnF / Apartments",new Point(339.1,477.7),6400000000),            
         };
-        
+        public static List<MnfLocation> LokaceS = new List<MnfLocation>()
+        {
+            new MnfLocation("MnF Alley / Hair Salon",new Point(629.55, 238.55),300000000),//portplace?
+            new MnfLocation("Private Club / Room #1",new Point(629.55, 238.55),600000000),//portplace?
+            new MnfLocation("Private Club / Room #2",new Point(629.55, 238.55),700000000),//portplace?
+            new MnfLocation("Private Club / Room #3",new Point(629.55, 238.55),800000000),//portplace?
+            new MnfLocation("Private Club / Room #4",new Point(629.55, 238.55),900000000),//portplace?
+            new MnfLocation("Lagoon Beach / Dr.Boobige`s Clinic",new Point(629.55, 238.55),1200000000),//portplace?
+            new MnfLocation("Petnis Forest / Petnis Shack",new Point(629.55, 238.55),3500000000),//portplace?
+            new MnfLocation("Shower bed manager - virtual location",new Point(629.55, 238.55),6300000000),//portplace?
+        };
         public static List<int> StartID = new List<int>() { 0, 1, 4, 5, 25, 34, 37, 38, 54, 57, 60};
     }
 }

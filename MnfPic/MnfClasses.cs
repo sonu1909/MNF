@@ -24,16 +24,79 @@ namespace MnfPic
         //    get { return _Heslo; }
         //    set { _Heslo = value; OnPropertyChanged("HesloUzivatele"); }
         //}
-        public string JmenoUzivatele { get; set; }
-        public string HesloUzivatele { get; set; }
+        private string _JmenoUzivatele = "";
+        public string JmenoUzivatele
+        {
+            get { return _JmenoUzivatele; }
+            set
+            {
+                _JmenoUzivatele = value;
+                OnPropertyChanged("JmenoUzivatele");
+            }
+        }
+        private string _HesloUzivatele = "";
+        public string HesloUzivatele
+        {
+            get { return _HesloUzivatele; }
+            set
+            {
+                _HesloUzivatele = value;
+                OnPropertyChanged("HesloUzivatele");
+            }
+        }
     }
     public class MnfUzivatel : ANotify
     {
-        public int UserID { get; set; }
-        public int premium { get; set; }
-        public int premium_notification { get; set; }
-        public int overcrowder { get; set; }
-        public string LoginPaswCrypted { get; set; }
+        int _UserID = 0;
+        public int UserID
+        {
+            get { return _UserID; }
+            set
+            {
+                _UserID = value;
+                OnPropertyChanged("UserID");
+            }
+        }
+        int _premium = 0;
+        public int premium
+        {
+            get { return _premium; }
+            set
+            {
+                _premium = value;
+                OnPropertyChanged("premium");
+            }
+        }
+        int _premium_notification = 0;
+        public int premium_notification
+        {
+            get { return _premium_notification; }
+            set
+            {
+                _premium_notification = value;
+                OnPropertyChanged("premium_notification");
+            }
+        }
+        int _overcrowder = 0;
+        public int overcrowder
+        {
+            get { return _overcrowder; }
+            set
+            {
+                _overcrowder = value;
+                OnPropertyChanged("overcrowder");
+            }
+        }
+        string _LoginPaswCrypted = "";
+        public string LoginPaswCrypted
+        {
+            get { return _LoginPaswCrypted; }
+            set
+            {
+                _LoginPaswCrypted = value;
+                OnPropertyChanged("LoginPaswCrypted");
+            }
+        }
     }
     /// <summary>
     /// postava uzivatele

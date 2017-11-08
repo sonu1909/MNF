@@ -64,3 +64,8 @@ T: <delivery_approve id_to="99742" />
 avatar_details data="99742,VzoreCZEk,1,2,2,8,1,38,1,2,2,1,1,2,6,3,1,4,3,1,3,1,1,9,227/252/176,18686,2686,38,GirlsTrueLove,0,1,1,0,0,3,38,38,0,1" friend="false" status="offline" info="" is_ignoring_you="0" cash="0" dont_disturb="0" from="Czech Republic" about="I like sEXP! and chat
 26, M 
 looking for friends" /
+
+
+C: <message id="8883059" name="Melily" color="191/252/176" text="*rougis*"></message>
+
+http://www.mnfclub.com/files/property_bgs/bg6408017363.jpg
