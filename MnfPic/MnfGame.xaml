@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MnfPic"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="360" d:DesignWidth="640">
     <Grid>
         <TabControl>
             <TabItem Header="Location">
@@ -23,15 +23,24 @@
             </TabItem>
             <TabItem Header="Chat">
                 <Grid>
-                    <GroupBox Header="Avatars" HorizontalAlignment="Left" Width="100">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="200*"/>
+                        <ColumnDefinition Width="250"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="Avatars" Margin="0,0,0.2,30">
                         <ListBox x:Name="lbChatPostavy" ItemsSource="{Binding ChatPostavy}" DisplayMemberPath="JmenoPostavy" SelectionChanged="ListBox_SelectionChanged"/>
                     </GroupBox>
-
-                    <Button Content="Send" Width="50" HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="SendClick"/>
-                    <TextBox x:Name="tbChat" Height="25" Margin="100,0,50,0" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom"/>
-                    <ScrollViewer x:Name="svHistory" Margin="100,0,0,25">
-                        <StackPanel x:Name="spHistory"/>
-                    </ScrollViewer>
+                    <Button Content="Send" Width="151" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Click="SendClick" Margin="0,0,0,5"/>
+                    <GroupBox Header="Chat" Grid.Column="1">
+                        <Grid>
+                            <TextBox x:Name="tbChat" Height="54" Margin="0,0,0,-0.4" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" AcceptsReturn="True"/>
+                            <ScrollViewer x:Name="svHistory" Margin="1,0,0,53.6">
+                                <StackPanel x:Name="spHistory"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </GroupBox>
+                    <local:ControlTranslator Grid.Column="2"/>
                 </Grid>
             </TabItem>
             <TabItem Header="People">
@@ -47,13 +56,34 @@
             </TabItem>
             <TabItem Header="Games">
                 <Grid>
-                    <Button Content="Beach Game" Click="BeachGameClick" HorizontalAlignment="Left" Width="100" Height="25" VerticalAlignment="Top"/>
+                    <Button Content="Start Game" Click="BeachGameClick" HorizontalAlignment="Left" Width="100" Height="24" VerticalAlignment="Top" Margin="0,34,0,0"/>
+                    <Button Content="Stop Game" Click="StopGameClick" HorizontalAlignment="Left" Width="100" Height="24" VerticalAlignment="Top" Margin="0,116,0,0"/>
+                    <CheckBox Content="Repeat" Width="100" Margin="196,7,0,0" IsChecked="{Binding GameRepeat}" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top"/>
+                    <CheckBox Content="IsBusy" Width="100" Margin="121,120,0,0" IsChecked="{Binding GameBW.IsBusy,Mode=OneWay}" IsEnabled="False" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top"/>
+                    <ComboBox HorizontalAlignment="Left" Margin="44,5,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="{Binding GameID}">
+                        <ComboBoxItem>None</ComboBoxItem>
+                        <ComboBoxItem>Non</ComboBoxItem>
+                        <ComboBoxItem>Beach Game</ComboBoxItem>
+                        <ComboBoxItem>Non</ComboBoxItem>
+                        <ComboBoxItem>Non</ComboBoxItem>
+                    </ComboBox>
+                    <Label Content="Game:" HorizontalAlignment="Left" Margin="0,3,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Money:" HorizontalAlignment="Left" Margin="196,34,0,0" VerticalAlignment="Top"/>
+                    <Label Content="{Binding AvatarMoney}" HorizontalAlignment="Left" Margin="240,34,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Friends">
                 <Grid>
                     <Button Content="Get list" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="getList"/>
 
+                </Grid>
+            </TabItem>
+            <TabItem Header="Pictures">
+                <Grid>
+                    <Button Content="Get picture" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="getPicture"/>
+                    <CheckBox Content="Save picutre" HorizontalAlignment="Left" Margin="99,3,0,0" VerticalAlignment="Top" IsChecked="{Binding SavePicture}"/>
+                    <Label Content="Images:" Margin="0,25,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Label Content="{Binding SavedPictures}" Margin="51,25,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                 </Grid>
             </TabItem>
         </TabControl>

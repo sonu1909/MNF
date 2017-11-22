@@ -19,7 +19,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Xml;
 
 namespace MnfPic
 {
@@ -82,7 +82,16 @@ namespace MnfPic
                 sr.Close();
             }
             catch (Exception e) { Console.WriteLine("Load file error"); Console.WriteLine(e.Message); }
+            //GameBW = new BackgroundWorker();
+            GameBW.WorkerSupportsCancellation = true;
+            GameBW.DoWork += GameBW_DoWork;
+            GameBW.RunWorkerCompleted += GameBW_RunWorkerCompleted;
+
+            PictureBW.WorkerSupportsCancellation = true;
+            PictureBW.DoWork += PictureBW_DoWork;
+            //PictureBW.RunWorkerCompleted += GameBW_RunWorkerCompleted;
         }
+        
         Stopwatch sw = new Stopwatch();
         Random r = new Random();
         private MnfPlayer _MP;
@@ -131,6 +140,50 @@ namespace MnfPic
         }
         bool Disconect = false;
         bool Disconect2 = false;
+        bool Disconect3 = false;
+
+        private int _GameID = 2;
+        public int GameID
+        {
+            get { return _GameID; }
+            set { if (_GameID != value) { _GameID = value; OnPropertyChanged("GameID"); } }
+        }
+        private int _AvatarMoney = 0;
+        public int AvatarMoney
+        {
+            get { return _AvatarMoney; }
+            set { if (_AvatarMoney != value) { _AvatarMoney = value; OnPropertyChanged("AvatarMoney"); } }
+        }
+
+        private bool _GameRepeat = true;
+        public bool GameRepeat
+        {
+            get { return _GameRepeat; }
+            set { if (_GameRepeat != value) { _GameRepeat = value; OnPropertyChanged("GameRepeat"); } }
+        }
+
+        private bool _SavePicture = false;
+        public bool SavePicture
+        {
+            get { return _SavePicture; }
+            set { if (_SavePicture != value) { _SavePicture = value; OnPropertyChanged("SavePicture"); } }
+        }
+        private string _ActualPicture = "";
+        public string ActualPicture
+        {
+            get { return _ActualPicture; }
+            set { if (_ActualPicture != value) { _ActualPicture = value; OnPropertyChanged("ActualPicture"); } }
+        }
+        private int _SavedPictures = 0;
+        public int SavedPictures
+        {
+            get { return _SavedPictures; }
+            set { if (_SavedPictures != value) { _SavedPictures = value; OnPropertyChanged("SavedPictures"); } }
+        }
+        BackgroundWorker _GameBW = new BackgroundWorker();
+        public BackgroundWorker GameBW { get { return _GameBW; } private set { _GameBW = value; } }
+        BackgroundWorker _PictureBW = new BackgroundWorker();
+        public BackgroundWorker PictureBW { get { return _PictureBW; } private set { _PictureBW = value; } }
         public void Init(MnfPlayer mp)
         {
             Disconect = false;
@@ -197,16 +250,11 @@ namespace MnfPic
             Disconect = true;
             Disconect2 = true;
             if (MP == null) return;
-            lock(MP.Server.LockerChat)
-            if (MP.Server.TC_chat.Connected) MP.Server.TC_chat.Close();
-            lock (MP.Server.LockerArea)
-                if (MP.Server.TC_area.Connected) MP.Server.TC_area.Close();
-            lock (MP.Server.LockerGame)
-                if (MP.Server.TC_game.Connected) MP.Server.TC_game.Close();
-            lock (MP.Server.LockerTop)
-                if (MP.Server.TC_top.Connected) MP.Server.TC_top.Close();
-            lock (MP.Server.LockerPolicy)
-                if (MP.Server.TC_policy.Connected) MP.Server.TC_policy.Close();
+            lock(MP.Server.LockerChat)  if (MP.Server.TC_chat.Connected) MP.Server.TC_chat.Close();
+            lock (MP.Server.LockerArea) if (MP.Server.TC_area.Connected) MP.Server.TC_area.Close();
+            lock (MP.Server.LockerGame) if (MP.Server.TC_game.Connected) MP.Server.TC_game.Close();
+            lock (MP.Server.LockerTop) if (MP.Server.TC_top.Connected) MP.Server.TC_top.Close();
+            lock (MP.Server.LockerPolicy) if (MP.Server.TC_policy.Connected) MP.Server.TC_policy.Close();
             sw.Stop();
             Console.WriteLine("Elapsed time " + sw.Elapsed);
             MP.Server.TC_chat = new TcpClient();
@@ -236,88 +284,71 @@ namespace MnfPic
                 string[] ss = s.Split('&');
                 if (ss[1].Split('=')[1] != "1") { throw new Exception("nelze se pripojit!!\n" + s); }
 
-                lock (MP.Server.LockerTop)
-                    if (!MP.Server.TC_top.Connected) MP.Server.TC_top.Connect(MP.Server.AdresaIP, MP.Server.top_socket);
-                s = "<data avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" />";
-                NetworkStream ns = MP.Server.TC_top.GetStream();
-                ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+                //lock (MP.Server.LockerTop)
+                //    if (!MP.Server.TC_top.Connected) MP.Server.TC_top.Connect(MP.Server.AdresaIP, MP.Server.top_socket);
+                //s = "<data avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" />";
+                //NetworkStream ns = MP.Server.TC_top.GetStream();
+                //ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+                XmlReaderSettings settings = new XmlReaderSettings
+                {
+                    ConformanceLevel = ConformanceLevel.Fragment,
+                    //CheckCharacters = false,
+                };
+                settings.ValidationEventHandler += Settings_ValidationEventHandler;
 
                 while (!Disconect)
                 {
                     try
                     {
-                        //lock (MP.Server.LockerTop)
-                        //    if (!MP.Server.TC_top.Connected) MP.Server.TC_top.Connect(MP.Server.AdresaIP, MP.Server.top_socket);
-                        //if (!TC_game.Connected) TC_game.Connect(AdresaIP, game_socket);
-
-                        //ns = MP.Server.TC_top.GetStream();
+                        lock (MP.Server.LockerTop)
+                            if (!MP.Server.TC_top.Connected) MP.Server.TC_top.Connect(MP.Server.AdresaIP, MP.Server.top_socket);
+                        s = "<data avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" />";
+                        NetworkStream ns = MP.Server.TC_top.GetStream();
+                        ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
                         ns.ReadTimeout = 500;
+                        //XmlReader XR = XmlReader.Create(ns, settings);
+                        ns = MP.Server.TC_top.GetStream();
                         byte[] b = new byte[16777216];
                         int i = ns.Read(b, 0, b.Length);
                         s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
                         if (s != "") Console.WriteLine("T: " + s);
-                        ss = s.Replace("\0","").Replace("<", "").Split('>');
+                        ss = s.Replace("\0", "").Replace("<", "").Split('>');
+                        XmlReader XR = null;
                         foreach (var v in ss)
+                        //while (XR.Read())
                         {
-                            //if (v.Contains(" "))
-                            //{
+                            if (v != "")
+                            {
                                 string[] vv = v.Split(' ');
                                 switch (vv[0])
                                 {
                                     case "base_data":
-                                        // <base_data server_time="1505856554000" session_id="f30af43a5ace1c4f1dbb6ac7001c2971" ignore_ids="" avatar_data="2844033,YourSexDreams,2,1,2,8,3,26,33,2,3,2,2,1,6,2,1,5,3,2,2,2,4,2,195/176/252,225,225,-1,,0,0,1,0,0,1,0,0,0,1"></base_data>
-                                        MP.Server.Server_time = DateTime.FromBinary(long.Parse(vv[1].Replace("\"", "").Split('=')[1]));
+                                        XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
+                                        XR.Read();
+                                        MP.Server.Server_time = DateTime.FromBinary(long.Parse(XR.GetAttribute("server_time")));
                                         sw.Restart();
                                         Console.WriteLine("Server_time: " + MP.Server.Server_time);
-
-                                        MP.Server.Session_id = vv[2].Replace("\"", "").Split('=')[1];
+                                        MP.Server.Session_id = XR.GetAttribute("session_id");
                                         Console.WriteLine("Session_id: " + MP.Server.Session_id);
-
-                                        Random r = new Random();
-                                        //GoToArea(MnfArea.Lokace[25]);
-                                        GoToArea(MnfArea.Lokace[MnfArea.StartID[r.Next(MnfArea.StartID.Count)]]);
-                                        /* var _loc5_ = xml.childNodes[_loc3_];
-             var _loc6_ = 0;
-             while(_loc6_ < _loc5_.childNodes.length)
-             {
-                if(_loc5_.childNodes[_loc6_].nodeName == "unread_msgs_data")
-                {
-                   var _loc14_ = Number(_loc5_.childNodes[_loc6_].attributes.avatar_id);
-                   var _loc13_ = Number(_loc5_.childNodes[_loc6_].attributes.msgs_num);
-                   unread_msgs_datas.push(new UnreadMsgsData(_loc14_,_loc13_));
-                }
-                _loc6_ = _loc6_ + 1;
-             }
-             ignore_ids = xml.childNodes[_loc3_].attributes.ignore_ids.split(",");
-             var _loc7_ = 0;
-             while(_loc7_ < ignore_ids.length)
-             {
-                ignore_ids[_loc7_] = Number(ignore_ids[_loc7_]);
-                _loc7_ = _loc7_ + 1;
-             }
-             server_time = Number(xml.childNodes[_loc3_].attributes.server_time);
-             initial_time = server_time - getTimer();
-             session_id = xml.childNodes[_loc3_].attributes.session_id;
-             _root.avatar_data = new AvatarData(false,xml.childNodes[_loc3_].attributes.avatar_data);
-             if(!_root.premium && _root.avatar_data.premium == "1" || _root.premium && _root.avatar_data.premium == "0")
-             {
-                FailReport("Account premium status has been changed. Game needs to be restarted.");
-                return undefined;
-             }
-             drop_area_id = drop_area_ids[random(drop_area_ids.length)];
-             if(_root.avatar_data.icon_id == 3)
-             {
-                gotoArea(6000000000,60,WalkPort.TYPE_AREA);
-             }
-             else
-             {
-                gotoArea(drop_area_id * 100000000,drop_area_id,WalkPort.TYPE_AREA);
-             }*/
+                                        XR.GetAttribute("ignore_ids");
+                                        XR.GetAttribute("avatar_data");
+                                        //Random r = new Random();
+                                        GoToArea(MnfArea.Lokace[MnfArea.StartID[r.Next(MnfArea.StartID.Count - 1)]]);
+                                        //XR.Read();
                                         break;
+                                    //case "unread_msgs_data":
+                                    //    XR.GetAttribute("avatar_id");
+                                    //    XR.GetAttribute("msgs_num");
+                                    //    break;
                                     case "friends_list":
                                     case "friends_page":
                                         StreamWriter swfl = new StreamWriter("FriendList.txt");
-                                        swfl.WriteLine(s);
+                                        //XR.Read();
+                                        //while (XR.Name == "avatar")
+                                        //{
+                                        //    swfl.WriteLine(XR.GetAttribute("data"));
+                                        //    XR.Read();
+                                        //}
                                         swfl.Close();
                                         break;
                                     case "invite":
@@ -327,92 +358,93 @@ namespace MnfPic
                                     case "invite_canceled":
                                         break;
                                     case "avatar_details":
+                                        //avatar_details data="99742,VzoreCZEk,1,2,2,8,1,38,1,2,2,1,1,2,6,3,1,4,3,1,3,1,1,9,227/252/176,18686,2686,38,GirlsTrueLove,0,1,1,0,0,3,38,38,0,1" friend="false" status="offline" info="" is_ignoring_you="0" cash="0" dont_disturb="0" from="Czech Republic" about="I like sEXP! and chat                              
+                                        XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(s)), settings);
+                                        XR.Read();
                                         MnfAvatar ma = new MnfAvatar();
-                                        ma.ParseAvatar(vv[1].Replace("\"", "").Split('=')[1]);
+                                        ma.ParseAvatar(XR.GetAttribute("data"));
+                                        XR.GetAttribute("friend");
+                                        XR.GetAttribute("status");
+                                        XR.GetAttribute("info");
+                                        XR.GetAttribute("is_ignoring_you");
+                                        XR.GetAttribute("cash");
+                                        XR.GetAttribute("dont_disturb");
+                                        XR.GetAttribute("from");
+                                        XR.GetAttribute("about");
+
                                         for (int p = 0; p < PotkanePostavy.Count; p++)
                                         {
                                             if (PotkanePostavy[p].AvatarID == ma.AvatarID)
                                             {
-                                                PotkanePostavy[p].ParseAvatar(vv[1].Replace("\"", "").Split('=')[1]);
-                                                int ind = 9;
-                                                if (!vv[ind].Contains("about=")) ind++;
-                                                var popis = vv[ind++].Replace("\"", "").Split('=')[1];
-                                                for (; ind < vv.Length-1; ind++)
-                                                {
-                                                    popis += " " + vv[ind].Replace("\"", "");
-                                                }
-                                                PotkanePostavy[p].Popis = popis;
-                                                //Dispatcher.BeginInvoke((Action)(() =>
-                                                //{
-                                                //    PotkanePostavy[p] = ma;
-                                                //    lbPotkanePostavy.SelectedIndex = p;
-                                                //}));
+                                                PotkanePostavy[p].ParseAvatar(XR.GetAttribute("data"));
+                                                PotkanePostavy[p].Popis = XR.GetAttribute("about");
                                                 break;
                                             }
                                         }
                                         break;
                                     case "msg":
-                                        var msgID = vv[1].Replace("\"", "").Split('=')[1];
+                                        //<private_msg id="1152019023" id_from="2844033" id_to="99742" name_from="YourSexDreams" name_to="VzoreCZEk" date_time="09/23/17 8:54 am" read="0" type="" text="ahojik" />
+                                        XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
+                                        XR.Read();
+                                        var msgID = XR.GetAttribute("id");
                                         ma = new MnfAvatar()
                                         {
-                                            AvatarID = int.Parse(vv[2].Replace("\"", "").Split('=')[1]),
-                                            JmenoPostavy = vv[4].Replace("\"", "").Split('=')[1],
+                                            AvatarID = int.Parse(XR.GetAttribute("id_from")),
+                                            JmenoPostavy = XR.GetAttribute("name_from")
                                         };
                                         MnfAvatar maTo = new MnfAvatar()
                                         {
-                                            AvatarID = int.Parse(vv[3].Replace("\"", "").Split('=')[1]),
-                                            JmenoPostavy = vv[5].Replace("\"", "").Split('=')[1],
+                                            AvatarID = int.Parse(XR.GetAttribute("id_to")),
+                                            JmenoPostavy = XR.GetAttribute("name_to")
                                         };
+                                        XR.GetAttribute("date_time");
+                                        XR.GetAttribute("read");
                                         if (ma.AvatarID == MP.Avatar.AvatarID)
                                         {
-                                            int ind = 12;
-                                            string text = vv[ind++].Replace("\"", "").Split('=')[1];
-                                            for (; ind < vv.Length - 1; ind++)
-                                            {
-                                                text += " " + vv[ind].Replace("\"", "");
-                                            }
+                                            string text = XR.GetAttribute("text");
                                             if (ActivChatAvatar != null)
                                                 if (ActivChatAvatar.AvatarID == maTo.AvatarID)
                                                 {
                                                     spHistory.Dispatcher.BeginInvoke((Action)(() =>
                                                     {
-                                                        spHistory.Children.Add(new Label()
+                                                        spHistory.Children.Add(new TextBox()
                                                         {
-                                                            Content = text,
+                                                            Text = text,
+                                                            IsReadOnly = true,
                                                             HorizontalAlignment = HorizontalAlignment.Right,
                                                             Background = Brushes.LightBlue,
+                                                            AcceptsReturn = true,
+                                                            TextWrapping = TextWrapping.Wrap,
                                                         });
+                                                        svHistory.ScrollToBottom();
                                                     }));
-                                                    svHistory.ScrollToBottom();
                                                     //DeliveryApprove(MP.Avatar.AvatarID);
                                                 }
                                         }
                                         else
                                         {
                                             if ((from f in PotkanePostavy where f.AvatarID == ma.AvatarID select f).Count() < 1) Dispatcher.BeginInvoke((Action)(() => { PotkanePostavy.Add(ma); }));
-                                            string types = vv[11].Replace("\"", "").Split('=')[1];
+                                            string types = XR.GetAttribute("type");
                                             switch (types)
                                             {
                                                 case "":
-                                                    int ind = 12;
-                                                    string text = vv[ind++].Replace("\"", "").Split('=')[1];
-                                                    for (; ind < vv.Length-1; ind++)
-                                                    {
-                                                        text += " " + vv[ind].Replace("\"", "");
-                                                    }
+                                                    string text = XR.GetAttribute("text");
                                                     if (ActivChatAvatar != null)
                                                         if (ActivChatAvatar.AvatarID == ma.AvatarID)
                                                         {
                                                             spHistory.Dispatcher.BeginInvoke((Action)(() =>
                                                             {
-                                                                spHistory.Children.Add(new Label()
+                                                                spHistory.Children.Add(new TextBox()
                                                                 {
-                                                                    Content = text,
+                                                                    Text = text,
+                                                                    IsReadOnly = true,
                                                                     HorizontalAlignment = HorizontalAlignment.Left,
                                                                     Background = Brushes.LightPink,
+                                                                    AcceptsReturn = true,
+                                                                    TextWrapping = TextWrapping.Wrap,
                                                                 });
+                                                                svHistory.ScrollToBottom();
                                                             }));
-                                                            svHistory.ScrollToBottom();
                                                             //DeliveryApprove(MP.Avatar.AvatarID);
                                                         }
                                                     break;
@@ -424,46 +456,51 @@ namespace MnfPic
                                     //break;
                                     case "private_msg":
                                         //T: <private_msg id="1151074399" id_from="8946383" id_to="2844033" name_from="Tibik" name_to="YourSexDreams" date_time="09/22/17 9:19 pm" read="0" type="" text="hi" />
-                                        msgID = vv[1].Replace("\"", "").Split('=')[1];
-                                        ma = new MnfAvatar()
+                                        XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
+                                        XR.Read();
+                                        if (XR.AttributeCount > 0)
                                         {
-                                            AvatarID = int.Parse(vv[2].Replace("\"", "").Split('=')[1]),
-                                            JmenoPostavy = vv[4].Replace("\"", "").Split('=')[1],
-                                        };
-                                        if (ma.AvatarID == MP.Avatar.AvatarID) break;
-                                        if ((from f in PotkanePostavy where f.AvatarID == ma.AvatarID select f).Count() < 1) Dispatcher.BeginInvoke((Action)(() => { PotkanePostavy.Add(ma); }));
-                                        var type = vv[11].Replace("\"", "").Split('=')[1];
-                                        switch (type)
-                                        {
-                                            case "":
-                                                int ind = 12;
-                                                string text = vv[ind++].Replace("\"", "").Split('=')[1];
-                                                for (; ind < vv.Length - 1; ind++)
-                                                {
-                                                    text += " " + vv[ind].Replace("\"", "");
-                                                }
-                                                LogMsg(ma, text, true);
-                                                if (ActivChatAvatar != null)
-                                                    if (ActivChatAvatar.AvatarID == ma.AvatarID)
-                                                    {
-                                                        spHistory.Dispatcher.BeginInvoke((Action)(() =>
+                                            msgID = XR.GetAttribute("id");
+                                            ma = new MnfAvatar()
+                                            {
+                                                AvatarID = int.Parse(XR.GetAttribute("id_from")),
+                                                JmenoPostavy = XR.GetAttribute("name_from")
+                                            };
+                                            if (ma.AvatarID == MP.Avatar.AvatarID) break;
+                                            if ((from f in PotkanePostavy where f.AvatarID == ma.AvatarID select f).Count() < 1) Dispatcher.BeginInvoke((Action)(() => { PotkanePostavy.Add(ma); }));
+                                            var type = XR.GetAttribute("type");
+                                            switch (type)
+                                            {
+                                                case "":
+                                                    string text = XR.GetAttribute("text");
+                                                    LogMsg(ma, text, true);
+                                                    if (ActivChatAvatar != null)
+                                                        if (ActivChatAvatar.AvatarID == ma.AvatarID)
                                                         {
-                                                            spHistory.Children.Add(new Label()
+                                                            spHistory.Dispatcher.BeginInvoke((Action)(() =>
                                                             {
-                                                                Content = text,
-                                                                HorizontalAlignment = HorizontalAlignment.Left,
-                                                                Background = Brushes.LightPink,
-                                                            });
-                                                        }));
-                                                        svHistory.ScrollToBottom();
-                                                        DeliveryApprove(MP.Avatar.AvatarID);
-                                                    }
-                                                        break;
+                                                                spHistory.Children.Add(new TextBox()
+                                                                {
+                                                                    Text = text,
+                                                                    IsReadOnly = true,
+                                                                    HorizontalAlignment = HorizontalAlignment.Left,
+                                                                    Background = Brushes.LightPink,
+                                                                    AcceptsReturn = true,
+                                                                    TextWrapping = TextWrapping.Wrap,
+                                                                });
+                                                                svHistory.ScrollToBottom();
+                                                            }));
+                                                            DeliveryApprove(ma.AvatarID);
+                                                        }
+                                                    break;
+                                            }
                                         }
                                         break;
                                     case "unread_msgs_data":
-                                        var avatarID = int.Parse(vv[1].Replace("\"", "").Split('=')[1]);
-                                        var msgN = int.Parse(vv[2].Replace("\"", "").Split('=')[1]);
+                                        XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
+                                        XR.Read();
+                                        var avatarID = int.Parse(XR.GetAttribute("avatar_id"));
+                                        var msgN = int.Parse(XR.GetAttribute("msgs_num"));
                                         if (avatarID != MP.Avatar.AvatarID)
                                             if ((from f in PotkanePostavy where f.AvatarID == avatarID select f).Count() < 1) Dispatcher.BeginInvoke((Action)(() =>
                                             {
@@ -488,6 +525,7 @@ namespace MnfPic
                                         break;
                                     case "items_list":
                                         //<items_list></items_list>
+                                        //XR.Read();
                                         break;
                                     case "show_items_list":
                                         break;
@@ -502,6 +540,10 @@ namespace MnfPic
                                     case "brothel_list":
                                         break;
                                     case "cash_display":
+                                        Console.WriteLine(s);
+                                        XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
+                                        XR.Read();
+                                        AvatarMoney = int.Parse(XR.GetAttribute("value"));
                                         break;
                                     case "exp_display":
                                         break;
@@ -521,12 +563,33 @@ namespace MnfPic
                                         break;
                                     case "picture_info":
                                     case "picture_info_new":
+                                        XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
+                                        XR.Read();
+                                        string oo = "";
+                                        string d = NastaveniMnfPic.MainFile + XR.GetAttribute("poster_name");
+                                        if (!Directory.Exists(d)) Directory.CreateDirectory(d);
+                                        if (ActualPicture != "")
+                                        {
+                                            oo = d + "\\" + ActualPicture.Split('/')[5];
+                                            if (!File.Exists(oo))
+                                            {
+                                                try
+                                                {
+                                                    wc.DownloadFile(new Uri(ActualPicture.Replace(".jpg", "_.jpg")), oo);
+                                                    SavedPictures++;
+                                                }
+                                                catch (Exception e) { Console.WriteLine(e); Console.WriteLine("nestazeno vse"); }
+                                            }
+                                        }
+                                        ActualPicture = "";
                                         break;
                                     case "cant_get_item":
                                         break;
                                     case "timeout":
+                                        Console.WriteLine("Timeouted");
                                         break;
                                     case "disconnect":
+                                        Console.WriteLine("Disconnected");
                                         break;
                                     case "avatar_data_by_name":
                                         break;
@@ -537,21 +600,27 @@ namespace MnfPic
                                     case "set_default_bg":
                                         break;
                                     default:
-                                        Console.WriteLine("Unknown type: " + vv[0]);
+                                        Console.WriteLine("Unknown type: " + s);
                                         break;
                                 }
                             }
                         }
-                    //}
-                    catch { }
+                    }
+                    catch (IOException te) { }
+                    catch (Exception ex) { Console.WriteLine("T:" + ex.Message); }
                 }
 
             }
-            catch { }
+            catch (Exception ex) { Console.WriteLine("T:" + ex.Message); }
 
         }
 
-    private void DataReaderArea()
+        private void Settings_ValidationEventHandler(object sender, System.Xml.Schema.ValidationEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DataReaderArea()
         {
             Disconect2 = false;
             try
@@ -560,34 +629,46 @@ namespace MnfPic
                 //    if (!MP.Server.TC_area.Connected) MP.Server.TC_area.Connect(MP.Server.AdresaIP, MP.Server.area_socket);
                 //Random r = new Random();
                 //var s = "<data type=\"area\" avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" area_id=\"" + ActualArea.IdLokace + "\" points=\"" + (ActualArea.PortLokace.X + r.Next(-5, 5)) + "," + (ActualArea.PortLokace.Y + r.Next(-5, 5)) + "\" bed_ids =\"\" pole_ids=\"\" session_id=\"" + MP.Server.Session_id + "\" />";
-
-                NetworkStream ns = MP.Server.TC_area.GetStream();
+                
                 //ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
-                ns.ReadTimeout = 500;
+
+                XmlReaderSettings settings = new XmlReaderSettings
+                {
+                    ConformanceLevel = ConformanceLevel.Fragment,
+                    CheckCharacters = false,
+                };
+                XmlReader XR = null;
                 while (!Disconect2)
                 {
-
                     try
                     {
-                        byte[] b = new byte[65535];
-                        int i = ns.Read(b, 0, b.Length);
+                        lock (MP.Server.LockerArea)
+                            if (!MP.Server.TC_area.Connected) MP.Server.TC_area.Connect(MP.Server.AdresaIP, MP.Server.area_socket);
+                        NetworkStream ns = MP.Server.TC_area.GetStream();
+                        ns.ReadTimeout = 1000;
+                        var b = new byte[65535];
+                        var i = ns.Read(b, 0, b.Length);
                         var s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
                         if (s != "") Console.WriteLine("A: " + s);
-                        var ss = s.Replace("<", "").Split('>');
+                        var ss = s.Replace("\0", "").Replace("<", "").Split('>');
                         foreach (var v in ss)
                         {
-                            if (v.Contains(" "))
+                            if (v != "")
                             {
-                                int ind = 0;
                                 string[] vv = v.Split(' ');
-                                if (vv[ind] == "") ind++;
-                                switch (vv[ind++])
+                                switch (vv[0])
                                 {
+                                    //<avatar id="5738678" points="576,479,553,441" />
+                                    //<avatar data="2427633,elizabeth_h,2,2,1,8,0,2,2,1,3,2,2,2,2,2,1,2,2,2,2,3,3,7,252/176/185,14135,13385,-1,,0,0,11,2,2,2,40,38,0,1" points="503,384,506,387" />
                                     case "avatar":
-                                        if (vv[ind].Contains("data"))
+                                        XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
+                                        XR.Read();
+                                        var data = XR.GetAttribute("data");
+                                        var points = XR.GetAttribute("points");
+                                        if (data!=null)
                                         {
                                             var avatar = new MnfAvatar();
-                                            avatar.ParseAvatar(vv[ind].Replace("\"", "").Split('=')[1]);
+                                            avatar.ParseAvatar(data);
                                             var aap = (from f in PotkanePostavy where f.AvatarID == avatar.AvatarID select f).ToArray();
                                             if (aap.Length == 0)
                                             {
@@ -608,24 +689,59 @@ namespace MnfPic
                                         else
                                         {
                                             //avatar moved
+                                            var id = XR.GetAttribute("id");
                                         }
                                         break;
                                     case "avatar_out":
-                                        var avatar_id = long.Parse(vv[1].Replace("\"", "").Split('=')[1]);
+                                        //<avatar_out id="3586824" />
+                                        XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
+                                        XR.Read();
+                                        var avatar_id = long.Parse(XR.GetAttribute("id"));
                                         var ap = (from f in AktualniPostavy where f.AvatarID == avatar_id select f).ToArray();
                                         foreach (var a in ap) if (AktualniPostavy.Contains(a)) Dispatcher.BeginInvoke(new Action(() =>
                                         {
                                             AktualniPostavy.Remove(a);
                                         }));
                                         break;
+                                    case "pictures":
+                                        //XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
+                                        //XR.Read();
+                                        break;
+                                    case "picture":
+                                        if (SavePicture)
+                                        {
+                                            SpinWait.SpinUntil(() => ActualPicture == "", 1000);
+                                            XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
+                                            XR.Read();
+                                            if (Directory.Exists(NastaveniMnfPic.MainFile))
+                                            {
+                                                ActualPicture = XR.GetAttribute("url");
+                                                string oo = NastaveniMnfPic.MainFile + ActualPicture.Split('/')[5];
+                                                //<data get_picture_info='bb1828fc60e44e63ea6889a392b23097'/>//port2030
+                                                //<picture_info poster_name='PaulinaLira' rating='4.3' is_voted='0' />//resp 
+                                                lock (MP.Server.LockerTop)
+                                                    if (!MP.Server.TC_top.Connected) MP.Server.TC_top.Connect(MP.Server.AdresaIP, MP.Server.top_socket);
+                                                s = "<data get_picture_info='" + Path.GetFileNameWithoutExtension(oo) + "'/>";
+                                                ns = MP.Server.TC_top.GetStream();
+                                                ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+                                            }
+                                        }
+                                        break;
+                                    case "/pictures":
+                                        SavePicture = false;
+                                        break;
+                                    default:
+                                        Console.WriteLine("A: Unknowen name" + XR.Name);
+                                        break;
                                 }
-                            }
+                            }                            
                         }
                     }
-                    catch { }
+                    catch (IOException te) { }
+                    catch (Exception ex) { Console.WriteLine("A: " + ex.Message); }
                 }
             }
-            catch { }
+            catch (Exception ex) { Console.WriteLine("A: " + ex.Message); }
         }
         private void DataReaderChat()
         {
@@ -639,21 +755,21 @@ namespace MnfPic
                 var ns = MP.Server.TC_chat.GetStream();
                 //ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
                 ns.ReadTimeout = 500;
+                XmlReaderSettings settings = new XmlReaderSettings
+                {
+                    ConformanceLevel = ConformanceLevel.Fragment,
+                    CheckCharacters = false,
+                };
+                XmlReader XR = XmlReader.Create(ns, settings);
                 while (!Disconect2)
                 {
                     try
                     {
-                        byte[] b = new byte[65535];
-                        int i = ns.Read(b, 0, b.Length);
-                        var s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
-                        if (s != "") Console.WriteLine("C: " + s);
-                        string[] ss = s.Replace("<", "").Split('>');
-                        foreach (var v in ss)
+                        while (XR.Read())
                         {
-                            if (v.Contains(" "))
+                            if (XR.NodeType == XmlNodeType.Element)
                             {
-                                string[] vv = v.Split(' ');
-                                switch (vv[0])
+                                switch (XR.Name)
                                 {
                                     case "message":
                                         break;
@@ -666,18 +782,115 @@ namespace MnfPic
                                     case "avatar_list":
                                         //avatar
                                         break;
+                                    default:
+                                        Console.WriteLine("C: Unknowen name" + XR.Name);
+                                        break;
                                 }
                             }
                         }
                     }
-                    catch { }
+                    catch (IOException te) { }
+                    catch (Exception ex) { Console.WriteLine("C: " + ex.Message); }
                 }
             }
-            catch { }
+            catch (Exception ex) { Console.WriteLine("C: " + ex.Message); }
+        }
+        private void DataReaderGame()
+        {
+            Disconect3 = false;
+            try
+            {
+                //lock (MP.Server.LockerChat)
+                //    if (!MP.Server.TC_chat.Connected) MP.Server.TC_chat.Connect(MP.Server.AdresaIP, MP.Server.chat_socket);
+                //var s = MP.Avatar.icon_id + "," + MP.Uzivatel.LoginPaswCrypted + "," + ActualArea.IdLokace + "," + MP.Server.Session_id + "," + MP.Avatar.userCT;
+                //private s+= ",l";
+                //ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+                XmlReaderSettings settings = new XmlReaderSettings
+                {
+                    ConformanceLevel = ConformanceLevel.Fragment,
+                    CheckCharacters = false,
+                };
+                XmlReader XR = null;
+                while (!Disconect3)
+                {
+                    try
+                    {
+                        lock (MP.Server.LockerGame)
+                            if (!MP.Server.TC_game.Connected) MP.Server.TC_game.Connect(MP.Server.AdresaIP, MP.Server.game_socket);
+                        var ns = MP.Server.TC_game.GetStream();
+                        ns.ReadTimeout = 1000;
+                        var b = new byte[65535];
+                        var i = ns.Read(b, 0, b.Length);
+                        var s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
+                        if (s != "") Console.WriteLine("G: " + s);
+                        var ss = s.Replace("\0", "").Replace("<", "").Split('>');
+                        foreach (var v in ss)
+                        {
+                            if (v != "")
+                            {
+                                string[] vv = v.Split(' ');
+                                switch (vv[0])
+                                {
+                                    case "game_over":
+                                        GameBW.CancelAsync();
+                                        break;
+                                    case "start":
+                                        XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
+                                        XR.Read();
+                                        if (XR.GetAttribute("success") == "1")
+                                            if (!GameBW.IsBusy) GameBW.RunWorkerAsync();
+                                        break;
+                                    default:
+                                        Console.WriteLine("G: Unknowen name" + XR.Name);
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    catch (IOException te) { }
+                    catch (Exception ex) { Console.WriteLine("G: " + ex.Message); }
+                }
+            }
+            catch (Exception ex) { Console.WriteLine("G: " + ex.Message); }
+        }
+
+        private void GameBW_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if (GameID == 2)
+            {
+                List<int> body = new List<int>() { 10, 15 };//, 20, 30 };//, 30, 45, 60, 80, 90, 100 };
+                Random r = new Random();
+                //h==75
+                int h = 0;
+                int multiple = 1;
+                while (!GameBW.CancellationPending)
+                {
+                    int rn = r.Next(0, 101);
+                    if (rn > 60) multiple += multiple >= 4 ? 0 : 1;
+                    else if (rn < 40) multiple -= multiple <= 1 ? 0 : 1;
+                    var s = "<data scores=\"" + body[r.Next(body.Count)] * multiple + "\" />";
+                    Console.WriteLine(h++ + " " + s);
+                    if (h == 10) body.Add(20);
+                    else if (h == 30) body.Add(30);
+                    lock (MP.Server.LockerGame)
+                        if (!MP.Server.TC_game.Connected) MP.Server.TC_game.Connect(MP.Server.AdresaIP, MP.Server.game_socket);
+                    var ns = MP.Server.TC_game.GetStream();
+                    ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+                    Thread.Sleep(r.Next(3000, 4000));
+                }
+            }
+        }
+
+        private void GameBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MP.Server.TC_game.Close();
+            Disconect3 = true;
+            if (GameRepeat) BeachGameClick(null, null);
         }
 
         public void GoToArea(MnfLocation area)
         {
+            if (ActualArea == area) return;
             Dispatcher.BeginInvoke((Action)(() => { AktualniPostavy.Clear(); }));
             Disconect2 = true;
             string s;
@@ -950,209 +1163,69 @@ namespace MnfPic
             NetworkStream ns = MP.Server.TC_top.GetStream();
             ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
         }
-        
+
         private void BeachGameClick(object sender, RoutedEventArgs e)
         {
-            int id = 2;
+            if (GameID == 2) GoToArea(MnfArea.Lokace[3]);
             string s;
             if (MP.Server.TC_game.Connected) MP.Server.TC_game.Close();
-
             MP.Server.TC_game = new TcpClient();
-            if (!MP.Server.TC_game.Connected) MP.Server.TC_game.Connect(MP.Server.AdresaIP, MP.Server.game_socket);
 
-            s = "<data avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" game_id=\"" + id + "\" session_id=\"" + MP.Server.Session_id + "\" />";
-            NetworkStream ns = MP.Server.TC_game.GetStream();
+            lock (MP.Server.LockerGame)
+                if (!MP.Server.TC_game.Connected) MP.Server.TC_game.Connect(MP.Server.AdresaIP, MP.Server.game_socket);
+            s = "<data avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" game_id=\"" + GameID + "\" session_id=\"" + MP.Server.Session_id + "\" />";
+            var ns = MP.Server.TC_game.GetStream();
             ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
 
+
+            lock (MP.Server.LockerTop)
+                if (!MP.Server.TC_top.Connected) MP.Server.TC_top.Connect(MP.Server.AdresaIP, MP.Server.top_socket);
             s = "<data cash_display = '1' />";
             ns = MP.Server.TC_top.GetStream();
             ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
-            ns.ReadTimeout = 1000;
-            byte[] b = new byte[65535];
-            int i = ns.Read(b, 0, b.Length);
-            s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
 
-            string[] ss = s.Split('\"');
-            Console.WriteLine("Cash " + ss[1]);
 
-            try
-            {
-                s = "<data status=\"start\" />";
-                ns = MP.Server.TC_game.GetStream();
-                ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
-                ns.ReadTimeout = 1000;
-                b = new byte[65535];
-                i = ns.Read(b, 0, b.Length);
-                s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
-            }
-            catch {  }
-            ss = s.Split('\"');
-            if (ss[1] != "1") ;// return true;
-            //hra zacala
-            List<int> body = new List<int>() { 10, 15 };//, 20, 30 };//, 30, 45, 60, 80, 90, 100 };
-            Random r = new Random();
-            //h==75
-            int h = 0;
-            int multiple = 1;
-            while (true)
-            {
-                //    s = "<clean_area area_id=\"2000400000\" />";
-                //    s = "<clean_area area_id=\"1800900000\" />";
-                //    s = "<clean_area area_id=\"4600300000\" />";
-                //    s = "<clean_area area_id=\"2200600000\" />";
-                //    s = "<clean_area area_id=\"4900700000\" />";
-                //    s = "<clean_area area_id=\"4900100000\" />";
-                //    s = "<clean_area area_id=\"2000100000\" />";
-                //    s = "<clean_area area_id=\"2000300000\" />";
-                //    s = "<clean_area area_id=\"4800800000\" />";
+            lock (MP.Server.LockerGame)
+                if (!MP.Server.TC_game.Connected) MP.Server.TC_game.Connect(MP.Server.AdresaIP, MP.Server.game_socket);
+            s = "<data status=\"start\" />";
+            ns = MP.Server.TC_game.GetStream();
+            ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
 
-                ns = MP.Server.TC_top.GetStream();
-                ns.ReadTimeout = 1000;
-                b = new byte[65535];
-                try
-                {
-                    i = ns.Read(b, 0, b.Length);
-                    s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
-                    Console.WriteLine(s);
-                }
-                catch (Exception ex)
-                {
-                    //Console.WriteLine(ex.Message);
-                }
-                int rn = r.Next(0, 101);
-                if (rn > 60) multiple += multiple >= 4 ? 0 : 1;
-                else if (rn < 40) multiple -= multiple <= 1 ? 0 : 1;
-                s = "<data scores=\"" + body[r.Next(body.Count)] * multiple + "\" />";
-                Console.WriteLine(h++ + " " + s);
-                if (h == 10) body.Add(20);
-                else if (h == 30) body.Add(30);
-                ns = MP.Server.TC_game.GetStream();
-                ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
-                ns.ReadTimeout = 1000;
-                b = new byte[65535];
-                try
-                {
-                    i = ns.Read(b, 0, b.Length);
-                }
-                catch (Exception ex)
-                {
-                    //Console.WriteLine(ex.Message);
-                }
-                s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
-
-                //if (h == 45) body.Add(30);
-
-                ss = s.Split(' ');
-                if (ss[0] == "<game_over") break;
-                Thread.Sleep(r.Next(3000, 4000));
-            }
-            //TC_top.Close();
-            //TC_game.Close();
-            ss = s.Split('\'');
-            Console.WriteLine("result " + ss[1]);
-
+            new Thread(DataReaderGame).Start();
         }
-        //public bool Game(int id)
-        //{
-        //    string s;
-        //    if (TC_game.Connected) TC_game.Close();
 
-        //    TC_game = new TcpClient();
-        //    if (!TC_game.Connected) TC_game.Connect(AdresaIP, game_socket);
+        private void StopGameClick(object sender, RoutedEventArgs e)
+        {
+            GameBW?.CancelAsync();
+        }
+        private void PictureBW_DoWork(object sender, DoWorkEventArgs e)
+        {
+            SavedPictures = 0;
+            GoToArea(MnfArea.Lokace[19]);
+            GoToArea(MnfArea.Lokace[20]);
+            SavePicture = true;
+            GoToArea(MnfArea.Lokace[21]);
+            SpinWait.SpinUntil(() => SavePicture == false, 20000);
+            SavePicture = true;
+            GoToArea(MnfArea.Lokace[22]);
+            SpinWait.SpinUntil(() => SavePicture == false, 20000);
+            SavePicture = true;
+            GoToArea(MnfArea.Lokace[23]);
+            SpinWait.SpinUntil(() => SavePicture == false, 20000);
+            SavePicture = true;
+            GoToArea(MnfArea.Lokace[24]);
+            SpinWait.SpinUntil(() => SavePicture == false, 20000);
+        }
 
-        //    s = "<data avatar_id=\"" + Avatar.AvatarID + "\" password=\"" + Avatar.User.LoginPaswCrypted + "\" game_id=\"" + id + "\" session_id=\"" + session_id + "\" />";
-        //    NetworkStream ns = TC_game.GetStream();
-        //    ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
+        public void GetAllPicture()
+        {
+            getPicture(null, null);
+        }
+        private void getPicture(object sender, RoutedEventArgs e)
+        {
+            if(!PictureBW.IsBusy) PictureBW.RunWorkerAsync();
+        }
 
-        //    s = "<data cash_display = '1' />";
-        //    ns = TC_top.GetStream();
-        //    ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
-        //    ns.ReadTimeout = 1000;
-        //    byte[] b = new byte[65535];
-        //    int i = ns.Read(b, 0, b.Length);
-        //    s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
-
-        //    string[] ss = s.Split('\"');
-        //    Console.WriteLine("Cash " + ss[1]);
-
-        //    try
-        //    {
-        //        s = "<data status=\"start\" />";
-        //        ns = TC_game.GetStream();
-        //        ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
-        //        ns.ReadTimeout = 1000;
-        //        b = new byte[65535];
-        //        i = ns.Read(b, 0, b.Length);
-        //        s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
-        //    }
-        //    catch { return true; }
-        //    ss = s.Split('\"');
-        //    if (ss[1] != "1") return true; 
-        //    //hra zacala
-        //    List<int> body = new List<int>() { 10, 15 };//, 20, 30 };//, 30, 45, 60, 80, 90, 100 };
-        //    Random r = new Random();
-        //    //h==75
-        //    int h = 0;
-        //    int multiple = 1;
-        //    while (true)
-        //    {
-        //        //    s = "<clean_area area_id=\"2000400000\" />";
-        //        //    s = "<clean_area area_id=\"1800900000\" />";
-        //        //    s = "<clean_area area_id=\"4600300000\" />";
-        //        //    s = "<clean_area area_id=\"2200600000\" />";
-        //        //    s = "<clean_area area_id=\"4900700000\" />";
-        //        //    s = "<clean_area area_id=\"4900100000\" />";
-        //        //    s = "<clean_area area_id=\"2000100000\" />";
-        //        //    s = "<clean_area area_id=\"2000300000\" />";
-        //        //    s = "<clean_area area_id=\"4800800000\" />";
-
-        //        ns = TC_top.GetStream();
-        //        ns.ReadTimeout = 1000;
-        //        b = new byte[65535];
-        //        try
-        //        {
-        //            i = ns.Read(b, 0, b.Length);
-        //            s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
-        //            Console.WriteLine(s);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            //Console.WriteLine(ex.Message);
-        //        }
-        //        int rn = r.Next(0, 101);
-        //        if (rn > 60) multiple += multiple >= 4 ? 0 : 1;
-        //        else if (rn < 40) multiple -= multiple <= 1 ? 0 : 1;
-        //        s = "<data scores=\"" + body[r.Next(body.Count)] * multiple + "\" />";
-        //        Console.WriteLine(h++ + " " + s);
-        //        if (h == 10) body.Add(20);
-        //        else if (h == 30) body.Add(30);
-        //        ns = TC_game.GetStream();
-        //        ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
-        //        ns.ReadTimeout = 1000;
-        //        b = new byte[65535];
-        //        try
-        //        {
-        //            i = ns.Read(b, 0, b.Length);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            //Console.WriteLine(ex.Message);
-        //        }
-        //        s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
-
-        //        //if (h == 45) body.Add(30);
-
-        //        ss = s.Split(' ');
-        //        if (ss[0] == "<game_over") break;
-        //        Thread.Sleep(r.Next(3000, 4000));
-        //    }
-        //    //TC_top.Close();
-        //    //TC_game.Close();
-        //    ss = s.Split('\'');
-        //    Console.WriteLine("result " + ss[1]);
-
-        //    return false;
-        //}
         //public bool PoSlozkach = true;
         //public bool GoToArea(int area)
         //{

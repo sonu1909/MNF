@@ -142,7 +142,7 @@ namespace MnfPic
         private void RemUser(object sender, RoutedEventArgs e)
         {
             Uzivatele.RemoveAt(LB.SelectedIndex);
-            LB.SelectedIndex--;
+            if (LB.SelectedIndex > -1) LB.SelectedIndex--;
         }
 
         private void LB_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
