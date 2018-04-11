@@ -28,16 +28,19 @@
                         <ColumnDefinition Width="200*"/>
                         <ColumnDefinition Width="250"/>
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="Avatars" Margin="0,0,0.2,30">
-                        <ListBox x:Name="lbChatPostavy" ItemsSource="{Binding ChatPostavy}" DisplayMemberPath="JmenoPostavy" SelectionChanged="ListBox_SelectionChanged"/>
+                    <GroupBox Header="Avatars">
+                        <Grid>
+                            <ListBox x:Name="lbChatPostavy" ItemsSource="{Binding ChatPostavy}" DisplayMemberPath="JmenoPostavy" SelectionChanged="ListBox_SelectionChanged" Margin="0,0,-0.4,30.6"/>
+                            <Button Content="Remove" Height="25" VerticalAlignment="Bottom" Click="ChatRemoveClick"/>                            
+                        </Grid>                        
                     </GroupBox>
-                    <Button Content="Send" Width="151" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Click="SendClick" Margin="0,0,0,5"/>
                     <GroupBox Header="Chat" Grid.Column="1">
                         <Grid>
-                            <TextBox x:Name="tbChat" Height="54" Margin="0,0,0,-0.4" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" AcceptsReturn="True"/>
-                            <ScrollViewer x:Name="svHistory" Margin="1,0,0,53.6">
+                            <TextBox x:Name="tbChat" Height="55" Margin="0,0,0,25" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" AcceptsReturn="True"/>
+                            <ScrollViewer x:Name="svHistory" Margin="0,0,0,80">
                                 <StackPanel x:Name="spHistory"/>
                             </ScrollViewer>
+                            <Button Content="Send" Height="25" VerticalAlignment="Bottom" Click="SendClick"/>
                         </Grid>
                     </GroupBox>
                     <local:ControlTranslator Grid.Column="2"/>

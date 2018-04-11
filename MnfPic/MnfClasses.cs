@@ -308,6 +308,7 @@ namespace MnfPic
     {
         private string _Popis = "";
         public string Popis { get { return _Popis; } set { _Popis = value; OnPropertyChanged("Popis"); } }
+        public int UnReadedMsg = 0;
 
         public MnfAvatar()
         {
