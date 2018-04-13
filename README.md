@@ -6,7 +6,7 @@ Small game client for mnfclub.com
   <li>Met people remembering</li>
   <li>Integrated Chat</li>
   <li>Gallery pics download</li>
-  <li>Downloaded pics shower</li>
+  <li>Downloaded pics browser</li>
   <li>The beach game auto-player</li>
 </ul>
 
