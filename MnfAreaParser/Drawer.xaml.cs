@@ -259,11 +259,15 @@ namespace MnfAreaParser
             //    sb.AppendLine(");");
             //    Console.WriteLine(sb.ToString());
         }
-        public void SearchPath(string s, int FromI, int FromFromI, int ToI)
+        List<string> SeznamS = new List<string>();
+        int MaxI = 40;
+        public void SearchPath(string s, int FromI, int FromFromI, int ToI, int ind)
         {
+            int inde = ind + 1;
+            if (inde > MaxI) return;
             var ss = (from f in Ribs[FromI].NextWalkRib.Split(',') select int.Parse(f)).ToArray();
-            if (FromI == ToI) ;
-            else if (ss.Contains(ToI)) ;
+            if (FromI == ToI) SeznamS.Add(s);
+            else if (ss.Contains(ToI)) SeznamS.Add(s);
             else
             {
                 string S = s;
@@ -273,10 +277,10 @@ namespace MnfAreaParser
                     {
                         if (s == "") S += "\"" + FromI + "\"";
                         else S += ",\"" + FromI + "\"";
-                        SearchPath(S, i, FromI, ToI);
+                        SearchPath(S, i, FromI, ToI, inde);
                     }
                 }
-                if (S != "") return;
+                if (S != "") SeznamS.Add(S);
             }
         }
     }
