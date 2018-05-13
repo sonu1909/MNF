@@ -24,9 +24,8 @@ namespace MnfAreaParser
         {
             InitializeComponent();
         }
-        public List<Point[]> ListPolygon = new List<Point[]>();
         public List<Point> BodyPolygonu = new List<Point>();
-        public List<List<WalkRib>> Ribs = new List<List<WalkRib>>();
+        public List<WalkRib> Ribs = new List<WalkRib>();
         public Point MainPoint = new Point();
         public bool NewPolygonFlag = false;
         public void Init(string cesta)
@@ -46,10 +45,10 @@ namespace MnfAreaParser
         {
             if (listBox.SelectedIndex >= 0)
             {
-                var l = listBox.SelectedIndex;
-                ListPolygon.RemoveAt(l);
-                mainGrid.Children.RemoveAt(l + 1);
-                listBox.Items.RemoveAt(l);
+                var l = (int)listBox.SelectedItem;
+                Ribs.RemoveAll(x => x.ID == l);
+                CreateGraphics();
+                CreateRibs();
             }
         }
 
@@ -72,30 +71,55 @@ namespace MnfAreaParser
         }
         public void AddPolygon()
         {
-            ListPolygon.Add(BodyPolygonu.ToArray());
-            //ListPolygon.Add(new Polygon()
-            //{
-            //    Points = new PointCollection(BodyPolygonu),
-            //    Fill = Brushes.Blue,
-            //});
-            listBox.Items.Add(ListPolygon.Count);
-            BodyPolygonu.Clear();
-            CreateGraphics();
-            CreateRibs();
+            if (BodyPolygonu.Count > 0)
+            {
+                int ID = 1;
+                if (Ribs.Count > 0) ID = (from f in Ribs select f.ID).Max() + 1;
+                foreach (Point p in BodyPolygonu)
+                {
+                    Ribs.Add(new WalkRib()
+                    {
+                        ID = ID,
+                        P = p,
+                    });
+                }
+                listBox.Items.Add(ID);
+                CreateGraphics();
+                BodyPolygonu.Clear();
+                CreateRibs();
+            }
         }
         public void CreateGraphics()
         {
             mainGrid.Children.RemoveRange(1, mainGrid.Children.Count - 1);
-            foreach (var i in ListPolygon)
+            var ID = (from f in Ribs select f.ID).Max() + 1;
+            for (int id = 0; id < ID; id++)
             {
+                var i = (from f in Ribs where f.ID == id select f.P).ToArray();
                 if (i.Count() > 2)
+                {
                     mainGrid.Children.Add(new Polygon()
                     {
-                        Points = new PointCollection((from f in i select new Point(f.X+MainPoint.X,f.Y+MainPoint.Y)).ToArray()),
+                        Points = new PointCollection((from f in i select new Point(f.X + MainPoint.X, f.Y + MainPoint.Y)).ToArray()),
                         Fill = Brushes.Blue,
                         VerticalAlignment = VerticalAlignment.Top,
                         HorizontalAlignment = HorizontalAlignment.Left,
                     });
+                    double x = 0, y = 0;
+                    foreach (var j in i)
+                    {
+                        x += j.X;
+                        y += j.Y;
+                    }
+                    x /= i.Count();
+                    y /= i.Count();
+                    mainGrid.Children.Add(new Label()
+                    {
+                        Content = id,
+                        Margin = new Thickness(x + MainPoint.X, y + MainPoint.Y + 10, 0, 0),
+                        Foreground = Brushes.Black,
+                    });
+                }
                 else if (i.Count() > 1)
                     mainGrid.Children.Add(new Line()
                     {
@@ -108,7 +132,7 @@ namespace MnfAreaParser
                         VerticalAlignment = VerticalAlignment.Top,
                         HorizontalAlignment = HorizontalAlignment.Left,
                     });
-                else
+                else if (i.Count() == 1)
                 {
                     foreach (var f in i)
                     {
@@ -125,57 +149,33 @@ namespace MnfAreaParser
                     }
                 }
             }
-            List<Point> Points = new List<Point>();
-            foreach (var i in ListPolygon) Points.AddRange(i);
+
             int pozice = 0;
-            foreach (var i in Points)
+            foreach (var i in Ribs)
             {
                 mainGrid.Children.Add(new Label()
                 {
                     Content = pozice++,
-                    Margin = new Thickness(i.X + MainPoint.X, i.Y + MainPoint.Y, 0, 0),
+                    Margin = new Thickness(i.P.X + MainPoint.X, i.P.Y + MainPoint.Y, 0, 0),
                     Foreground = Brushes.Red,
                 });
             }
         }
         public void CreateRibs()
         {
-            List<Point> Points = new List<Point>();
-            foreach (var i in ListPolygon) Points.AddRange(i);
-            var n = Points.Count;
-            Ribs.Clear();
-            listBox2.Items.Clear();
-            for (int i = 0; i < n; i++)
-            {
-                Ribs.Add(new List<WalkRib>());
-                for (int j = 0; j < n; j++)
-                {
-                    Ribs[i].Add(new WalkRib(Math.Round(Math.Sqrt(Math.Pow(Points[i].X - Points[j].X, 2) + Math.Pow(Points[i].Y - Points[j].Y, 2)), 2)));
-                }
-                listBox2.Items.Add(i);
-            }
-        }
-
-        private void listBox_SelectionChanged2(object sender, SelectionChangedEventArgs e)
-        {
-            if (listBox2.SelectedIndex < 0) return;
             stackPanel.Children.Clear();
-            int pocet = 0;
-            foreach (var i in Ribs[listBox2.SelectedIndex])
+            stackPanelN.Children.Clear();
+            for (int i = 0; i < Ribs.Count; i++)
             {
-                Grid g = new Grid();
-                g.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(25), });
-                g.ColumnDefinitions.Add(new ColumnDefinition());
-                Label l = new Label() { Content = pocet++, };
-                g.Children.Add(l);
+                Label l = new Label() { Content = i, };
+                stackPanel.Children.Add(l);
+
                 var tb = new TextBox();
-                Binding b = new Binding("Pole");
-                b.Source = i;
+                Binding b = new Binding("NextWalkRib");
+                b.Source = Ribs[i];
                 b.Mode = BindingMode.TwoWay;
                 tb.SetBinding(TextBox.TextProperty, b);
-                Grid.SetColumn(tb, 1);
-                g.Children.Add(tb);
-                stackPanel.Children.Add(g);
+                stackPanelN.Children.Add(tb);
             }
         }
 
@@ -184,11 +184,25 @@ namespace MnfAreaParser
             if (listBox.SelectedIndex < 0) return;
             StackPanel sp1 = new StackPanel();
             StackPanel sp2 = new StackPanel();
-            var p = ListPolygon[listBox.SelectedIndex];
-            foreach (var i in p)
+            int ID = (int)listBox.SelectedItem;
+            foreach (var i in Ribs)
             {
-                sp1.Children.Add(new TextBox() { Text = i.X.ToString(), TextAlignment = TextAlignment.Center });
-                sp2.Children.Add(new TextBox() { Text = i.Y.ToString(), TextAlignment = TextAlignment.Center });
+                if (i.ID == ID)
+                {
+                    var tb = new TextBox() { TextAlignment = TextAlignment.Center };
+                    Binding b = new Binding("P.X");//nelze prepsat (vlastni Point?)
+                    b.Source = i;
+                    b.Mode = BindingMode.TwoWay;
+                    tb.SetBinding(TextBox.TextProperty, b);
+                    sp1.Children.Add(tb);
+
+                    tb = new TextBox() { TextAlignment = TextAlignment.Center };
+                    b = new Binding("P.Y");//nelze prepsat
+                    b.Source = i;
+                    b.Mode = BindingMode.TwoWay;
+                    tb.SetBinding(TextBox.TextProperty, b);
+                    sp2.Children.Add(tb);
+                }
             }
             var g = new Grid();
             g.ColumnDefinitions.Add(new ColumnDefinition());
@@ -198,70 +212,72 @@ namespace MnfAreaParser
             Grid.SetColumn(sp2, 1);
             var w = new Window() { Content = g };
             w.ShowDialog();
-            for (int i = 0; i < p.Length; i++)
-            {
-                try
-                {
-                    ListPolygon[listBox.SelectedIndex][i].X = double.Parse((sp1.Children[i] as TextBox).Text);
-                    ListPolygon[listBox.SelectedIndex][i].Y = double.Parse((sp2.Children[i] as TextBox).Text);
-                }
-                catch { }
-            }
-
             CreateGraphics();
-            List<Point> Points = new List<Point>();
-            var n = Points.Count;
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < n; j++)
-                {
-                    Ribs[i][j].D = Math.Round(Math.Sqrt(Math.Pow(Points[i].X - Points[j].X, 2) + Math.Pow(Points[i].Y - Points[j].Y, 2)), 2);
-                }
-            }
         }
 
         private void Click_Generate(object sender, RoutedEventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (var polygon in ListPolygon)
+            //    //Ribs[i].Add(new WalkRib(Math.Round(Math.Sqrt(Math.Pow(Points[i].X - Points[j].X, 2) + Math.Pow(Points[i].Y - Points[j].Y, 2)), 2)));
+            //    StringBuilder sb = new StringBuilder();
+            //    foreach (var polygon in ListPolygon)
+            //    {
+            //        //walk_manager.AddPointGroup(new Array(new WalkPoint(449.2, 249.55), new WalkPoint(486.85, 249.55)));
+            //        sb.Append("walk_manager.AddPointGroup(new Array(");
+            //        sb.Append("new WalkPoint(" + polygon[0].X + ", " + polygon[0].Y + ")");
+            //        for (int i = 1; i < polygon.Length; i++)
+            //        {
+            //            sb.Append(", new WalkPoint(" + polygon[i].X + ", " + polygon[i].Y + ")");
+            //        }
+            //        sb.AppendLine("));");
+            //    }
+            //    sb.Append("walk_manager.ribs = new Array(");
+            //    sb.Append("new Array(");
+            //    sb.Append("new WalkRib(" + Ribs[0][0].D.ToString().Replace(',', '.'));
+            //    if (Ribs[0][0].Pole != "") sb.Append(",new Array(" + Ribs[0][0].Pole + ")");
+            //    sb.Append(")");
+            //    for (int j = 1; j < Ribs[0].Count; j++)
+            //    {
+            //        sb.Append(",new WalkRib(" + Ribs[0][j].D.ToString().Replace(',', '.'));
+            //        if (Ribs[0][j].Pole != "") sb.Append(",new Array(" + Ribs[0][j].Pole + ")");
+            //        sb.Append(")");
+            //    }
+            //    sb.Append(")");
+            //    for (int i = 1; i < Ribs.Count; i++)
+            //    {
+            //        sb.Append(",new Array(");
+            //        sb.Append("new WalkRib(" + Ribs[i][0].D.ToString().Replace(',', '.'));
+            //        if (Ribs[i][0].Pole != "") sb.Append(",new Array(" + Ribs[i][0].Pole + ")");
+            //        sb.Append(")");
+            //        for (int j = 1; j < Ribs[i].Count; j++)
+            //        {
+            //            sb.Append(",new WalkRib(" + Ribs[i][j].D.ToString().Replace(',', '.'));
+            //            if (Ribs[i][j].Pole != "") sb.Append(",new Array(" + Ribs[i][j].Pole + ")");
+            //            sb.Append(")");
+            //        }
+            //        sb.Append(")");
+            //    }
+            //    sb.AppendLine(");");
+            //    Console.WriteLine(sb.ToString());
+        }
+        public void SearchPath(string s, int FromI, int FromFromI, int ToI)
+        {
+            var ss = (from f in Ribs[FromI].NextWalkRib.Split(',') select int.Parse(f)).ToArray();
+            if (FromI == ToI) ;
+            else if (ss.Contains(ToI)) ;
+            else
             {
-                //walk_manager.AddPointGroup(new Array(new WalkPoint(449.2, 249.55), new WalkPoint(486.85, 249.55)));
-                sb.Append("walk_manager.AddPointGroup(new Array(");
-                sb.Append("new WalkPoint(" + polygon[0].X + ", " + polygon[0].Y + ")");
-                for (int i = 1; i < polygon.Length; i++)
+                string S = s;
+                foreach (var i in ss)
                 {
-                    sb.Append(", new WalkPoint(" + polygon[i].X + ", " + polygon[i].Y + ")");
+                    if (i != FromI && i != FromFromI)
+                    {
+                        if (s == "") S += "\"" + FromI + "\"";
+                        else S += ",\"" + FromI + "\"";
+                        SearchPath(S, i, FromI, ToI);
+                    }
                 }
-                sb.AppendLine("));");
+                if (S != "") return;
             }
-            sb.Append("walk_manager.ribs = new Array(");
-            sb.Append("new Array(");
-            sb.Append("new WalkRib(" + Ribs[0][0].D);
-            if (Ribs[0][0].Pole != "") sb.Append(",new Array(" + Ribs[0][0].Pole + ")");
-            sb.Append(")");
-            for (int j = 1; j < Ribs[0].Count; j++)
-            {
-                sb.Append(",new WalkRib(" + Ribs[0][j].D);
-                if (Ribs[0][j].Pole != "") sb.Append(",new Array(" + Ribs[0][j].Pole + ")");
-                sb.Append(")");
-            }
-            sb.Append(")");
-            for (int i = 1; i < Ribs.Count; i++)
-            {
-                sb.Append(",new Array(");
-                sb.Append("new WalkRib(" + Ribs[i][0].D);
-                if (Ribs[i][0].Pole != "") sb.Append(",new Array(" + Ribs[i][0].Pole + ")");
-                sb.Append(")");
-                for (int j = 1; j < Ribs[i].Count; j++)
-                {
-                    sb.Append(",new WalkRib(" + Ribs[i][j].D);
-                    if (Ribs[i][j].Pole != "") sb.Append(",new Array(" + Ribs[i][j].Pole + ")");
-                    sb.Append(")");
-                }
-                sb.Append(")");
-            }
-            sb.AppendLine(");");
-            Console.WriteLine(sb.ToString());
         }
     }
 }

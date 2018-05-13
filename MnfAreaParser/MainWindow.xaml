@@ -7,7 +7,16 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <local:Drawer x:Name="drawer"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="28"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel x:Name="sp" Orientation="Horizontal">
+            <Button Content="Load BG" Click="ClickLoadBG"/>
+            <Separator Visibility="Hidden" Width="10"/>
+            <Button Content="Load Points" Click="ClickLoadPoints"/>
+        </StackPanel>
+        <local:Drawer x:Name="drawer" Grid.Row="1"/>
         <!--<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid x:Name="mainGrid">
                 <Image x:Name="obrazek" Stretch="Fill" Height="319" VerticalAlignment="Top" HorizontalAlignment="Left" Width="517"/>
