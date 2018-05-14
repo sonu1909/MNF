@@ -167,10 +167,10 @@ namespace MnfAreaParser
             stackPanelN.Children.Clear();
             for (int i = 0; i < Ribs.Count; i++)
             {
-                Label l = new Label() { Content = i, };
+                Label l = new Label() { Content = i, Height = 25, };
                 stackPanel.Children.Add(l);
 
-                var tb = new TextBox();
+                var tb = new TextBox() { Height = 25, };
                 Binding b = new Binding("NextWalkRib");
                 b.Source = Ribs[i];
                 b.Mode = BindingMode.TwoWay;
@@ -214,9 +214,25 @@ namespace MnfAreaParser
             w.ShowDialog();
             CreateGraphics();
         }
-
+        double[,] Delky;
         private void Click_Generate(object sender, RoutedEventArgs e)
         {
+            MaxI = Ribs.Count;
+            Delky = new double[MaxI, MaxI];
+            for (int i = 0; i < MaxI; i++)
+            {
+                for (int j = 0; j < MaxI; j++)
+                {
+                    Delky[i, j] = Math.Sqrt(Math.Pow(Ribs[i].P.X - Ribs[j].P.X, 2) + Math.Pow(Ribs[i].P.Y - Ribs[j].P.Y, 2));
+                }
+            }
+            for (int i = 0; i < MaxI; i++)
+            {
+                for (int j = 0; j < MaxI; j++)
+                {
+                    Console.WriteLine(i + "," + j + ":" + GeneratePath(i, j));
+                }
+            }
             //    //Ribs[i].Add(new WalkRib(Math.Round(Math.Sqrt(Math.Pow(Points[i].X - Points[j].X, 2) + Math.Pow(Points[i].Y - Points[j].Y, 2)), 2)));
             //    StringBuilder sb = new StringBuilder();
             //    foreach (var polygon in ListPolygon)
@@ -259,6 +275,30 @@ namespace MnfAreaParser
             //    sb.AppendLine(");");
             //    Console.WriteLine(sb.ToString());
         }
+        public string GeneratePath(int FromI, int ToI)
+        {
+            SeznamS.Clear();
+            SearchPath("", FromI, -1, ToI, 0);
+            //return SeznamS.First(s => s.Length == SeznamS.Min(x => x.Length));
+            return SeznamS.First(s => DelkaCesty(CreateCesta(FromI, ToI, s)) == SeznamS.Min(x => DelkaCesty(CreateCesta(FromI, ToI, x))));
+        }
+        public int[] CreateCesta(int FromI, int ToI, string cesta)
+        {
+            List<int> l = new List<int>();
+            l.Add(FromI);
+            if (cesta != "") l.AddRange(cesta.Replace("\"", "").Split(',').Select(x => int.Parse(x)));
+            l.Add(ToI);
+            return l.ToArray();
+        }
+        public double DelkaCesty(int[] cesta)
+        {
+            double suma = 0;
+            for (int i = 1; i < cesta.Length; i++)
+            {
+                suma += Delky[i - 1, i];
+            }
+            return suma;
+        }
         List<string> SeznamS = new List<string>();
         int MaxI = 40;
         public void SearchPath(string s, int FromI, int FromFromI, int ToI, int ind)
@@ -270,17 +310,17 @@ namespace MnfAreaParser
             else if (ss.Contains(ToI)) SeznamS.Add(s);
             else
             {
-                string S = s;
                 foreach (var i in ss)
                 {
                     if (i != FromI && i != FromFromI)
                     {
-                        if (s == "") S += "\"" + FromI + "\"";
-                        else S += ",\"" + FromI + "\"";
+                        string S = s;
+                        if (s == "") S += "\"" + i + "\"";
+                        else S += ",\"" + i + "\"";
                         SearchPath(S, i, FromI, ToI, inde);
                     }
                 }
-                if (S != "") SeznamS.Add(S);
+                //if (S != "") SeznamS.Add(S);
             }
         }
     }
