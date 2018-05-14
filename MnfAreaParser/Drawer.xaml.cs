@@ -47,6 +47,7 @@ namespace MnfAreaParser
             {
                 var l = (int)listBox.SelectedItem;
                 Ribs.RemoveAll(x => x.ID == l);
+                listBox.Items.RemoveAt(l);
                 CreateGraphics();
                 CreateRibs();
             }
@@ -92,6 +93,7 @@ namespace MnfAreaParser
         public void CreateGraphics()
         {
             mainGrid.Children.RemoveRange(1, mainGrid.Children.Count - 1);
+            if (Ribs.Count < 1) return;
             var ID = (from f in Ribs select f.ID).Max() + 1;
             for (int id = 0; id < ID; id++)
             {
@@ -217,63 +219,68 @@ namespace MnfAreaParser
         double[,] Delky;
         private void Click_Generate(object sender, RoutedEventArgs e)
         {
-            MaxI = Ribs.Count;
-            Delky = new double[MaxI, MaxI];
-            for (int i = 0; i < MaxI; i++)
+            try
             {
-                for (int j = 0; j < MaxI; j++)
+                MaxI = Ribs.Count;
+                Delky = new double[MaxI, MaxI];
+                for (int i = 0; i < MaxI; i++)
                 {
-                    Delky[i, j] = Math.Sqrt(Math.Pow(Ribs[i].P.X - Ribs[j].P.X, 2) + Math.Pow(Ribs[i].P.Y - Ribs[j].P.Y, 2));
+                    for (int j = 0; j < MaxI; j++)
+                    {
+                        Delky[i, j] = Math.Sqrt(Math.Pow(Ribs[i].P.X - Ribs[j].P.X, 2) + Math.Pow(Ribs[i].P.Y - Ribs[j].P.Y, 2));
+                    }
                 }
-            }
-            for (int i = 0; i < MaxI; i++)
-            {
-                for (int j = 0; j < MaxI; j++)
+                for (int i = 0; i < MaxI; i++)
                 {
-                    Console.WriteLine(i + "," + j + ":" + GeneratePath(i, j));
+                    for (int j = 0; j < MaxI; j++)
+                    {
+                        Console.WriteLine(i + "," + j + ":" + GeneratePath(i, j));
+                    }
                 }
+                //    //Ribs[i].Add(new WalkRib(Math.Round(Math.Sqrt(Math.Pow(Points[i].X - Points[j].X, 2) + Math.Pow(Points[i].Y - Points[j].Y, 2)), 2)));
+                //    StringBuilder sb = new StringBuilder();
+                //    foreach (var polygon in ListPolygon)
+                //    {
+                //        //walk_manager.AddPointGroup(new Array(new WalkPoint(449.2, 249.55), new WalkPoint(486.85, 249.55)));
+                //        sb.Append("walk_manager.AddPointGroup(new Array(");
+                //        sb.Append("new WalkPoint(" + polygon[0].X + ", " + polygon[0].Y + ")");
+                //        for (int i = 1; i < polygon.Length; i++)
+                //        {
+                //            sb.Append(", new WalkPoint(" + polygon[i].X + ", " + polygon[i].Y + ")");
+                //        }
+                //        sb.AppendLine("));");
+                //    }
+                //    sb.Append("walk_manager.ribs = new Array(");
+                //    sb.Append("new Array(");
+                //    sb.Append("new WalkRib(" + Ribs[0][0].D.ToString().Replace(',', '.'));
+                //    if (Ribs[0][0].Pole != "") sb.Append(",new Array(" + Ribs[0][0].Pole + ")");
+                //    sb.Append(")");
+                //    for (int j = 1; j < Ribs[0].Count; j++)
+                //    {
+                //        sb.Append(",new WalkRib(" + Ribs[0][j].D.ToString().Replace(',', '.'));
+                //        if (Ribs[0][j].Pole != "") sb.Append(",new Array(" + Ribs[0][j].Pole + ")");
+                //        sb.Append(")");
+                //    }
+                //    sb.Append(")");
+                //    for (int i = 1; i < Ribs.Count; i++)
+                //    {
+                //        sb.Append(",new Array(");
+                //        sb.Append("new WalkRib(" + Ribs[i][0].D.ToString().Replace(',', '.'));
+                //        if (Ribs[i][0].Pole != "") sb.Append(",new Array(" + Ribs[i][0].Pole + ")");
+                //        sb.Append(")");
+                //        for (int j = 1; j < Ribs[i].Count; j++)
+                //        {
+                //            sb.Append(",new WalkRib(" + Ribs[i][j].D.ToString().Replace(',', '.'));
+                //            if (Ribs[i][j].Pole != "") sb.Append(",new Array(" + Ribs[i][j].Pole + ")");
+                //            sb.Append(")");
+                //        }
+                //        sb.Append(")");
+                //    }
+                //    sb.AppendLine(");");
+                //    Console.WriteLine(sb.ToString());
             }
-            //    //Ribs[i].Add(new WalkRib(Math.Round(Math.Sqrt(Math.Pow(Points[i].X - Points[j].X, 2) + Math.Pow(Points[i].Y - Points[j].Y, 2)), 2)));
-            //    StringBuilder sb = new StringBuilder();
-            //    foreach (var polygon in ListPolygon)
-            //    {
-            //        //walk_manager.AddPointGroup(new Array(new WalkPoint(449.2, 249.55), new WalkPoint(486.85, 249.55)));
-            //        sb.Append("walk_manager.AddPointGroup(new Array(");
-            //        sb.Append("new WalkPoint(" + polygon[0].X + ", " + polygon[0].Y + ")");
-            //        for (int i = 1; i < polygon.Length; i++)
-            //        {
-            //            sb.Append(", new WalkPoint(" + polygon[i].X + ", " + polygon[i].Y + ")");
-            //        }
-            //        sb.AppendLine("));");
-            //    }
-            //    sb.Append("walk_manager.ribs = new Array(");
-            //    sb.Append("new Array(");
-            //    sb.Append("new WalkRib(" + Ribs[0][0].D.ToString().Replace(',', '.'));
-            //    if (Ribs[0][0].Pole != "") sb.Append(",new Array(" + Ribs[0][0].Pole + ")");
-            //    sb.Append(")");
-            //    for (int j = 1; j < Ribs[0].Count; j++)
-            //    {
-            //        sb.Append(",new WalkRib(" + Ribs[0][j].D.ToString().Replace(',', '.'));
-            //        if (Ribs[0][j].Pole != "") sb.Append(",new Array(" + Ribs[0][j].Pole + ")");
-            //        sb.Append(")");
-            //    }
-            //    sb.Append(")");
-            //    for (int i = 1; i < Ribs.Count; i++)
-            //    {
-            //        sb.Append(",new Array(");
-            //        sb.Append("new WalkRib(" + Ribs[i][0].D.ToString().Replace(',', '.'));
-            //        if (Ribs[i][0].Pole != "") sb.Append(",new Array(" + Ribs[i][0].Pole + ")");
-            //        sb.Append(")");
-            //        for (int j = 1; j < Ribs[i].Count; j++)
-            //        {
-            //            sb.Append(",new WalkRib(" + Ribs[i][j].D.ToString().Replace(',', '.'));
-            //            if (Ribs[i][j].Pole != "") sb.Append(",new Array(" + Ribs[i][j].Pole + ")");
-            //            sb.Append(")");
-            //        }
-            //        sb.Append(")");
-            //    }
-            //    sb.AppendLine(");");
-            //    Console.WriteLine(sb.ToString());
+            catch (Exception ex)
+            { Console.WriteLine(ex.Message); }
         }
         public string GeneratePath(int FromI, int ToI)
         {
