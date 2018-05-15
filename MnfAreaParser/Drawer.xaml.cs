@@ -219,8 +219,25 @@ namespace MnfAreaParser
         double[,] Delky;
         private void Click_Generate(object sender, RoutedEventArgs e)
         {
+            StringBuilder sb = new StringBuilder();
             try
             {
+                var ID = (from f in Ribs select f.ID).Max() + 1;
+                for (int id = 0; id < ID; id++)
+                {
+                    var polygon = (from f in Ribs where f.ID == id select f).ToArray();
+                    if (polygon.Length > 0)
+                    {
+                        //walk_manager.AddPointGroup(new Array(new WalkPoint(449.2, 249.55), new WalkPoint(486.85, 249.55)));
+                        sb.Append("walk_manager.AddPointGroup(new Array(");
+                        sb.Append("new WalkPoint(" + UpravCislo(polygon[0].P.X) + ", " + UpravCislo(polygon[0].P.Y) + ")");
+                        for (int i = 1; i < polygon.Length; i++)
+                        {
+                            sb.Append(", new WalkPoint(" + UpravCislo(polygon[i].P.X) + ", " + UpravCislo(polygon[i].P.Y) + ")");
+                        }
+                        sb.AppendLine("));");
+                    }
+                }
                 MaxI = Ribs.Count;
                 Delky = new double[MaxI, MaxI];
                 for (int i = 0; i < MaxI; i++)
@@ -230,57 +247,51 @@ namespace MnfAreaParser
                         Delky[i, j] = Math.Sqrt(Math.Pow(Ribs[i].P.X - Ribs[j].P.X, 2) + Math.Pow(Ribs[i].P.Y - Ribs[j].P.Y, 2));
                     }
                 }
-                for (int i = 0; i < MaxI; i++)
+                sb.Append("walk_manager.ribs = new Array(");
+                sb.Append("new Array(");
+                sb.Append("new WalkRib(" + UpravCislo(GetDelka(Ribs[0], Ribs[0])));
+                var pole = GeneratePath(0, 0);
+                if (pole != "") sb.Append(",new Array(" + pole + ")");
+                sb.Append(")");
+                for (int j = 1; j < MaxI; j++)
                 {
-                    for (int j = 0; j < MaxI; j++)
-                    {
-                        Console.WriteLine(i + "," + j + ":" + GeneratePath(i, j));
-                    }
+                    sb.Append(",new WalkRib(" + UpravCislo(GetDelka(Ribs[0], Ribs[j])));
+                    pole = GeneratePath(0, j);
+                    if (pole != "") sb.Append(",new Array(" + pole + ")");
+                    sb.Append(")");
                 }
-                //    //Ribs[i].Add(new WalkRib(Math.Round(Math.Sqrt(Math.Pow(Points[i].X - Points[j].X, 2) + Math.Pow(Points[i].Y - Points[j].Y, 2)), 2)));
-                //    StringBuilder sb = new StringBuilder();
-                //    foreach (var polygon in ListPolygon)
-                //    {
-                //        //walk_manager.AddPointGroup(new Array(new WalkPoint(449.2, 249.55), new WalkPoint(486.85, 249.55)));
-                //        sb.Append("walk_manager.AddPointGroup(new Array(");
-                //        sb.Append("new WalkPoint(" + polygon[0].X + ", " + polygon[0].Y + ")");
-                //        for (int i = 1; i < polygon.Length; i++)
-                //        {
-                //            sb.Append(", new WalkPoint(" + polygon[i].X + ", " + polygon[i].Y + ")");
-                //        }
-                //        sb.AppendLine("));");
-                //    }
-                //    sb.Append("walk_manager.ribs = new Array(");
-                //    sb.Append("new Array(");
-                //    sb.Append("new WalkRib(" + Ribs[0][0].D.ToString().Replace(',', '.'));
-                //    if (Ribs[0][0].Pole != "") sb.Append(",new Array(" + Ribs[0][0].Pole + ")");
-                //    sb.Append(")");
-                //    for (int j = 1; j < Ribs[0].Count; j++)
-                //    {
-                //        sb.Append(",new WalkRib(" + Ribs[0][j].D.ToString().Replace(',', '.'));
-                //        if (Ribs[0][j].Pole != "") sb.Append(",new Array(" + Ribs[0][j].Pole + ")");
-                //        sb.Append(")");
-                //    }
-                //    sb.Append(")");
-                //    for (int i = 1; i < Ribs.Count; i++)
-                //    {
-                //        sb.Append(",new Array(");
-                //        sb.Append("new WalkRib(" + Ribs[i][0].D.ToString().Replace(',', '.'));
-                //        if (Ribs[i][0].Pole != "") sb.Append(",new Array(" + Ribs[i][0].Pole + ")");
-                //        sb.Append(")");
-                //        for (int j = 1; j < Ribs[i].Count; j++)
-                //        {
-                //            sb.Append(",new WalkRib(" + Ribs[i][j].D.ToString().Replace(',', '.'));
-                //            if (Ribs[i][j].Pole != "") sb.Append(",new Array(" + Ribs[i][j].Pole + ")");
-                //            sb.Append(")");
-                //        }
-                //        sb.Append(")");
-                //    }
-                //    sb.AppendLine(");");
-                //    Console.WriteLine(sb.ToString());
+                sb.Append(")");
+                for (int i = 1; i < Ribs.Count; i++)
+                {
+                    sb.Append(",new Array(");
+                    sb.Append("new WalkRib(" + UpravCislo(GetDelka(Ribs[i], Ribs[0])));
+                    pole = GeneratePath(i, 0);
+                    if (pole != "") sb.Append(",new Array(" + pole + ")");
+                    sb.Append(")");
+                    for (int j = 1; j < MaxI; j++)
+                    {
+                        sb.Append(",new WalkRib(" + UpravCislo(GetDelka(Ribs[i], Ribs[j])));
+                        pole = GeneratePath(i, j);
+                        if (pole != "") sb.Append(",new Array(" + pole + ")");
+                        sb.Append(")");
+                    }
+                    sb.Append(")");
+                }
+                sb.AppendLine(");");
             }
             catch (Exception ex)
-            { Console.WriteLine(ex.Message); }
+            {
+                Console.WriteLine(ex.Message);
+            }
+            Console.WriteLine(sb.ToString());
+        }
+        public string UpravCislo(double d)
+        {
+            return d.ToString("0.00").Replace(',', '.');
+        }
+        public double GetDelka(WalkRib wr1, WalkRib wr2)
+        {
+            return Math.Round(Math.Sqrt(Math.Pow(wr1.P.X - wr2.P.X, 2) + Math.Pow(wr1.P.Y - wr2.P.Y, 2)), 2);
         }
         public string GeneratePath(int FromI, int ToI)
         {
@@ -302,7 +313,7 @@ namespace MnfAreaParser
             double suma = 0;
             for (int i = 1; i < cesta.Length; i++)
             {
-                suma += Delky[i - 1, i];
+                suma += Delky[cesta[i - 1], cesta[i]];
             }
             return suma;
         }
