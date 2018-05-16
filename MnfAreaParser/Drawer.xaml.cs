@@ -119,6 +119,8 @@ namespace MnfAreaParser
                     {
                         Content = id,
                         Margin = new Thickness(x + MainPoint.X, y + MainPoint.Y + 10, 0, 0),
+                        VerticalAlignment = VerticalAlignment.Top,
+                        HorizontalAlignment = HorizontalAlignment.Left,
                         Foreground = Brushes.Black,
                         Background = Brushes.White,
                     });
@@ -160,6 +162,8 @@ namespace MnfAreaParser
                 {
                     Content = pozice++,
                     Margin = new Thickness(i.P.X + MainPoint.X, i.P.Y + MainPoint.Y, 0, 0),
+                    VerticalAlignment = VerticalAlignment.Top,
+                    HorizontalAlignment = HorizontalAlignment.Left,
                     Foreground = Brushes.Red,
                     Background = Brushes.White,
                 });
