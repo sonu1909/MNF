@@ -295,10 +295,21 @@ namespace MnfAreaParser
         }
         public string GeneratePath(int FromI, int ToI)
         {
-            SeznamS.Clear();
+            NejkratsiCesta.Clear();
             SearchPath("", FromI, -1, ToI, 0);
-            //return SeznamS.First(s => s.Length == SeznamS.Min(x => x.Length));
-            return SeznamS.First(s => DelkaCesty(CreateCesta(FromI, ToI, s)) == SeznamS.Min(x => DelkaCesty(CreateCesta(FromI, ToI, x))));
+            var Cesty = new List<int[]>();
+            foreach (var s in NejkratsiCesta)
+            {
+                Cesty.Add(CreateCesta(FromI, ToI, s));
+            }
+            var DelkyCesty = new List<double>();
+            foreach (var s in Cesty)
+            {
+                DelkyCesty.Add(DelkaCesty(s));
+            }
+            var MinD = DelkyCesty.Min();
+            return NejkratsiCesta.First(s => DelkyCesty[NejkratsiCesta.IndexOf(s)] == MinD);
+            //return SeznamS.First(s => DelkaCesty(CreateCesta(FromI, ToI, s)) == SeznamS.Min(x => DelkaCesty(CreateCesta(FromI, ToI, x))));
         }
         public int[] CreateCesta(int FromI, int ToI, string cesta)
         {
@@ -317,15 +328,27 @@ namespace MnfAreaParser
             }
             return suma;
         }
-        List<string> SeznamS = new List<string>();
+        List<string> NejkratsiCesta = new List<string>();
         int MaxI = 40;
         public void SearchPath(string s, int FromI, int FromFromI, int ToI, int ind)
         {
+            if (NejkratsiCesta.Count > 0 && ind > NejkratsiCesta[0].Length / 4) return;
             int inde = ind + 1;
             if (inde > MaxI) return;
             var ss = (from f in Ribs[FromI].NextWalkRib.Split(',') select int.Parse(f)).ToArray();
-            if (FromI == ToI) SeznamS.Add(s);
-            else if (ss.Contains(ToI)) SeznamS.Add(s);
+            if (FromI == ToI || ss.Contains(ToI))
+            {
+                if (NejkratsiCesta.Count > 0)
+                {
+                    if (s.Length < NejkratsiCesta[0].Length)
+                    {
+                        NejkratsiCesta.Clear();
+                        NejkratsiCesta.Add(s);
+                    }
+                    else if (s.Length == NejkratsiCesta[0].Length) NejkratsiCesta.Add(s);
+                }
+                else NejkratsiCesta.Add(s);
+            }
             else
             {
                 foreach (var i in ss)

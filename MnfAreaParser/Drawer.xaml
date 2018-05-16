@@ -16,7 +16,7 @@
             <ColumnDefinition Width="27"/>
             <ColumnDefinition Width="27"/>
             <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="100"/>
         </Grid.ColumnDefinitions>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.RowSpan="2">
             <Grid x:Name="mainGrid" MouseDown="mainGrid_MouseDown">
