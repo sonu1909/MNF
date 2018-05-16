@@ -14,7 +14,7 @@
         <StackPanel x:Name="sp" Orientation="Horizontal">
             <Button Content="Load BG" Click="ClickLoadBG"/>
             <Separator Visibility="Hidden" Width="10"/>
-            <Button Content="Load Points" Click="ClickLoadPoints"/>
+            <Button Content="Load Points" Click="ClickLoadPoints" Visibility="Hidden"/>
         </StackPanel>
         <local:Drawer x:Name="drawer" Grid.Row="1"/>
         <!--<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">

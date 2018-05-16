@@ -247,17 +247,29 @@ namespace MnfAreaParser
                         Delky[i, j] = Math.Sqrt(Math.Pow(Ribs[i].P.X - Ribs[j].P.X, 2) + Math.Pow(Ribs[i].P.Y - Ribs[j].P.Y, 2));
                     }
                 }
+                var Pole = new string[MaxI, MaxI];
+                Parallel.For(0, MaxI, i =>
+                 {
+                     for (int j = i; j < MaxI; j++)
+                     {
+                         if (i == j) Pole[i, j] = "";
+                         else
+                         {
+                             var cesta = GeneratePath(i, j);
+                             Pole[i, j] = cesta;
+                             Pole[j, i] = new string(cesta.ToCharArray().Reverse().ToArray());
+                         }
+                     }
+                 });
                 sb.Append("walk_manager.ribs = new Array(");
                 sb.Append("new Array(");
                 sb.Append("new WalkRib(" + UpravCislo(GetDelka(Ribs[0], Ribs[0])));
-                var pole = GeneratePath(0, 0);
-                if (pole != "") sb.Append(",new Array(" + pole + ")");
+                if (Pole[0,0] != "") sb.Append(",new Array(" + Pole[0, 0] + ")");
                 sb.Append(")");
                 for (int j = 1; j < MaxI; j++)
                 {
                     sb.Append(",new WalkRib(" + UpravCislo(GetDelka(Ribs[0], Ribs[j])));
-                    pole = GeneratePath(0, j);
-                    if (pole != "") sb.Append(",new Array(" + pole + ")");
+                    if (Pole[0, j] != "") sb.Append(",new Array(" + Pole[0, j] + ")");
                     sb.Append(")");
                 }
                 sb.Append(")");
@@ -265,14 +277,12 @@ namespace MnfAreaParser
                 {
                     sb.Append(",new Array(");
                     sb.Append("new WalkRib(" + UpravCislo(GetDelka(Ribs[i], Ribs[0])));
-                    pole = GeneratePath(i, 0);
-                    if (pole != "") sb.Append(",new Array(" + pole + ")");
+                    if (Pole[i, 0] != "") sb.Append(",new Array(" + Pole[i, 0] + ")");
                     sb.Append(")");
                     for (int j = 1; j < MaxI; j++)
                     {
                         sb.Append(",new WalkRib(" + UpravCislo(GetDelka(Ribs[i], Ribs[j])));
-                        pole = GeneratePath(i, j);
-                        if (pole != "") sb.Append(",new Array(" + pole + ")");
+                        if (Pole[i, j] != "") sb.Append(",new Array(" + Pole[i, j] + ")");
                         sb.Append(")");
                     }
                     sb.Append(")");
@@ -295,8 +305,8 @@ namespace MnfAreaParser
         }
         public string GeneratePath(int FromI, int ToI)
         {
-            NejkratsiCesta.Clear();
-            SearchPath("", FromI, -1, ToI, 0);
+            var NejkratsiCesta = new List<string>();
+            SearchPath(NejkratsiCesta, "", FromI, -1, ToI, 0);
             var Cesty = new List<int[]>();
             foreach (var s in NejkratsiCesta)
             {
@@ -328,9 +338,8 @@ namespace MnfAreaParser
             }
             return suma;
         }
-        List<string> NejkratsiCesta = new List<string>();
         int MaxI = 40;
-        public void SearchPath(string s, int FromI, int FromFromI, int ToI, int ind)
+        public void SearchPath(List<string> NejkratsiCesta, string s, int FromI, int FromFromI, int ToI, int ind)
         {
             if (NejkratsiCesta.Count > 0 && ind > NejkratsiCesta[0].Length / 4) return;
             int inde = ind + 1;
@@ -358,10 +367,53 @@ namespace MnfAreaParser
                         string S = s;
                         if (s == "") S += "\"" + i + "\"";
                         else S += ",\"" + i + "\"";
-                        SearchPath(S, i, FromI, ToI, inde);
+                        SearchPath(NejkratsiCesta, S, i, FromI, ToI, inde);
                     }
                 }
                 //if (S != "") SeznamS.Add(S);
+            }
+        }
+
+        private void Click_Save(object sender, RoutedEventArgs e)
+        {
+            var sfd = new System.Windows.Forms.SaveFileDialog();
+            if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                var sw = new System.IO.StreamWriter(sfd.FileName);
+                for (int i = 0; i < Ribs.Count; i++)
+                {
+                    sw.WriteLine(Ribs[i].ID + " " + Ribs[i].P.ToString() + " " + Ribs[i].NextWalkRib);
+                }
+                sw.Close();
+            }
+        }
+
+        private void Click_Load(object sender, RoutedEventArgs e)
+        {
+            var ofd = new System.Windows.Forms.OpenFileDialog();
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                var sr = new System.IO.StreamReader(ofd.FileName);
+                var radek = sr.ReadLine();
+                while(radek!=null)
+                {
+                    var s = radek.Split(' ');
+                    if (s.Length != 3) Console.WriteLine("Line corrupted.");
+                    else
+                    {
+                        Ribs.Add(new WalkRib() { ID = int.Parse(s[0]), P = Point.Parse(s[1].Replace(';', ',')), NextWalkRib = s[2] });
+                    }
+                    radek = sr.ReadLine();
+                }
+                sr.Close();
+                listBox.Items.Clear();
+                var ID = (from f in Ribs select f.ID).Max() + 1;
+                for (int id = 0; id < ID; id++)
+                {
+                    listBox.Items.Add(id);
+                }
+                CreateGraphics();
+                CreateRibs();
             }
         }
     }
