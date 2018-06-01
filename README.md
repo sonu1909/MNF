@@ -16,3 +16,5 @@ Projects
   <li>MnfPicReader - picture browser</li>
   <li>MnfAreaParser - tool for map edit</li>
 </ul>
+
+Temporary link for compiled Windows version http://leteckaposta.cz/750051878
