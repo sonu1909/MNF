@@ -18,7 +18,7 @@ namespace MnfPic
             new MnfLocation("MnF Alley",new Point(407.8,247.95),000000000),//0
             new MnfLocation("Wild West",new Point(341.05,297.1),100000000),//1
             new MnfLocation("MnF Alley / Mme Olivia`s Private Club",new Point(317.95,191.35),200000000),//2
-            new MnfLocation("Lagoon Beach",new Point(641,473.85),400000000),//3
+            new MnfLocation("Lagoon Beach",new Point(650,480),new Point(300,200),400000000),//3
             new MnfLocation("Sacred Mountain",new Point(356.2,1146.3),500000000),//4
             new MnfLocation("Wild West / Saloon",new Point(787.2,748.2),1000000000),//5
             new MnfLocation("Wild West / Motel Lobby",new Point(436.1,466.1),1100000000),//6

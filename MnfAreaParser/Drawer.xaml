@@ -25,8 +25,16 @@
             </Grid>
         </ScrollViewer>
         <ListBox Grid.Column="1" x:Name="listBox" Grid.ColumnSpan="2" MouseDoubleClick="listBox_MouseDoubleClick"/>
-        <StackPanel x:Name="stackPanel" Grid.Column="3"/>
-        <StackPanel x:Name="stackPanelN" Grid.Column="4" Grid.ColumnSpan="2"/>
+        <ScrollViewer Grid.Column="3" Grid.ColumnSpan="3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel x:Name="stackPanel"/>
+                <StackPanel x:Name="stackPanelN" Grid.Column="1"/>
+            </Grid>
+        </ScrollViewer>
         <Button Content="Add" Grid.Column="1" Grid.Row="1" Click="Click_Add"/>
         <Button Content="Rem" Grid.Column="2" Grid.Row="1" Click="Click_Rem"/>
         <Button Content="Generate" Grid.Column="3" Grid.Row="1" Click="Click_Generate"/>

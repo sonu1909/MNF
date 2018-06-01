@@ -223,6 +223,7 @@ namespace MnfAreaParser
             CreateGraphics();
         }
         double[,] Delky;
+        int[][] Ribs2;
         private void Click_Generate(object sender, RoutedEventArgs e)
         {
             StringBuilder sb = new StringBuilder();
@@ -245,6 +246,11 @@ namespace MnfAreaParser
                     }
                 }
                 MaxI = Ribs.Count;
+                Ribs2 = new int[MaxI][];
+                for (int i = 0; i < MaxI; i++)
+                {
+                    Ribs2[i] = (from f in Ribs[i].NextWalkRib.Split(',') select int.Parse(f)).ToArray();
+                }
                 Delky = new double[MaxI, MaxI];
                 for (int i = 0; i < MaxI; i++)
                 {
@@ -254,6 +260,7 @@ namespace MnfAreaParser
                     }
                 }
                 var Pole = new string[MaxI, MaxI];
+                int PocetPokusu = 0;
                 Parallel.For(0, MaxI, i =>
                  {
                      for (int j = i; j < MaxI; j++)
@@ -262,9 +269,10 @@ namespace MnfAreaParser
                          else
                          {
                              var cesta = GeneratePath(i, j);
-                             Pole[i, j] = cesta;
-                             Pole[j, i] = new string(cesta.ToCharArray().Reverse().ToArray());
+                             Pole[i, j] = GetCesta(cesta);
+                             Pole[j, i] = GetCesta(cesta.Reverse().ToArray());
                          }
+                         Console.WriteLine("Pokus" + PocetPokusu++);
                      }
                  });
                 sb.Append("walk_manager.ribs = new Array(");
@@ -300,6 +308,9 @@ namespace MnfAreaParser
                 Console.WriteLine(ex.Message);
             }
             Console.WriteLine(sb.ToString());
+            TextBox tb = new TextBox() { Text = sb.ToString(), TextWrapping = TextWrapping.Wrap };
+            Window w = new Window() { Content = tb };
+            w.Show();
         }
         public string UpravCislo(double d)
         {
@@ -309,23 +320,24 @@ namespace MnfAreaParser
         {
             return Math.Round(Math.Sqrt(Math.Pow(wr1.P.X - wr2.P.X, 2) + Math.Pow(wr1.P.Y - wr2.P.Y, 2)), 2);
         }
-        public string GeneratePath(int FromI, int ToI)
+        public string GetCesta(int[] pole)
         {
-            var NejkratsiCesta = new List<string>();
-            SearchPath(NejkratsiCesta, "", FromI, -1, ToI, 0);
-            var Cesty = new List<int[]>();
-            foreach (var s in NejkratsiCesta)
+            if (pole == null || pole.Length == 0) return "";
+            else
             {
-                Cesty.Add(CreateCesta(FromI, ToI, s));
+                string s = "\"" + pole[0] + "\"";
+                for (int i = 1; i < pole.Length; i++)
+                {
+                    s+= ",\"" + pole[i] + "\"";
+                }
+                return s;
             }
-            var DelkyCesty = new List<double>();
-            foreach (var s in Cesty)
-            {
-                DelkyCesty.Add(DelkaCesty(s));
-            }
-            var MinD = DelkyCesty.Min();
-            return NejkratsiCesta.First(s => DelkyCesty[NejkratsiCesta.IndexOf(s)] == MinD);
-            //return SeznamS.First(s => DelkaCesty(CreateCesta(FromI, ToI, s)) == SeznamS.Min(x => DelkaCesty(CreateCesta(FromI, ToI, x))));
+        }
+        public int[] GeneratePath(int FromI, int ToI)
+        {
+            var NejkratsiCesta = new List<int>();
+            SearchPath(NejkratsiCesta, new int[0], FromI, -1, ToI, 0);
+            return NejkratsiCesta.ToArray();
         }
         public int[] CreateCesta(int FromI, int ToI, string cesta)
         {
@@ -337,6 +349,8 @@ namespace MnfAreaParser
         }
         public double DelkaCesty(int[] cesta)
         {
+            if (cesta == null || cesta.Length == 0) return 0;
+            if (cesta.Length == 1) return cesta[0];
             double suma = 0;
             for (int i = 1; i < cesta.Length; i++)
             {
@@ -344,36 +358,47 @@ namespace MnfAreaParser
             }
             return suma;
         }
-        int MaxI = 40;
-        public void SearchPath(List<string> NejkratsiCesta, string s, int FromI, int FromFromI, int ToI, int ind)
+        public double DelkaCesty(List<int> cesta)
         {
-            if (NejkratsiCesta.Count > 0 && ind > NejkratsiCesta[0].Length / 4) return;
+            if (cesta == null || cesta.Count == 0) return 0;
+            if (cesta.Count == 1) return cesta[0];
+            double suma = 0;
+            for (int i = 1; i < cesta.Count; i++)
+            {
+                suma += Delky[cesta[i - 1], cesta[i]];
+            }
+            return suma;
+        }
+        int MaxI = 40;
+        public void SearchPath(List<int> NejkratsiCesta, int[] Cesta, int FromI, int FromFromI, int ToI, int ind)
+        {
             int inde = ind + 1;
             if (inde > MaxI) return;
-            var ss = (from f in Ribs[FromI].NextWalkRib.Split(',') select int.Parse(f)).ToArray();
-            if (FromI == ToI || ss.Contains(ToI))
-            {
+            if (NejkratsiCesta.Count > 0 && Cesta.Length > NejkratsiCesta.Count) return;
+            var sousedi = Ribs2[FromI];
+            if (FromI == ToI || sousedi.Contains(ToI))
+            {//konec cesty
+                var delka = DelkaCesty(Cesta);
                 if (NejkratsiCesta.Count > 0)
                 {
-                    if (s.Length < NejkratsiCesta[0].Length)
+                    if (delka < DelkaCesty(NejkratsiCesta))
                     {
                         NejkratsiCesta.Clear();
-                        NejkratsiCesta.Add(s);
+                        NejkratsiCesta.AddRange(Cesta);
                     }
-                    else if (s.Length == NejkratsiCesta[0].Length) NejkratsiCesta.Add(s);
                 }
-                else NejkratsiCesta.Add(s);
+                else NejkratsiCesta.AddRange(Cesta);
             }
             else
-            {
-                foreach (var i in ss)
+            {//hledat cestu
+                foreach (var i in sousedi)
                 {
                     if (i != FromI && i != FromFromI)
                     {
-                        string S = s;
-                        if (s == "") S += "\"" + i + "\"";
-                        else S += ",\"" + i + "\"";
-                        SearchPath(NejkratsiCesta, S, i, FromI, ToI, inde);
+                        List<int> cesta = new List<int>();
+                        cesta.AddRange(Cesta);
+                        cesta.Add(i);
+                        SearchPath(NejkratsiCesta, cesta.ToArray(), i, FromI, ToI, inde);
                     }
                 }
                 //if (S != "") SeznamS.Add(S);

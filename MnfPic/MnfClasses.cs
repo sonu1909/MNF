@@ -519,6 +519,7 @@ namespace MnfPic
             }
         }
         public Point PortLokace;
+        public Point PortPresnost;
         public long IdLokace = 0;
         public MnfLocation()
         {
@@ -526,7 +527,11 @@ namespace MnfPic
         }
         public MnfLocation(string j, Point p, long id)
         {
-            JmenoLokace = j;PortLokace = p;IdLokace = id;
+            JmenoLokace = j; PortLokace = p; IdLokace = id; PortPresnost = new Point(20, 20);
+        }
+        public MnfLocation(string j, Point p, Point pp, long id)
+        {
+            JmenoLokace = j; PortLokace = p; IdLokace = id; PortPresnost = pp;
         }
     }
 }

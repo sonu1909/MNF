@@ -861,6 +861,7 @@ namespace MnfPic
             {
                 GameRepeat = false;
                 GamesBW.CancelAsync();
+                Write(MP.Server.TC_game, "<data status=\"stop\" />");
             }
         }
 
@@ -936,7 +937,7 @@ namespace MnfPic
                 MP.Server.TC_area = new TcpClient();
                 MP.Server.TC_area.Connect(MP.Server.AdresaIP, MP.Server.area_socket);
             }
-            s = "<data type=\"area\" avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" area_id=\"" + ActualArea.IdLokace + "\" points=\"" + (ActualArea.PortLokace.X + r.Next(-5, 5)) + "," + (ActualArea.PortLokace.Y + r.Next(-5, 5)) + "\" bed_ids =\"\" pole_ids=\"\" session_id=\"" + MP.Server.Session_id + "\" />";
+            s = "<data type=\"area\" avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" area_id=\"" + ActualArea.IdLokace + "\" points=\"" + (ActualArea.PortLokace.X + r.Next(0, (int)ActualArea.PortPresnost.X)) + "," + (ActualArea.PortLokace.Y + r.Next(0, (int)ActualArea.PortPresnost.Y)) + "\" bed_ids =\"\" pole_ids=\"\" session_id=\"" + MP.Server.Session_id + "\" />";
             ns = MP.Server.TC_area.GetStream();
             ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
 
@@ -1133,7 +1134,14 @@ namespace MnfPic
         private void BeachGameClick(object sender, RoutedEventArgs e)
         {
             if (GameBW.IsBusy) return;
-            if (GameID == 2) GoToArea(MnfArea.Lokace[3]);
+            if (GameID == 2)
+            {
+                GoToArea(MnfArea.Lokace[3]);
+                ChatBW.CancelAsync();
+                AreaBW.CancelAsync();
+                if (MP.Server.TC_area.Connected) MP.Server.TC_area.Close();
+                if (MP.Server.TC_chat.Connected) MP.Server.TC_chat.Close();
+            }
             if (MP.Server.TC_game.Connected) MP.Server.TC_game.Close();
             MP.Server.TC_game = new TcpClient();
             MP.Server.TC_game.Connect(MP.Server.AdresaIP, MP.Server.game_socket);
