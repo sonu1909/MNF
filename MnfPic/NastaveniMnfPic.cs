@@ -24,6 +24,7 @@ namespace MnfPic
                 }
             }
         }
+
         static Hodnota _UserFile = new HodnotaString() { Sekce = "Common", Jmeno = "UserFile", Value = "Users.txt" };
         public static string UserFile
         {
@@ -37,10 +38,48 @@ namespace MnfPic
                 }
             }
         }
+        
+        static Hodnota _SaveImages = new HodnotaBool() { Sekce = "Lockers", Jmeno = "SaveImages", Value = false };
+        public static bool SaveImages
+        {
+            get { return (bool)_SaveImages.Value; }
+            set
+            {
+                if ((bool)_SaveImages.Value != value)
+                {
+                    _SaveImages.Value = value;
+                    Save();
+                }
+            }
+        }
+        
+        static Hodnota _SaveStrangers = new HodnotaBool() { Sekce = "Lockers", Jmeno = "SaveStrangers", Value = false };
+        public static bool SaveStrangers
+        {
+            get { return (bool)_SaveStrangers.Value; }
+            set
+            {
+                if ((bool)_SaveStrangers.Value != value)
+                {
+                    _SaveStrangers.Value = value;
+                    Save();
+                }
+            }
+        }
 
-
-
-
+        static Hodnota _SaveFriendList = new HodnotaBool() { Sekce = "Lockers", Jmeno = "SaveFriendList", Value = false };
+        public static bool SaveFriendList
+        {
+            get { return (bool)_SaveFriendList.Value; }
+            set
+            {
+                if ((bool)_SaveFriendList.Value != value)
+                {
+                    _SaveFriendList.Value = value;
+                    Save();
+                }
+            }
+        }
 
 
         /// <summary>

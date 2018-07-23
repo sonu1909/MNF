@@ -106,7 +106,9 @@ namespace MnfPic
         public int AvatarID {get{return _AvatarID;}set{ _AvatarID = value; OnPropertyChanged("AvatarID");}}
         public string JmenoPostavy { get { return _JmenoPostavy; } set { _JmenoPostavy = value; OnPropertyChanged("_JmenoPostavy"); } }
         public string petnis_name {get{return _petnis_name; }set{ _petnis_name = value; OnPropertyChanged("petnis_name");}}
-        public int sex {get{return _sex; }set{ _sex = value; OnPropertyChanged("sex");}}
+        public int sex {get{return _sex; }set{ _sex = value; OnPropertyChanged("sex"); Ssex = value > 1 ? "Girl" : "Boy"; } }
+        public string Ssex { get { return _Ssex; } set { _Ssex = value; OnPropertyChanged("Ssex"); } }
+        private string _Ssex = "None";
         public int sexual_orientation {get{return _sexual_orientation; }set{ _sexual_orientation = value; OnPropertyChanged("sexual_orientation");}}
         public int skin_color {get{return _skin_color; }set{ _skin_color = value; OnPropertyChanged("skin_color");}}
         public int hair_color {get{return _hair_color; }set{ _hair_color = value; OnPropertyChanged("hair_color");}}
@@ -133,7 +135,9 @@ namespace MnfPic
         public int exp_gross {get{return _exp_gross; }set{ _exp_gross = value; OnPropertyChanged("exp_gross");}}
         public int exp_available {get{return _exp_available; }set{ _exp_available = value; OnPropertyChanged("exp_available");}}
         public int deleted {get{return _deleted; }set{ _deleted = value; OnPropertyChanged("deleted");}}
-        public int premium {get{return _premium; }set{ _premium = value; OnPropertyChanged("premium");}}
+        public int premium {get{return _premium; }set{ _premium = value; OnPropertyChanged("premium"); Spremium = value > 0 ? "Premium" : ""; } }
+        public string Spremium { get { return _Spremium; } set { _Spremium = value; OnPropertyChanged("Spremium"); } }
+        private string _Spremium = "";
         public int hat {get{return _hat; }set{ _hat = value; OnPropertyChanged("hat");}}
         public int hat_color1 {get{return _hat_color1; }set{ _hat_color1 = value; OnPropertyChanged("hat_color1");}}
         public int hat_color2 {get{return _hat_color2; }set{ _hat_color2 = value; OnPropertyChanged("hat_color2");}}

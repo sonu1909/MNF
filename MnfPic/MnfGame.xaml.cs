@@ -46,25 +46,8 @@ namespace MnfPic
             if (!File.Exists("ChatPPL.txt")) File.Create("ChatPPL.txt").Close();
             try
             {
-                StreamReader sr = new StreamReader("MeetPPL.txt");
+                StreamReader sr = new StreamReader("ChatPPL.txt");
                 string radek = sr.ReadLine();
-                while (radek != null)
-                {
-                    var s = radek.Split(' ');
-                    MnfAvatar a = new MnfAvatar();
-                    try
-                    {
-                        a.AvatarID = int.Parse(s[0]);
-                        a.JmenoPostavy = s[1];
-                    }
-                    catch { }
-                    //neuplne info o postave
-                    PotkanePostavy.Add(a);
-                    radek = sr.ReadLine();
-                }
-                sr.Close();
-                sr = new StreamReader("ChatPPL.txt");
-                radek = sr.ReadLine();
                 while (radek != null)
                 {
                     var s = radek.Split(' ');
@@ -80,6 +63,26 @@ namespace MnfPic
                     radek = sr.ReadLine();
                 }
                 sr.Close();
+                if (NastaveniMnfPic.SaveStrangers)
+                {
+                    sr = new StreamReader("MeetPPL.txt");
+                    radek = sr.ReadLine();
+                    while (radek != null)
+                    {
+                        var s = radek.Split(' ');
+                        MnfAvatar a = new MnfAvatar();
+                        try
+                        {
+                            a.AvatarID = int.Parse(s[0]);
+                            a.JmenoPostavy = s[1];
+                        }
+                        catch { }
+                        //neuplne info o postave
+                        PotkanePostavy.Add(a);
+                        radek = sr.ReadLine();
+                    }
+                    sr.Close();
+                }                
             }
             catch (Exception e) { Console.WriteLine("Load file error"); Console.WriteLine(e.Message); }
             
@@ -245,18 +248,21 @@ namespace MnfPic
 
         public void Close()
         {
-            StreamWriter sr = new StreamWriter("MeetPPL.txt");
-            foreach(var v in PotkanePostavy)
-            {
-                sr.WriteLine(v.AvatarID + " " + v.JmenoPostavy);
-            }
-            sr.Close();
-            sr = new StreamWriter("ChatPPL.txt");
+            StreamWriter sr = new StreamWriter("ChatPPL.txt");
             foreach (var v in ChatPostavy)
             {
                 sr.WriteLine(v.AvatarID + " " + v.JmenoPostavy);
             }
             sr.Close();
+            if (NastaveniMnfPic.SaveStrangers)
+            {
+                sr = new StreamWriter("MeetPPL.txt");
+                foreach (var v in PotkanePostavy)
+                {
+                    sr.WriteLine(v.AvatarID + " " + v.JmenoPostavy);
+                }
+                sr.Close();
+            }
 
             TopBW.CancelAsync();
             AreaBW.CancelAsync();
@@ -529,16 +535,21 @@ namespace MnfPic
                                 //    break;
                                 case "friends_list":
                                 case "friends_page":
-                                    StreamWriter swfl = new StreamWriter("FriendList.txt");
-                                    //XR.Read();
-                                    //while (XR.Name == "avatar")
-                                    //{
-                                    //    swfl.WriteLine(XR.GetAttribute("data"));
-                                    //    XR.Read();
-                                    //}
-                                    swfl.Close();
+                                    if (NastaveniMnfPic.SaveFriendList)
+                                    {
+                                        StreamWriter swfl = new StreamWriter("FriendList.txt");
+                                        XR.Read();
+                                        while (XR.Name == "avatar")
+                                        {
+                                            swfl.WriteLine(XR.GetAttribute("data"));
+                                            XR.Read();
+                                        }
+                                        swfl.Close();
+                                    }
                                     break;
                                 case "invite":
+                                    //Write(MP.Server.TC_top, "<data><invite avatar_id=\"" + avatar.data.id + "\" status=\"canceled\"/></data>");
+                                    //Write(MP.Server.TC_top, "<data private_message=\"send\" type=\"friendship_accept\" id_to=\"" + active_invitation.invitor_data.id + "\" />");
                                     break;
                                 case "invite_reply":
                                     break;
@@ -550,21 +561,28 @@ namespace MnfPic
                                     XR.Read();
                                     MnfAvatar ma = new MnfAvatar();
                                     ma.ParseAvatar(XR.GetAttribute("data"));
-                                    XR.GetAttribute("friend");
-                                    XR.GetAttribute("status");
-                                    XR.GetAttribute("info");
-                                    XR.GetAttribute("is_ignoring_you");
-                                    XR.GetAttribute("cash");
-                                    XR.GetAttribute("dont_disturb");
-                                    XR.GetAttribute("from");
-                                    XR.GetAttribute("about");
+                                    ma.IsFriend = XR.GetAttribute("friend") == "1";
+                                    ma.Status = XR.GetAttribute("status");
+                                    ma.Info = XR.GetAttribute("info");
+                                    ma.Is_ignoring_you = XR.GetAttribute("is_ignoring_you") == "1";
+                                    ma.Cash = int.Parse(XR.GetAttribute("cash"));
+                                    ma.Dont_disturb = XR.GetAttribute("dont_disturb") == "1";
+                                    ma.From = XR.GetAttribute("from");
+                                    ma.Popis = XR.GetAttribute("about");
 
                                     for (int p = 0; p < PotkanePostavy.Count; p++)
                                     {
                                         if (PotkanePostavy[p].AvatarID == ma.AvatarID)
                                         {
                                             PotkanePostavy[p].ParseAvatar(XR.GetAttribute("data"));
-                                            PotkanePostavy[p].Popis = XR.GetAttribute("about");
+                                            PotkanePostavy[p].IsFriend = ma.IsFriend;
+                                            PotkanePostavy[p].Status = ma.Status;
+                                            PotkanePostavy[p].Info = ma.Info;
+                                            PotkanePostavy[p].Is_ignoring_you = ma.Is_ignoring_you;
+                                            PotkanePostavy[p].Cash = ma.Cash;
+                                            PotkanePostavy[p].Dont_disturb = ma.Dont_disturb;
+                                            PotkanePostavy[p].From = ma.From;
+                                            PotkanePostavy[p].Popis = ma.Popis;
                                             break;
                                         }
                                     }
@@ -750,25 +768,28 @@ namespace MnfPic
                                     break;
                                 case "picture_info":
                                 case "picture_info_new":
-                                    XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
-                                    XR.Read();
-                                    string oo = "";
-                                    string d = NastaveniMnfPic.MainFile + XR.GetAttribute("poster_name");
-                                    if (!Directory.Exists(d)) Directory.CreateDirectory(d);
-                                    if (ActualPicture != "")
+                                    if (NastaveniMnfPic.SaveImages)
                                     {
-                                        oo = d + "\\" + ActualPicture.Split('/')[5];
-                                        if (!File.Exists(oo))
+                                        XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
+                                        XR.Read();
+                                        string oo = "";
+                                        string d = NastaveniMnfPic.MainFile + XR.GetAttribute("poster_name");
+                                        if (!Directory.Exists(d)) Directory.CreateDirectory(d);
+                                        if (ActualPicture != "")
                                         {
-                                            try
+                                            oo = d + "\\" + ActualPicture.Split('/')[5];
+                                            if (!File.Exists(oo))
                                             {
-                                                wc.DownloadFile(new Uri(ActualPicture.Replace(".jpg", "_.jpg")), oo);
-                                                SavedPictures++;
+                                                try
+                                                {
+                                                    wc.DownloadFile(new Uri(ActualPicture.Replace(".jpg", "_.jpg")), oo);
+                                                    SavedPictures++;
+                                                }
+                                                catch (Exception ex) { Console.WriteLine(ex.Message); Console.WriteLine("nestazeno vse"); }
                                             }
-                                            catch (Exception ex) { Console.WriteLine(ex.Message); Console.WriteLine("nestazeno vse"); }
                                         }
+                                        ActualPicture = "";
                                     }
-                                    ActualPicture = "";
                                     break;
                                 case "cant_get_item":
                                     break;
@@ -1166,27 +1187,30 @@ namespace MnfPic
         }
         private void PictureBW_DoWork(object sender, DoWorkEventArgs e)
         {
-            SavedPictures = 0;
-            GoToArea(MnfArea.Lokace[19]);
-            if (PictureBW.CancellationPending) return;
-            GoToArea(MnfArea.Lokace[20]);
-            if (PictureBW.CancellationPending) return;
-            SavePicture = true;
-            GoToArea(MnfArea.Lokace[21]);
-            if (PictureBW.CancellationPending) return;
-            SpinWait.SpinUntil(() => SavePicture == false || PictureBW.CancellationPending, 20000);
-            SavePicture = true;
-            GoToArea(MnfArea.Lokace[22]);
-            if (PictureBW.CancellationPending) return;
-            SpinWait.SpinUntil(() => SavePicture == false || PictureBW.CancellationPending, 20000);
-            SavePicture = true;
-            GoToArea(MnfArea.Lokace[23]);
-            if (PictureBW.CancellationPending) return;
-            SpinWait.SpinUntil(() => SavePicture == false || PictureBW.CancellationPending, 20000);
-            SavePicture = true;
-            GoToArea(MnfArea.Lokace[24]);
-            if (PictureBW.CancellationPending) return;
-            SpinWait.SpinUntil(() => SavePicture == false || PictureBW.CancellationPending, 20000);
+            if (NastaveniMnfPic.SaveImages)
+            {
+                SavedPictures = 0;
+                GoToArea(MnfArea.Lokace[19]);
+                if (PictureBW.CancellationPending) return;
+                GoToArea(MnfArea.Lokace[20]);
+                if (PictureBW.CancellationPending) return;
+                SavePicture = true;
+                GoToArea(MnfArea.Lokace[21]);
+                if (PictureBW.CancellationPending) return;
+                SpinWait.SpinUntil(() => SavePicture == false || PictureBW.CancellationPending, 20000);
+                SavePicture = true;
+                GoToArea(MnfArea.Lokace[22]);
+                if (PictureBW.CancellationPending) return;
+                SpinWait.SpinUntil(() => SavePicture == false || PictureBW.CancellationPending, 20000);
+                SavePicture = true;
+                GoToArea(MnfArea.Lokace[23]);
+                if (PictureBW.CancellationPending) return;
+                SpinWait.SpinUntil(() => SavePicture == false || PictureBW.CancellationPending, 20000);
+                SavePicture = true;
+                GoToArea(MnfArea.Lokace[24]);
+                if (PictureBW.CancellationPending) return;
+                SpinWait.SpinUntil(() => SavePicture == false || PictureBW.CancellationPending, 20000);
+            }
         }
 
         public void GetAllPicture()
@@ -1196,7 +1220,7 @@ namespace MnfPic
 
         private void getPicture(object sender, RoutedEventArgs e)
         {
-            if(!PictureBW.IsBusy) PictureBW.RunWorkerAsync();
+            if (NastaveniMnfPic.SaveImages) if (!PictureBW.IsBusy) PictureBW.RunWorkerAsync();
         }
 
         private void ChatRemoveClick(object sender, RoutedEventArgs e)

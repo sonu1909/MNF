@@ -41,14 +41,14 @@ namespace MnfPic
         private void Click_Invite(object sender, RoutedEventArgs e)
         {
             if (MA == null) return;
-
+            Console.WriteLine("Room invite is not supported!");
+            //TODO: room invite
         }
 
         private void Click_To_Chat(object sender, RoutedEventArgs e)
         {
             if (MA == null) return;
             MG?.ChatPostavy.Add(MA);
-
         }
 
         private void Click_From_Friends(object sender, RoutedEventArgs e)
@@ -60,6 +60,7 @@ namespace MnfPic
         private void Click_To_Friends(object sender, RoutedEventArgs e)
         {
             if (MA == null) return;
+            MG?.Write(MG?.MP.Server.TC_top, "<data><invite type=\"friendship\" avatar_id=\"" + MG?.InfoAvatar.AvatarID + "\" /></data>");
         }
 
         private void Click_From_Ignor(object sender, RoutedEventArgs e)

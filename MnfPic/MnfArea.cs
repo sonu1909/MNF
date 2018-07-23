@@ -72,6 +72,8 @@ namespace MnfPic
             new MnfLocation("Southern MnF / Jail",new Point(519.15,953.25),6100000000),//54
             new MnfLocation("Southern MnF / MNF National Bank",new Point(416.2,726),6200000000),//55
             new MnfLocation("Southern MnF / Apartments",new Point(339.1,477.7),6400000000),//56
+            new MnfLocation("Suburbs",new Point(126,351.7),6500000000),//57
+            new MnfLocation("2 Bedroom House",new Point(402.1,482.7),6600000000),//58
         };
         public static List<MnfLocation> LokaceS = new List<MnfLocation>()
         {

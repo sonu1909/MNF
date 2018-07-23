@@ -20,15 +20,17 @@
                 <Label Content="Name" Height="25"/>
                 <Label Content="Sex" Height="25"/>
                 <Label Content="Premium" Height="25"/>
+                <Label Content="State" Height="25"/>
                 <Label Content="Note" Height="25"/>
             </StackPanel>
             <StackPanel Grid.Column="1">
                 <Label Content="{Binding JmenoPostavy}" Height="25"/>
-                <Label Content="{Binding sex}" Height="25"/>
-                <Label Content="{Binding premium}" Height="25"/>
+                <Label Content="{Binding Ssex}" Height="25"/>
+                <Label Content="{Binding Spremium}" Height="25"/>
+                <Label Content="{Binding From}" Height="25"/>
                 <!--<Label Content="{Binding Popis}" Height="25"/>-->
             </StackPanel>
-            <TextBox x:Name="tbInfoL" Text="{Binding Popis}" Grid.Column="1" Margin="0,75,0,0"/>
+            <TextBox x:Name="tbInfoL" Text="{Binding Popis}" Grid.Column="1" Margin="0,100,0,0"/>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
