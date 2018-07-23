@@ -308,7 +308,22 @@ namespace MnfPic
     {
         private string _Popis = "";
         public string Popis { get { return _Popis; } set { _Popis = value; OnPropertyChanged("Popis"); } }
-        public int UnReadedMsg = 0;
+        public int _UnReadedMsg = 0;
+        public int UnReadedMsg { get { return _UnReadedMsg; } set { _UnReadedMsg = value; OnPropertyChanged("UnReadedMsg"); } }
+        public bool _IsFriend = false;
+        public bool IsFriend { get { return _IsFriend; } set { _IsFriend = value; OnPropertyChanged("IsFriend"); } }
+        public int _Cash = 0;
+        public int Cash { get { return _Cash; } set { _Cash = value; OnPropertyChanged("Cash"); } }
+        public string _Status = "offline";
+        public string Status { get { return _Status; } set { _Status = value; OnPropertyChanged("Status"); } }
+        public string _Info = "";
+        public string Info { get { return _Info; } set { _Info = value; OnPropertyChanged("Info"); } }
+        public bool _Is_ignoring_you = false;
+        public bool Is_ignoring_you { get { return _Is_ignoring_you; } set { _Is_ignoring_you = value; OnPropertyChanged("Is_ignoring_you"); } }
+        public bool _Dont_disturb = false;
+        public bool Dont_disturb { get { return _Dont_disturb; } set { _Dont_disturb = value; OnPropertyChanged("Dont_disturb"); } }
+        public string _From = "Nowhere";
+        public string From { get { return _From; } set { _From = value; OnPropertyChanged("From"); } }
 
         public MnfAvatar()
         {

@@ -7,22 +7,48 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <StackPanel>
-            <Label Content="Name" Height="25"/>
-            <Label Content="Sex" Height="25"/>
-            <Label Content="Premium" Height="25"/>
-            <Label Content="Note" Height="25"/>
-        </StackPanel>
-        <StackPanel Grid.Column="1">
-            <Label Content="{Binding JmenoPostavy}" Height="25"/>
-            <Label Content="{Binding sex}" Height="25"/>
-            <Label Content="{Binding premium}" Height="25"/>
-            <!--<Label Content="{Binding Popis}" Height="25"/>-->
-            <TextBox x:Name="tbInfoL" Text="{Binding Popis}"/>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <Label Content="Name" Height="25"/>
+                <Label Content="Sex" Height="25"/>
+                <Label Content="Premium" Height="25"/>
+                <Label Content="Note" Height="25"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <Label Content="{Binding JmenoPostavy}" Height="25"/>
+                <Label Content="{Binding sex}" Height="25"/>
+                <Label Content="{Binding premium}" Height="25"/>
+                <!--<Label Content="{Binding Popis}" Height="25"/>-->
+            </StackPanel>
+            <TextBox x:Name="tbInfoL" Text="{Binding Popis}" Grid.Column="1" Margin="0,75,0,0"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Row="0" Grid.Column="0" Content="To Jail" Click="Click_To_Jail"/>
+            <Button Grid.Row="1" Grid.Column="0" Content="From Jail" Click="Click_From_Jail"/>
+            <Button Grid.Row="0" Grid.Column="1" Content="To Ignor" Click="Click_To_Ignor"/>
+            <Button Grid.Row="1" Grid.Column="1" Content="From Ignor" Click="Click_From_Ignor"/>
+            <Button Grid.Row="0" Grid.Column="2" Content="To Friends" Click="Click_To_Friends"/>
+            <Button Grid.Row="1" Grid.Column="2" Content="From Friends" Click="Click_From_Friends"/>
+            <Button Grid.Row="0" Grid.Column="3" Content="To Chat" Click="Click_To_Chat"/>
+            <Button Grid.Row="1" Grid.Column="3" Content="Invite" Click="Click_Invite"/>
+        </Grid>
     </Grid>
 </UserControl>

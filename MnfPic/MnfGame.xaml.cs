@@ -107,6 +107,9 @@ namespace MnfPic
             GamesBW.WorkerSupportsCancellation = true;
             GamesBW.DoWork += GamesBW_DoWork;
             GamesBW.RunWorkerCompleted += GamesBW_RunWorkerCompleted;
+
+            MAIpeople.Init(this);
+            MAIlocation.Init(this);
         }
         
         Stopwatch sw = new Stopwatch();
@@ -133,7 +136,10 @@ namespace MnfPic
             get { return _InfoAvatar; }
             set
             {
-                if (value != _InfoAvatar) { _InfoAvatar = value; OnPropertyChanged("InfoAvatar"); }
+                if (value != _InfoAvatar) { _InfoAvatar = value; OnPropertyChanged("InfoAvatar");
+                    MAIlocation.Init(InfoAvatar);
+                    MAIpeople.Init(InfoAvatar);
+                }
             }
         }
         WebClient wc = new WebClient();
@@ -997,9 +1003,9 @@ namespace MnfPic
         {
             ToJail(AvatarID, 60);
         }
-        public void ToJail(int AvatarID,int sec)
+        public void ToJail(int AvatarID,int min)
         {
-            Write(MP.Server.TC_top, "<data jail_avatar_id=\"" + AvatarID + "\" time=\"" + sec + "\" />");
+            Write(MP.Server.TC_top, "<data jail_avatar_id=\"" + AvatarID + "\" time=\"" + min + "\" />");
         }
         public void FromJail(int AvatarID)
         {
