@@ -501,9 +501,18 @@ namespace MnfPic
                     ns.ReadTimeout = 500;
                     //XmlReader XR = XmlReader.Create(ns, settings);
                     ns = MP.Server.TC_top.GetStream();
-                    byte[] b = new byte[16777216];
-                    int i = ns.Read(b, 0, b.Length);
-                    s = Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
+                    try
+                    {
+                        s = "";
+                        while (s.Last().ToString() == ">")
+                        {
+                            byte[] b = new byte[16777216];
+                            int i = ns.Read(b, 0, b.Length);
+                            s += Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
+                        }
+                    }
+                    catch (IOException te) { }
+                    catch (Exception ex) { Console.WriteLine("T:" + ex.Message); }
                     if (s != "") Console.WriteLine("T: " + s);
                     var ss = s.Replace("\0", "").Replace("<", "").Split('>');
                     XmlReader XR = null;
@@ -537,6 +546,7 @@ namespace MnfPic
                                 case "friends_page":
                                     if (NastaveniMnfPic.SaveFriendList)
                                     {
+                                        XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(s)), settings);
                                         StreamWriter swfl = new StreamWriter("FriendList.txt");
                                         XR.Read();
                                         while (XR.Name == "avatar")
