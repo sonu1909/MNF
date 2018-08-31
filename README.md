@@ -17,4 +17,4 @@ Projects
   <li>MnfAreaParser - tool for map edit</li>
 </ul>
 
-Temporary link for compiled Windows version http://leteckaposta.cz/750051878
+Temporary link for compiled Windows version:
