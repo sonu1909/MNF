@@ -42,6 +42,7 @@ namespace MnfPic
                 OnPropertyChanged("Uzivatele");
             }
         }
+        public int UzivateleSelected = -1;
         MnfUzivatel mnfUzivatel = new MnfUzivatel();
         ObservableCollection<Avatar> _Avatars = new ObservableCollection<Avatar>();
         public ObservableCollection<Avatar> Avatars
@@ -53,6 +54,7 @@ namespace MnfPic
                 OnPropertyChanged("Avatars");
             }
         }
+        public int AvatarsSelected = -1;
         MnfAvatar mnfAvatar = new MnfAvatar();
         ObservableCollection<Server> _Servers = new ObservableCollection<Server>();
         public ObservableCollection<Server> Servers
@@ -64,6 +66,7 @@ namespace MnfPic
                 OnPropertyChanged("Servers");
             }
         }
+        public int ServersSelected = -1;
         MnfServer mnfServer = new MnfServer();
 
         WebClient wc = new WebClient();
@@ -152,6 +155,14 @@ namespace MnfPic
             mnfUzivatel = new MnfUzivatel();
             //TODO disconnect logged user!   
             UserLogIn(Uzivatele[LB.SelectedIndex]);
+            UzivateleSelected = LB.SelectedIndex;
+        }
+        public void LB_Select(int i)
+        {
+            mnfUzivatel = new MnfUzivatel();
+            //TODO disconnect logged user!   
+            UserLogIn(Uzivatele[i]);
+            UzivateleSelected = i;
         }
         /// <summary>
         /// pripoji se a nacte avatary
@@ -267,6 +278,7 @@ namespace MnfPic
         {
             if (LBS.SelectedIndex < 0) return;
             mnfServer = new MnfServer(Servers[LBS.SelectedIndex]);
+            ServersSelected = LBS.SelectedIndex;
             if (LBS.SelectedIndex > -1)
             {
                 OnNewUser(new MnfPlayer()
@@ -277,6 +289,23 @@ namespace MnfPic
                 });
             }
         }
+        public MnfPlayer LBS_Select(int i)
+        {
+            MnfPlayer mp = null;
+            if (i < 0) return mp;
+            mnfServer = new MnfServer(Servers[i]);
+            ServersSelected = i;
+            if (i > -1)
+            {
+                mp = new MnfPlayer()
+                {
+                    Avatar = mnfAvatar,
+                    Server = mnfServer,
+                    Uzivatel = mnfUzivatel
+                };
+            }
+            return mp;
+        }
         /// <summary>
         /// Aktivuje avatar a nacte servery
         /// </summary>
@@ -286,6 +315,15 @@ namespace MnfPic
         {
             if (LBA.SelectedIndex < 0) return;
             mnfAvatar = new MnfAvatar(Avatars[LBA.SelectedIndex]);
+            AvatarsSelected = LBA.SelectedIndex;
+            if (VyberAvatara()) NactiServery();
+            else Servers.Clear();
+        }
+        public void LBA_Select(int i)
+        {
+            if (i < 0) return;
+            mnfAvatar = new MnfAvatar(Avatars[i]);
+            AvatarsSelected = i;
             if (VyberAvatara()) NactiServery();
             else Servers.Clear();
         }

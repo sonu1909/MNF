@@ -115,7 +115,7 @@ namespace MnfPic
             MAIlocation.Init(this);
         }
         
-        Stopwatch sw = new Stopwatch();
+        public Stopwatch sw = new Stopwatch();
         Random r = new Random();
         private MnfPlayer _MP;
         public MnfPlayer MP
@@ -504,10 +504,13 @@ namespace MnfPic
                     try
                     {
                         s = "";
+                        byte[] b = new byte[16777216];
+                        int i = ns.Read(b, 0, b.Length);
+                        s += Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
                         while (s.Last().ToString() == ">")
                         {
-                            byte[] b = new byte[16777216];
-                            int i = ns.Read(b, 0, b.Length);
+                            b = new byte[16777216];
+                            i = ns.Read(b, 0, b.Length);
                             s += Encoding.UTF8.GetString(Array.ConvertAll(b, x => (byte)x), 0, i);
                         }
                     }
@@ -867,6 +870,7 @@ namespace MnfPic
                                         if(GameRepeat)
                                         {
                                             SpinWait.SpinUntil(() => !GamesBW.IsBusy);
+                                            Thread.Sleep(r.Next(5000, 60000));
                                             Write(MP.Server.TC_game, "<data status=\"start\" />");
                                         }
                                         break;
@@ -924,7 +928,7 @@ namespace MnfPic
                         if (h == 10) body.Add(20);
                         else if (h == 30) body.Add(30);
                         Write(MP.Server.TC_game, s);
-                        Thread.Sleep(r.Next(3000, 4000));
+                        Thread.Sleep(r.Next(3000, 4000) + (r.Next(0, 6) == 0 ? 2000 : 0));
                     }
                     if(GamesBW.CancellationPending)e.Cancel = true;
                 }
@@ -982,7 +986,7 @@ namespace MnfPic
             if (!AreaBW.IsBusy) AreaBW.RunWorkerAsync();
         }
 
-        public void WriteA(TcpClient tc, string s)
+        public void WriteASCII(TcpClient tc, string s)
         {
             try
             {
@@ -1168,7 +1172,7 @@ namespace MnfPic
             Write(MP.Server.TC_top, "<data friends_list=\"1\" />");
         }
 
-        private void BeachGameClick(object sender, RoutedEventArgs e)
+        public  void BeachGameClick(object sender, RoutedEventArgs e)
         {
             if (GameBW.IsBusy) return;
             if (GameID == 2)

@@ -1,0 +1,24 @@
+﻿<Window x:Class="MnfFarmer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MnfFarmer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <!--<Viewbox Height="30" VerticalAlignment="Top" HorizontalAlignment="Left">-->
+            <!--<StackPanel Orientation="Horizontal">-->
+        <Button x:Name="bSetup" Content="Setup" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="30" Click="Setup_Click"/>
+        <Label x:Name="lSetup" Content=" Make Setup! " VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" VerticalContentAlignment="Center" Margin="75,0,125,0" Padding="0,0,0,0"/>
+        <Button x:Name="bStart" Content="Start" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Height="30" Click="Start_Click" Margin="0,0,50,0" />
+        <Ellipse x:Name="ell" Fill="Red" Height="30" Width="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,20,0"/>
+        <Ellipse x:Name="el2" Fill="Red" Height="20" Width="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,0,0" Visibility="Hidden"/>
+        <!--</StackPanel>-->
+        <!--</Viewbox>-->
+        <GroupBox Header="Time Select" Margin="0,30,0,0">
+            <local:WeekSelect x:Name="ws"/>
+        </GroupBox>
+            
+    </Grid>
+</Window>
