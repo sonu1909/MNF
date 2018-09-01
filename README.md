@@ -14,6 +14,7 @@ Projects
  <ul>
   <li>MnfPic - game client</li>
   <li>MnfPicReader - picture browser</li>
+  <li>MnfFarmer - minigame farm bot</li>
   <li>MnfAreaParser - tool for map edit</li>
 </ul>
 
