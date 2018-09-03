@@ -955,6 +955,7 @@ namespace MnfPic
             LastPoint = ActualArea.PortLokace;
             //lock (MP.Server.LockerTop)
             //    if (!MP.Server.TC_top.Connected) MP.Server.TC_top.Connect(MP.Server.AdresaIP, MP.Server.top_socket);
+            new WebClient().DownloadData(MnfAddress.SiteSWF(MnfAddress.SiteArea(MnfArea.Lokace.IndexOf(area))));
             var s = "<data area_info=\"" + ActualArea.JmenoLokace + "\" />";
             NetworkStream ns = MP.Server.TC_top.GetStream();
             ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
