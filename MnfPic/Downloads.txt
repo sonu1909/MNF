@@ -1,0 +1,90 @@
+﻿$addr = "http://www.mnfclub.com/swf/"
+$target = "C:\Users\Legomaniak\Desktop\MnfSwf\MnfSwf_180327\"
+$a=@("act_selector","area_manager_screen","avatar","avatar_manager_screen","avatar_info","avatar_mini","avatar_mini_bed","avatar_poledance_mini","bed_manager","bubble_manager","cash_display","click_trace","clothes_fit_screen","custom_bg_manager","dialog_manager","dialog1","emoticons","exp_display","friends_list","game_settings","highscores","chat_manager","invite_manager","item_manager","login_screen","mail_manager","main","map","multiplayer_manager","outlined_font","pole_dance","petnis","petnis_mini","picture_viewer","pole_dance","poledance_manager","sex_positions","system_message_manager","register_screen","avatar_poledance_mini")
+$txt=@("dialog0","dialog1","dialog2","dialog3","dialog5","dialog7","dialog8","dialog10","dialog10_expired","dialog10_all_occupied","dialog10_extend","dialog10_book","dialog11","dialog12_male","dialog12_female2","dialog12_female","dialog13","dialog14","dialog14_buy","dialog14_transfer","dialog14_transfer_success","dialog14_check_transfer","dialog16","minigame1","minigame3_slowshooting","minigame3_good1","minigame3_good2","minigame3_good3","minigame3_bad1","minigame3_bad2","minigame3_bad3","minigame3_average1","minigame3_average2","minigame3_average3","minigame3_intro1","minigame3_intro2","minigame3_intro3","minigame3_intro4","minigame3_intro5","minigame3_intro6","minigame3_intro7","minigame3_intro8","minigame3_intro9","minigame3")
+Foreach  ($item in $txt){
+$in = $addr+$item+".txt"
+$out = $target+$item+".txt"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}
+Foreach  ($item in $a){
+$in = $addr+$item+".swf"
+$out = $target+$item+".swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}
+For ($i=0; $i -le 9; $i++) {
+$j = "sex_female_"
+$in = $addr+$j+$i+".swf"
+$out = $target+$j+$i+".swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}    
+For ($i=0; $i -le 3; $i++) {
+$j = "sex_ff_"
+$in = $addr+$j+$i+".swf"
+$out = $target+$j+$i+".swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}    
+For ($i=0; $i -le 3; $i++) {
+$j = "sex_ffm_"
+$in = $addr+$j+$i+".swf"
+$out = $target+$j+$i+".swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}    
+For ($i=0; $i -le 9; $i++) {
+$j = "sex_male_"
+$in = $addr+$j+$i+".swf"
+$out = $target+$j+$i+".swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}    
+For ($i=0; $i -le 1; $i++) {
+$j = "sex_mm_"
+$in = $addr+$j+$i+".swf"
+$out = $target+$j+$i+".swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}    
+For ($i=0; $i -le 3; $i++) {
+$j = "sex_mmf_"
+$in = $addr+$j+$i+".swf"
+$out = $target+$j+$i+".swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}   
+For ($i=0; $i -le 1; $i++) {
+$in = $addr+"sex_petnis_"+$i+"_master.swf"
+$out = $target+"sex_petnis_"+$i+"_master.swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}  
+For ($i=0; $i -le 1; $i++) {
+$in = $addr+"sex_petnis_"+$i+"_slave.swf"
+$out = $target+"sex_petnis_"+$i+"_slave.swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}   
+For ($i=0; $i -le 7; $i++) {
+$j = "mini_game"
+$in = $addr+$j+$i+".swf"
+$out = $target+$j+$i+".swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}      
+For ($i=0; $i -le 1; $i++) {
+$j = "sex_shower_mf_"
+$in = $addr+$j+$i+".swf"
+$out = $target+$j+$i+".swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}   
+For ($i=0; $i -le 70; $i++) {
+$j = "area"
+$in = $addr+$j+$i+".swf"
+$out = $target+$j+$i+".swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}     
+For ($i=0; $i -le 20; $i++) {
+$j = "dialog"
+$in = $addr+$j+$i+".swf"
+$out = $target+$j+$i+".swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}       
+For ($i=0; $i -le 10; $i++) {
+$j = "sex_npc_"
+$in = $addr+$j+$i+".swf"
+$out = $target+$j+$i+".swf"
+PowerShell Invoke-WebRequest $in -OutFile $out
+}    

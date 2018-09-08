@@ -92,12 +92,15 @@ namespace MnfFarmer
                                 Game.Close();
                                 var s = LoggingString.Split(';');
                                 Logger.LB_Select(Logger.Uzivatele.IndexOf((from f in Logger.Uzivatele where f.JmenoUzivatele == s[0] select f).First()));
+                                Thread.Sleep(500 + r.Next(1000));
                                 Logger.LBA_Select(Logger.Avatars.IndexOf((from f in Logger.Avatars where f.JmenoPostavy == s[2] select f).First()));
+                                Thread.Sleep(500 + r.Next(1000));
                                 var mp = Logger.LBS_Select(Logger.Servers.IndexOf((from f in Logger.Servers where f.JmenoServeru == s[1] select f).First()));
                                 Game.Init(mp);
                                 IsInGame = true;
                                 Game.GameID = (int)Enum.Parse(typeof(EGames), s[3]);
-                                SpinWait.SpinUntil(() => Game.ActualArea != null);
+                                //SpinWait.SpinUntil(() => Game.ActualArea != null);
+                                Thread.Sleep(8000 + r.Next(2000));
                                 Game.BeachGameClick(null, null);
                             }));
                         }

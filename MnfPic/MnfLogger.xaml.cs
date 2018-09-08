@@ -164,6 +164,14 @@ namespace MnfPic
             UserLogIn(Uzivatele[i]);
             UzivateleSelected = i;
         }
+        public void GetVersion()
+        {
+            Console.WriteLine("Initizing Version");
+            var responseNON = wc.DownloadString("http://www.mnfclub.com/game.html");
+            Properties.Settings.Default.Verze = (from f in responseNON.Split('\n') where f.Contains("value=\"http://www.mnfclub.com/swf/main.swf?version=") select f.Split('"')[3].Split('=')[1]).ToArray()[0];
+            Properties.Settings.Default.Save();
+            Console.WriteLine("Version is " + Properties.Settings.Default.Verze);
+        }
         /// <summary>
         /// pripoji se a nacte avatary
         /// </summary>
@@ -172,23 +180,32 @@ namespace MnfPic
         {
             try
             {
+                GetVersion();
+                Console.WriteLine("Download main.swf");
+                var responseNON = wc.DownloadString(MnfAddress.SiteSWF("main.swf?version=" + Properties.Settings.Default.Verze));
+                responseNON = wc.DownloadString(MnfAddress.SiteMain("bug_report.php"));
                 string s;
                 //Logovani
                 var data = new NameValueCollection();
-                data["email"] = u.JmenoUzivatele;
                 data["pass"] = u.HesloUzivatele;
+                data["email"] = u.JmenoUzivatele;
                 mnfUzivatel.LoginPaswCrypted = u.HesloUzivatele;
 
-                var response = wc.UploadValues(MnfAddress.SiteMain + MnfAddress.SiteLogin, "POST", data);//&errors=00&user_id=1880483&premium=0&premium_notification=0&overcrowder=0&
+                Console.WriteLine("Loging to game");
+                var response = wc.UploadValues(MnfAddress.SiteMain() + MnfAddress.SiteLogin, "POST", data);//&errors=00&user_id=1880483&premium=0&premium_notification=0&overcrowder=0&
                 s = Encoding.UTF8.GetString(response, 0, response.Length);
                 if (UserParse(s)) { MessageBox.Show("Bad login\n" + s); return; }
-
+                Console.WriteLine("Loging ok");
+                Console.WriteLine("Download bug_report & avatar_manager_screen");
+                responseNON = wc.DownloadString(MnfAddress.SiteMain("bug_report.php?email=" + u.JmenoUzivatele + "&avatar="));
+                responseNON = wc.DownloadString(MnfAddress.SiteSWF("avatar_manager_screen.swf?1." + Properties.Settings.Default.Verze));
                 ////Zisk Avatara
                 data = new NameValueCollection();
                 data["pass"] = u.HesloUzivatele;
                 data["user_id"] = mnfUzivatel.UserID.ToString();//nebo user%5Fid
 
-                response = wc.UploadValues(MnfAddress.SiteMain + MnfAddress.SiteAvatar, "POST", data);
+                Console.WriteLine("read avatars");
+                response = wc.UploadValues(MnfAddress.SiteMain() + MnfAddress.SiteAvatar, "POST", data);
                 s = Encoding.UTF8.GetString(response, 0, response.Length);
                 string[] ss = s.Split('&')[1].Split(';');
                 //if (ss.Length < 5) { MessageBox.Show("bad response\n" + s); return true; }
@@ -197,7 +214,11 @@ namespace MnfPic
                 {
                     var a = new Avatar();
                     if (a.ParseAvatar(ss[i])) MessageBox.Show("bad response\n" + ss[i]);
-                    else Avatars.Add(a);
+                    else
+                    {
+                        Avatars.Add(a);
+                        Console.WriteLine("Avatar add " + a.JmenoPostavy);
+                    }
                 }
             }
             catch(Exception e) { Console.WriteLine("Nepovedlo se pripojit uzivatele " + u.JmenoUzivatele); Console.WriteLine(e); }
@@ -227,15 +248,16 @@ namespace MnfPic
             {
                 string s;
                 //kontrola brothel
+                Console.WriteLine("Brothel CheckUp");
                 var data = new NameValueCollection();
                 data["avatar_id"] = mnfAvatar.AvatarID.ToString();
                 data["pass"] = mnfUzivatel.LoginPaswCrypted;
                 data["user_id"] = mnfUzivatel.UserID.ToString();
-                var response = wc.UploadValues(MnfAddress.SiteMain + MnfAddress.SiteBrothel, "POST", data);
-
+                var response = wc.UploadValues(MnfAddress.SiteMain() + MnfAddress.SiteBrothel, "POST", data);
                 s = Encoding.UTF8.GetString(response, 0, response.Length);
                 string[] ss = s.Split('&');
                 if (ss[1].Split('=')[1] != "not_working") { MessageBox.Show("Working in Brothel!!\n" + s); return false; }
+                var responseNON = wc.DownloadString(MnfAddress.SiteMain("bug_report.php?email=" + Uzivatele[UzivateleSelected].JmenoUzivatele + "&avatar=" + mnfAvatar.JmenoPostavy)); Console.WriteLine("Downloaded bug_report.php");
             }
             catch(Exception e){ Console.WriteLine("Nepovedlo se pripojit avatara");Console.WriteLine(e); }
             return true;
@@ -252,7 +274,8 @@ namespace MnfPic
                 data["avatar_id"] = mnfAvatar.AvatarID.ToString();
                 data["pass"] = mnfUzivatel.LoginPaswCrypted;
                 data["user_id"] = mnfUzivatel.UserID.ToString();
-                var response = wc.UploadValues(MnfAddress.SiteMain + MnfAddress.SiteServer, "POST", data);
+                Console.WriteLine("read servers");
+                var response = wc.UploadValues(MnfAddress.SiteMain() + MnfAddress.SiteServer, "POST", data);
 
                 s = Encoding.UTF8.GetString(response, 0, response.Length);
                 string[] ss = s.Replace("<server ", ";").Split(';');
@@ -262,6 +285,7 @@ namespace MnfPic
                     Server ms = new Server();
                     if (ms.ParseServer(ss[i])) { MessageBox.Show("Bad response\n" + s); }
                     Servers.Add(ms);
+                    Console.WriteLine("Server add " + ms.JmenoServeru);
                     /*
                 foreach (MnfServer a in ms)
                 {
@@ -278,6 +302,7 @@ namespace MnfPic
         {
             if (LBS.SelectedIndex < 0) return;
             mnfServer = new MnfServer(Servers[LBS.SelectedIndex]);
+            Console.WriteLine("Selected server " + mnfServer.JmenoServeru);
             ServersSelected = LBS.SelectedIndex;
             if (LBS.SelectedIndex > -1)
             {
@@ -294,6 +319,7 @@ namespace MnfPic
             MnfPlayer mp = null;
             if (i < 0) return mp;
             mnfServer = new MnfServer(Servers[i]);
+            Console.WriteLine("Selected server " + mnfServer.JmenoServeru);
             ServersSelected = i;
             if (i > -1)
             {
@@ -315,6 +341,7 @@ namespace MnfPic
         {
             if (LBA.SelectedIndex < 0) return;
             mnfAvatar = new MnfAvatar(Avatars[LBA.SelectedIndex]);
+            Console.WriteLine("Selected avatar " + mnfAvatar.JmenoPostavy);
             AvatarsSelected = LBA.SelectedIndex;
             if (VyberAvatara()) NactiServery();
             else Servers.Clear();
@@ -323,6 +350,7 @@ namespace MnfPic
         {
             if (i < 0) return;
             mnfAvatar = new MnfAvatar(Avatars[i]);
+            Console.WriteLine("Selected avatar " + mnfAvatar.JmenoPostavy);
             AvatarsSelected = i;
             if (VyberAvatara()) NactiServery();
             else Servers.Clear();

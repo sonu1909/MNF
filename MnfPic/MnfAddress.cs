@@ -8,7 +8,8 @@ namespace MnfPic
 {
     public static class MnfAddress
     {
-        public static string SiteMain = "http://www.mnfclub.com/";
+        public static string SiteMain() { return "http://www.mnfclub.com/"; }
+        public static string SiteMain(string s) { return SiteMain() + s; }
         public static string SiteSWF() { return "http://www.mnfclub.com/swf/"; }
         public static string SiteSWF(string s) { return SiteSWF() + s; }
         public static string SiteMuseum = "files/museum/";
@@ -17,7 +18,7 @@ namespace MnfPic
         public static string SiteBrothel = "brothel_checkup.php";
         public static string SiteServer = "servers_list.php";
         public static string SiteActive = "activate_avatar.php";
-        public static string SiteArea(int i) { return "area" + i + ".php"; }
+        public static string SiteArea(int i) { return "area" + i + ".swf?1." + Properties.Settings.Default.Verze; }
 
     }
 }

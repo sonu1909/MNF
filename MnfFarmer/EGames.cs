@@ -12,6 +12,6 @@ namespace MnfFarmer
         BeachGame = 2,
         ShootGame,
         CasinoGame,
-        FlappyGame
+        FlappyGame = 5
     }
 }
