@@ -113,6 +113,13 @@ namespace MnfPic
 
             MAIpeople.Init(this);
             MAIlocation.Init(this);
+
+        }
+        public void AddHeaders()
+        {
+            //wc.UseDefaultCredentials = true;
+            wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko ");
+            wc.Headers.Add("X-Requested-With", "ShockwaveFlash / 22.0.0.209");
         }
         
         public Stopwatch sw = new Stopwatch();
@@ -479,6 +486,7 @@ namespace MnfPic
                 data["avatar_id"] = MP.Avatar.AvatarID.ToString();// _ -> %5
                 data["pass"] = MP.Uzivatel.LoginPaswCrypted;
                 data["user_id"] = MP.Uzivatel.UserID.ToString();
+                AddHeaders();
                 var response = wc.UploadValues(MnfAddress.SiteMain() + MnfAddress.SiteActive, "POST", data);
                 string s = Encoding.UTF8.GetString(response, 0, response.Length);
                 string[] ss = s.Split('&');
@@ -543,6 +551,7 @@ namespace MnfPic
                                     XR.GetAttribute("avatar_data");
                                     lock (AreaLock)
                                     {
+                                        AddHeaders();
                                         lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("area_manager_screen.swf?1." + Properties.Settings.Default.Verze));
                                         //Random r = new Random();
                                         GoToArea(MnfArea.Lokace[MnfArea.StartID[r.Next(MnfArea.StartID.Count - 1)]]);
@@ -803,6 +812,7 @@ namespace MnfPic
                                             {
                                                 try
                                                 {
+                                                    AddHeaders();
                                                     wc.DownloadFile(new Uri(ActualPicture.Replace(".jpg", "_.jpg")), oo);
                                                     SavedPictures++;
                                                 }
@@ -892,7 +902,8 @@ namespace MnfPic
                                     default:
                                         Console.WriteLine("G: Unknowen name" + XR.Name);
                                         break;
-                                        /*                                         <hand_gates data='66920,3;68183,1' /><hand_gates data='69426,2;70649,0' /><hand_gates data='71852,3;73035,1' /><hand_gates data='74198,0;75341,0' />
+                                        /*
+                                         <hand_gates data='66920,3;68183,1' /><hand_gates data='69426,2;70649,0' /><hand_gates data='71852,3;73035,1' /><hand_gates data='74198,0;75341,0' />
                                          <data progress_check_data='99.5,274.6;249.35,342.85;90.3,353.95;113.9,220.5;113.9,-87.5;113.9,524.5;113.9,832.5' />
                                          <hand_gates data='76464,4;77567,0' />
                                          <data progress_check_data='96.25,199.35;255.05,234.25;96.15,277.55;114.15,138;114.15,-170;114.15,442;114.15,750' />
@@ -939,12 +950,12 @@ namespace MnfPic
                     {
                         if (!MP.Server.TC_game.Connected) break;
                         int rn = r.Next(0, 101);
-                        if (rn > 60) multiple += multiple >= 4 ? 0 : 1;
+                        if (rn > 60) multiple += multiple >= 3 ? 0 : 1;
                         else if (rn < 40) multiple -= multiple <= 1 ? 0 : 1;
                         var s = "<data scores=\"" + body[r.Next(body.Count)] * multiple + "\" />";
                         Console.WriteLine(h++ + " " + s);
-                        if (h == 10) body.Add(20);
-                        else if (h == 30) body.Add(30);
+                        if (h == 15) body.Add(20);
+                        else if (h == 40) body.Add(30);
                         Write(MP.Server.TC_game, s);
                         Thread.Sleep(r.Next(2500, 4500));
                         //Thread.Sleep(r.Next(3000, 4000) + (r.Next(0, 6) == 0 ? 2000 : 0));
@@ -1031,10 +1042,10 @@ namespace MnfPic
                 LastPoint = ActualArea.PortLokace;
                 //lock (MP.Server.LockerTop)
                 //    if (!MP.Server.TC_top.Connected) MP.Server.TC_top.Connect(MP.Server.AdresaIP, MP.Server.top_socket);
-                var s = "<data area_info=\"" + ActualArea.JmenoLokace + "\" />";
+                var s = "<data area_info=\"" + ActualArea.JmenoLokace + "\" />"; AddHeaders();
                 NetworkStream ns = MP.Server.TC_top.GetStream();
                 ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
-
+                AddHeaders();
                 lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF(MnfAddress.SiteArea((int)(area.IdLokace/100000000))));//async
 
                 lock (MP.Server.LockerChat)
@@ -1049,9 +1060,11 @@ namespace MnfPic
                 ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
                 SpinWait.SpinUntil(() => !ChatBW.IsBusy, 1000);
                 if (!ChatBW.IsBusy) ChatBW.RunWorkerAsync();
-
+                AddHeaders();
                 lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("click_trace.swf?1." + Properties.Settings.Default.Verze));//only first?
+                AddHeaders();
                 lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("petnis_mini.swf?1." + Properties.Settings.Default.Verze));
+                AddHeaders();
                 lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("avatar_mini.swf?1." + Properties.Settings.Default.Verze));
 
                 lock (MP.Server.LockerArea)
@@ -1072,6 +1085,7 @@ namespace MnfPic
 
         public void GetMap()
         {
+            AddHeaders();
             lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("map.swf?1." + Properties.Settings.Default.Verze));
         }
 
@@ -1291,7 +1305,9 @@ namespace MnfPic
             MP.Server.TC_game.Connect(MP.Server.AdresaIP, MP.Server.game_socket);
 
             Console.WriteLine("Beach game starting");
+            AddHeaders();
             lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("mini_game" + GameID + ".swf?1." + Properties.Settings.Default.Verze));
+            AddHeaders();
             lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("cash_display.swf?1." + Properties.Settings.Default.Verze));
             Write(MP.Server.TC_game, "<data avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" game_id=\"" + GameID + "\" session_id=\"" + MP.Server.Session_id + "\" />");
             Write(MP.Server.TC_top, "<data cash_display = '1' />");
@@ -1314,8 +1330,9 @@ namespace MnfPic
             if (MP.Server.TC_game.Connected) MP.Server.TC_game.Close();
             MP.Server.TC_game = new TcpClient();
             MP.Server.TC_game.Connect(MP.Server.AdresaIP, MP.Server.game_socket);
-            
+            AddHeaders();
             lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("mini_game"+GameID+".swf?1." + Properties.Settings.Default.Verze));
+            AddHeaders();
             lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("cash_display.swf?1." + Properties.Settings.Default.Verze));
             Write(MP.Server.TC_top, "<data cash_display='1'/>");
             Write(MP.Server.TC_game, "<data avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" game_id=\"" + GameID + "\" session_id=\"" + MP.Server.Session_id + "\" />");

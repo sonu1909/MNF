@@ -355,5 +355,20 @@ namespace MnfPic
             if (VyberAvatara()) NactiServery();
             else Servers.Clear();
         }
+
+        private void LB_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            LB_SelectionChanged(null, null);
+        }
+
+        private void LBA_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            LBA_SelectionChanged(null, null);
+        }
+
+        private void LBS_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            LBS_SelectionChanged(null, null);
+        }
     }
 }

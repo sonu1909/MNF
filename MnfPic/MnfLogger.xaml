@@ -22,7 +22,7 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <ListBox x:Name="LB" ItemsSource="{Binding Uzivatele}" DisplayMemberPath="JmenoUzivatele" SelectionChanged="LB_SelectionChanged" Margin="0,0,0,5.853" Grid.ColumnSpan="2"/>
+                <ListBox x:Name="LB" ItemsSource="{Binding Uzivatele}" DisplayMemberPath="JmenoUzivatele" MouseDoubleClick="LB_MouseDoubleClick" Margin="0,0,0,5.853" Grid.ColumnSpan="2"/>
                 <Button Content="ADD" Grid.Row="1" Click="AddUser"/>
                 <Button Content="REM" Grid.Row="1" Grid.Column="1" Click="RemUser"/>
             </Grid>
@@ -37,7 +37,7 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <ListBox x:Name="LBA" ItemsSource="{Binding Avatars}" DisplayMemberPath="JmenoPostavy" SelectionChanged="LBA_SelectionChanged" Margin="0,0,0,5.853" Grid.ColumnSpan="2"/>
+                <ListBox x:Name="LBA" ItemsSource="{Binding Avatars}" DisplayMemberPath="JmenoPostavy" MouseDoubleClick="LBA_MouseDoubleClick" Margin="0,0,0,5.853" Grid.ColumnSpan="2"/>
                 <Button Content="ADD" Grid.Row="1" Click="AddUser" IsEnabled="False"/>
                 <Button Content="REM" Grid.Row="1" Grid.Column="1" Click="RemUser" IsEnabled="False"/>
             </Grid>
@@ -52,7 +52,7 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <ListBox x:Name="LBS" ItemsSource="{Binding Servers}" DisplayMemberPath="JmenoServeru" SelectionChanged="LBS_SelectionChanged" Margin="0,0,0,5.853" Grid.ColumnSpan="2"/>
+                <ListBox x:Name="LBS" ItemsSource="{Binding Servers}" DisplayMemberPath="JmenoServeru" MouseDoubleClick="LBS_MouseDoubleClick" Margin="0,0,0,5.853" Grid.ColumnSpan="2"/>
             </Grid>
         </GroupBox>
     </Grid>

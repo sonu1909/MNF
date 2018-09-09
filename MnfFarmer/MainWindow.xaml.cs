@@ -89,19 +89,30 @@ namespace MnfFarmer
                         {
                             Logger.Dispatcher.BeginInvoke((Action)(() =>
                             {
-                                Game.Close();
-                                var s = LoggingString.Split(';');
-                                Logger.LB_Select(Logger.Uzivatele.IndexOf((from f in Logger.Uzivatele where f.JmenoUzivatele == s[0] select f).First()));
-                                Thread.Sleep(500 + r.Next(1000));
-                                Logger.LBA_Select(Logger.Avatars.IndexOf((from f in Logger.Avatars where f.JmenoPostavy == s[2] select f).First()));
-                                Thread.Sleep(500 + r.Next(1000));
-                                var mp = Logger.LBS_Select(Logger.Servers.IndexOf((from f in Logger.Servers where f.JmenoServeru == s[1] select f).First()));
-                                Game.Init(mp);
-                                IsInGame = true;
-                                Game.GameID = (int)Enum.Parse(typeof(EGames), s[3]);
-                                //SpinWait.SpinUntil(() => Game.ActualArea != null);
-                                Thread.Sleep(8000 + r.Next(2000));
-                                Game.BeachGameClick(null, null);
+                                try
+                                {
+                                    Game.Close();
+                                    var s = LoggingString.Split(';');
+                                    Logger.LB_Select(Logger.Uzivatele.IndexOf((from f in Logger.Uzivatele where f.JmenoUzivatele == s[0] select f).First()));
+                                    Thread.Sleep(500 + r.Next(1000));
+                                    Logger.LBA_Select(Logger.Avatars.IndexOf((from f in Logger.Avatars where f.JmenoPostavy == s[2] select f).First()));
+                                    Thread.Sleep(500 + r.Next(1000));
+                                    var mp = Logger.LBS_Select(Logger.Servers.IndexOf((from f in Logger.Servers where f.JmenoServeru == s[1] select f).First()));
+                                    Game.Init(mp);
+                                    IsInGame = true;
+                                    Game.GameID = (int)Enum.Parse(typeof(EGames), s[3]);
+                                    //SpinWait.SpinUntil(() => Game.ActualArea != null);
+                                    Thread.Sleep(8000 + r.Next(2000));
+                                    Game.BeachGameClick(null, null);
+                                }
+                                catch (Exception e)
+                                {
+                                    MessageBox.Show("Login Error " + e.Message);
+
+                                    Logger.Close();
+                                    Game.Close();
+                                    IsInGame = false;
+                                }
                             }));
                         }
                         catch(Exception e)
@@ -158,6 +169,10 @@ namespace MnfFarmer
             Properties.Settings.Default.AllDaySame = ws.UseOne;
             Properties.Settings.Default.Delay = ws.Delay;
             Properties.Settings.Default.Save();
+
+            Logger.Close();
+            Game.Close();
+            IsStarted = false;
         }
 
         private void Setup_Click(object sender, RoutedEventArgs e)
@@ -174,6 +189,7 @@ namespace MnfFarmer
             catch { }
             w.ShowDialog();
             LoggingString = w.Ucet + ";" + w.Server + ";" + w.Postava + ";" + w.Hra + ";" + w.HraPar;
+            Logger = new MnfPic.MnfLogger();
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)
