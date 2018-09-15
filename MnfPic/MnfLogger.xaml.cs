@@ -171,6 +171,16 @@ namespace MnfPic
             Properties.Settings.Default.Verze = (from f in responseNON.Split('\n') where f.Contains("value=\"http://www.mnfclub.com/swf/main.swf?version=") select f.Split('"')[3].Split('=')[1]).ToArray()[0];
             Properties.Settings.Default.Save();
             Console.WriteLine("Version is " + Properties.Settings.Default.Verze);
+            Console.WriteLine("Initizing http servers");
+            responseNON = wc.DownloadString(MnfAddress.SiteMain("images/left_couple_purple.jpg"));
+            responseNON = wc.DownloadString(MnfAddress.SiteMain("images/right_couple_purple.jpg"));
+            responseNON = wc.DownloadString(MnfAddress.SiteMain("bug_report.php"));
+            responseNON = wc.DownloadString(MnfAddress.SiteMain("images/send_btn.gif"));
+            responseNON = wc.DownloadString(MnfAddress.SiteMain("images/close_btn.gif"));
+
+        }
+        public void GetLoad()
+        {
         }
         /// <summary>
         /// pripoji se a nacte avatary
@@ -183,7 +193,12 @@ namespace MnfPic
                 GetVersion();
                 Console.WriteLine("Download main.swf");
                 var responseNON = wc.DownloadString(MnfAddress.SiteSWF("main.swf?version=" + Properties.Settings.Default.Verze));
-                responseNON = wc.DownloadString(MnfAddress.SiteMain("bug_report.php"));
+                string[] toDown = new string[] { "highscores", "dialog_manager", "outlined_font", "bubble_manager", "chat_manager", "picture_viewer", "avatar_info", "custom_bg_manager", "friends_list", "mail_manager", "invite_manager", "item_manager", "system_message_manager", "game_settings", "login_screen", "emoticons", "petnis", "avatar" };
+                foreach (var td in toDown)
+                {
+                    Console.WriteLine("Download " + td + ".swf");
+                    responseNON = wc.DownloadString(MnfAddress.SiteSWF(td + "?version=" + Properties.Settings.Default.Verze));
+                }
                 string s;
                 //Logovani
                 var data = new NameValueCollection();
@@ -294,6 +309,7 @@ namespace MnfPic
                 }
                 */
                 }
+                response = wc.UploadValues(MnfAddress.SiteMain() + MnfAddress.SiteServer, "POST", data);
             }
             catch(Exception e) { Console.WriteLine("Nepovedlo se nacist servery");Console.WriteLine(e); }
         }
