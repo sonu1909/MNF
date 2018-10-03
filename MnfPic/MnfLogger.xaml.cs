@@ -81,7 +81,7 @@ namespace MnfPic
         {
             InitializeComponent();
             DataContext = this;
-
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             try
             {
                 if (!File.Exists(NastaveniMnfPic.UserFile)) File.Create(NastaveniMnfPic.UserFile).Close();
@@ -197,7 +197,7 @@ namespace MnfPic
                 foreach (var td in toDown)
                 {
                     Console.WriteLine("Download " + td + ".swf");
-                    responseNON = wc.DownloadString(MnfAddress.SiteSWF(td + "?version=" + Properties.Settings.Default.Verze));
+                    responseNON = wc.DownloadString(MnfAddress.SiteSWF(td + ".swf?version=" + Properties.Settings.Default.Verze));
                 }
                 string s;
                 //Logovani

@@ -74,17 +74,18 @@ namespace MnfPic
             new MnfLocation("Southern MnF / Apartments",new Point(339.1,477.7),6400000000),//56
             new MnfLocation("Suburbs",new Point(126,351.7),6500000000),//57
             new MnfLocation("2 Bedroom House",new Point(402.1,482.7),6600000000),//58
+            new MnfLocation("Shaman Tower",new Point(402.1,482.7),6700000000),//59//TODO: Point!
         };
         public static List<MnfLocation> LokaceS = new List<MnfLocation>()
         {
-            new MnfLocation("MnF Alley / Hair Salon",new Point(629.55, 238.55),300000000),//portplace?
-            new MnfLocation("Private Club / Room #1",new Point(629.55, 238.55),600000000),//portplace?
-            new MnfLocation("Private Club / Room #2",new Point(629.55, 238.55),700000000),//portplace?
-            new MnfLocation("Private Club / Room #3",new Point(629.55, 238.55),800000000),//portplace?
-            new MnfLocation("Private Club / Room #4",new Point(629.55, 238.55),900000000),//portplace?
-            new MnfLocation("Lagoon Beach / Dr.Boobige`s Clinic",new Point(629.55, 238.55),1200000000),//portplace?
-            new MnfLocation("Petnis Forest / Petnis Shack",new Point(629.55, 238.55),3500000000),//portplace?
-            new MnfLocation("Shower bed manager - virtual location",new Point(629.55, 238.55),6300000000),//portplace?
+            new MnfLocation("MnF Alley / Hair Salon",new Point(629.55, 238.55),300000000),//TODO: Portplace?
+            new MnfLocation("Private Club / Room #1",new Point(629.55, 238.55),600000000),//TODO: Portplace?
+            new MnfLocation("Private Club / Room #2",new Point(629.55, 238.55),700000000),//TODO: Portplace?
+            new MnfLocation("Private Club / Room #3",new Point(629.55, 238.55),800000000),//TODO: Portplace?
+            new MnfLocation("Private Club / Room #4",new Point(629.55, 238.55),900000000),//TODO: Portplace?
+            new MnfLocation("Lagoon Beach / Dr.Boobige`s Clinic",new Point(629.55, 238.55),1200000000),//TODO: Portplace?
+            new MnfLocation("Petnis Forest / Petnis Shack",new Point(629.55, 238.55),3500000000),//TODO: Portplace?
+            new MnfLocation("Shower bed manager - virtual location",new Point(629.55, 238.55),6300000000),//TODO: Portplace?
         };
         public static List<int> StartID = new List<int>() { 0, 1, 3, 4, 19, 28, 30, 31, 47, 50, 53};
     }

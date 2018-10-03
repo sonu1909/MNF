@@ -212,6 +212,7 @@ namespace MnfPic
             get { return _SavedPictures; }
             set { if (_SavedPictures != value) { _SavedPictures = value; OnPropertyChanged("SavedPictures"); } }
         }
+        public int AvatarMaxID = 1100000;
         BackgroundWorker _GameBW = new BackgroundWorker();
         public BackgroundWorker GameBW { get { return _GameBW; } private set { _GameBW = value; OnPropertyChanged("GameBW"); } }
         BackgroundWorker _PictureBW = new BackgroundWorker();
@@ -600,6 +601,12 @@ namespace MnfPic
                                     ma.From = XR.GetAttribute("from");
                                     ma.Popis = XR.GetAttribute("about");
 
+                                    if(AvatarsDownload)
+                                    {
+                                        AvatarsDownloadTo.AppendLine(ma.AvatarID + " " + ma.JmenoPostavy);
+                                        Console.WriteLine("AvatarDetails " + ma.AvatarID);
+                                    }
+
                                     for (int p = 0; p < PotkanePostavy.Count; p++)
                                     {
                                         if (PotkanePostavy[p].AvatarID == ma.AvatarID)
@@ -950,9 +957,11 @@ namespace MnfPic
                     {
                         if (!MP.Server.TC_game.Connected) break;
                         int rn = r.Next(0, 101);
-                        if (rn > 60) multiple += multiple >= 3 ? 0 : 1;
-                        else if (rn < 40) multiple -= multiple <= 1 ? 0 : 1;
-                        var s = "<data scores=\"" + body[r.Next(body.Count)] * multiple + "\" />";
+                        if (rn > 60) multiple += multiple >= 4 ? 0 : 1;
+                        else if (rn < 60) multiple -= multiple <= 1 ? 0 : 1;
+                        int score = body[r.Next(body.Count)] * multiple;
+                        score = score > 90 ? 90 : score;
+                        var s = "<data scores=\"" + score + "\" />";
                         Console.WriteLine(h++ + " " + s);
                         if (h == 15) body.Add(20);
                         else if (h == 40) body.Add(30);
@@ -1388,6 +1397,76 @@ namespace MnfPic
         private void ChatRemoveClick(object sender, RoutedEventArgs e)
         {
             ChatPostavy.Remove(ActivChatAvatar);
+        }
+        bool AvatarsDownload = false;
+        StringBuilder AvatarsDownloadTo;
+        private void getUsers(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
+            if(sfd.ShowDialog()==System.Windows.Forms.DialogResult.OK)
+            {
+                //TODO: read old file and start from the end
+                AvatarsDownloadTo = new StringBuilder();
+                string s = sfd.FileName;
+                AvatarsDownload = true;
+                try
+                {
+                    for (int i = 10000; i < AvatarMaxID; i++)
+                    {
+                        GetAvatarDetails(i);
+                        Thread.Sleep(30);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    AvatarsDownload = false;
+                    File.WriteAllText(s, AvatarsDownloadTo.ToString());
+                }
+            }
+        }
+
+        private void getBackGroundsA(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                //TODO: read old file and start from the end
+                string s = fbd.SelectedPath;
+                for (int i = 0; i < AvatarMaxID; i++)
+                {
+                    try
+                    {
+                        var n = "64" + i.ToString("00000000");
+                        wc.DownloadFileAsync(new Uri(MnfAddress.SiteBG(n)), s + "//" + n + ".jpg");
+                        Console.WriteLine("Downloaded " + i);
+                    }
+                    catch { }
+                }
+            }
+        }
+
+        private void getBackGroundsS(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                //TODO: read old file and start from the end
+                string s = fbd.SelectedPath;
+                for (int i = 0; i < AvatarMaxID; i++)
+                {
+                    try
+                    {
+                        var n = "66" + i.ToString("00000000");
+                        wc.DownloadFileAsync(new Uri(MnfAddress.SiteBG(n)), s + "//" + n + ".jpg");
+                        Console.WriteLine("Downloaded " + i);
+                    }
+                    catch { }
+                }
+            }
         }
         //"<avatar data=\"1168373,SissySlutEric,2,2,2,8,3,38,38,1,3,2,1,1,6,3,1,5,2,3,1,3,1,7,176/252/200,1217,1217,-1,,0,0,7,38,2,2,40,38,0,1\" points=\"987,1179,987,1181\" /><avatar data=\"2278205,Teranas,1,3,2,8,1,38,1,1,1,3,2,2,6,2,1,1,3,5,3,1,3,9,176/252/208,8120,620,-1,,0,1,1,0,0,3,38,0,0,1\" points=\"1130,721,1183,723\" /><avatar data=\"3898264,wolfkidd,1,3,1,7,2,35,9,2,2,1,2,2,6,3,1,5,3,1,1,1,1,3,239/176/252,5609,4859,-1,,0,0,11,35,9,3,38,1,0,1\" points=\"764,735,884,676\" /><avatar data=\"2515041,Casslut,2,2,5,5,0,37,37,1,1,3,1,2,7,1,1,4,3,2,1,3,3,7,202/176/252,2771,2021,-1,,0,0,1,0,0,1,0,0,0,1\" points=\"928,691\" />\0"
         //"<avatar_out id=\"2515041\" />\0"

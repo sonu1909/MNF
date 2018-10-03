@@ -34,5 +34,101 @@ namespace MnfPic.Properties {
                 this["Verze"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MainFile {
+            get {
+                return ((string)(this["MainFile"]));
+            }
+            set {
+                this["MainFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string UserFile {
+            get {
+                return ((string)(this["UserFile"]));
+            }
+            set {
+                this["UserFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SaveImages {
+            get {
+                return ((bool)(this["SaveImages"]));
+            }
+            set {
+                this["SaveImages"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SaveStrangers {
+            get {
+                return ((bool)(this["SaveStrangers"]));
+            }
+            set {
+                this["SaveStrangers"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SaveFriendList {
+            get {
+                return ((bool)(this["SaveFriendList"]));
+            }
+            set {
+                this["SaveFriendList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SaveFolderBG {
+            get {
+                return ((string)(this["SaveFolderBG"]));
+            }
+            set {
+                this["SaveFolderBG"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SaveFileUsers {
+            get {
+                return ((string)(this["SaveFileUsers"]));
+            }
+            set {
+                this["SaveFileUsers"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SaveFolderPic {
+            get {
+                return ((string)(this["SaveFolderPic"]));
+            }
+            set {
+                this["SaveFolderPic"] = value;
+            }
+        }
     }
 }

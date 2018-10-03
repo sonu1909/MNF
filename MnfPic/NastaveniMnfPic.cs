@@ -81,6 +81,48 @@ namespace MnfPic
             }
         }
 
+        static Hodnota _SaveFolderBG = new HodnotaString() { Sekce = "Folders", Jmeno = "SaveFolderBG", Value = false };
+        public static string SaveFolderBG
+        {
+            get { return (string)_SaveFolderBG.Value; }
+            set
+            {
+                if ((string)_SaveFolderBG.Value != value)
+                {
+                    _SaveFolderBG.Value = value;
+                    Save();
+                }
+            }
+        }
+
+        static Hodnota _SaveFileUsers = new HodnotaString() { Sekce = "Folders", Jmeno = "SaveFileUsers", Value = false };
+        public static string SaveFileUsers
+        {
+            get { return (string)_SaveFileUsers.Value; }
+            set
+            {
+                if ((string)_SaveFileUsers.Value != value)
+                {
+                    _SaveFileUsers.Value = value;
+                    Save();
+                }
+            }
+        }
+
+        static Hodnota _SaveFolderPic = new HodnotaString() { Sekce = "Folders", Jmeno = "SaveFolderPic", Value = false };
+        public static string SaveFolderPic
+        {
+            get { return (string)_SaveFolderPic.Value; }
+            set
+            {
+                if ((string)_SaveFolderPic.Value != value)
+                {
+                    _SaveFolderPic.Value = value;
+                    Save();
+                }
+            }
+        }
+
 
         /// <summary>
         /// PRIDAT VSECHNY PROMENE .. pro ukladani a nacitani
