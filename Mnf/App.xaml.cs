@@ -6,10 +6,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MnfPic
+namespace Mnf
 {
     /// <summary>
-    /// Interakční logika pro App.xaml
+    /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {

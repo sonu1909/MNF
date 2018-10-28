@@ -39,8 +39,8 @@ namespace MnfFarmer
         public string LoggingString { get { return _LoggingString; } set { _LoggingString = value; OnPropertyChanged("LoggingString"); } }
         Timer t;
         Random r = new Random();
-        MnfPic.MnfGame Game;
-        MnfPic.MnfLogger Logger;
+        Mnf.MnfGame Game;
+        Mnf.MnfLogger Logger;
         public MainWindow()
         {
             InitializeComponent();
@@ -70,8 +70,8 @@ namespace MnfFarmer
             catch (Exception e) { Console.WriteLine(e.Message); }
             ws.UseOne = Properties.Settings.Default.AllDaySame;
             ws.Delay = Properties.Settings.Default.Delay;
-            Game = new MnfPic.MnfGame();
-            Logger = new MnfPic.MnfLogger();
+            Game = new Mnf.MnfGame();
+            Logger = new Mnf.MnfLogger();
         }
 
         private void tick(object state)
@@ -189,7 +189,7 @@ namespace MnfFarmer
             catch { }
             w.ShowDialog();
             LoggingString = w.Ucet + ";" + w.Server + ";" + w.Postava + ";" + w.Hra + ";" + w.HraPar;
-            Logger = new MnfPic.MnfLogger();
+            Logger = new Mnf.MnfLogger();
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)

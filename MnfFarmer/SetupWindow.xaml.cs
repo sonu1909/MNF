@@ -41,7 +41,7 @@ namespace MnfFarmer
             l.Close();
         }
 
-        private void L_NewUser(object sender, MnfPic.MnfPlayer e)
+        private void L_NewUser(object sender, Mnf.MnfPlayer e)
         {
             Ucet = l.Uzivatele[l.UzivateleSelected].JmenoUzivatele;
             Server = l.Servers[l.ServersSelected].JmenoServeru;

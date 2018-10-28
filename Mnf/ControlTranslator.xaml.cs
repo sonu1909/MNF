@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MnfPic
+namespace Mnf
 {
     /// <summary>
     /// Interaction logic for ControlTranslator.xaml

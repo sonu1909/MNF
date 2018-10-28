@@ -5,13 +5,15 @@ VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfFarmer", "MnfFarmer\MnfFarmer.csproj", "{D498E192-1A12-4A6E-B055-F3325F948017}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfPic", "MnfPic\MnfPic.csproj", "{9C7A826C-25AC-4C83-88DC-C5CFD4ED5DDC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mnf", "Mnf\Mnf.csproj", "{9C7A826C-25AC-4C83-88DC-C5CFD4ED5DDC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "App\App.csproj", "{3727D78D-17E4-47F2-9BA0-9648A18B6911}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfPicReader", "MnfPicReader\MnfPicReader.csproj", "{D930A724-6C09-412F-87FA-F6C2E83C8814}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfAreaParser", "MnfAreaParser\MnfAreaParser.csproj", "{1D96CE4B-DDBD-4173-A6A3-DE04BD14CAF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfPic", "MnfPic\MnfPic.csproj", "{528CEA60-BE34-4A05-8E9B-01472FDD1AFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{1D96CE4B-DDBD-4173-A6A3-DE04BD14CAF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D96CE4B-DDBD-4173-A6A3-DE04BD14CAF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D96CE4B-DDBD-4173-A6A3-DE04BD14CAF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{528CEA60-BE34-4A05-8E9B-01472FDD1AFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{528CEA60-BE34-4A05-8E9B-01472FDD1AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{528CEA60-BE34-4A05-8E9B-01472FDD1AFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{528CEA60-BE34-4A05-8E9B-01472FDD1AFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

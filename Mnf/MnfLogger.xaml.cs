@@ -19,7 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MnfPic
+namespace Mnf
 {
     /// <summary>
     /// Interaction logic for MnfLogger.xaml
@@ -84,8 +84,8 @@ namespace MnfPic
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             try
             {
-                if (!File.Exists(NastaveniMnfPic.UserFile)) File.Create(NastaveniMnfPic.UserFile).Close();
-                StreamReader sr = new StreamReader(NastaveniMnfPic.UserFile);
+                if (!File.Exists(NastaveniMnf.UserFile)) File.Create(NastaveniMnf.UserFile).Close();
+                StreamReader sr = new StreamReader(NastaveniMnf.UserFile);
                 var radek = sr.ReadLine();
                 while (radek != null)
                 {
@@ -106,7 +106,7 @@ namespace MnfPic
         }
         public void Close()
         {
-            StreamWriter sw = new StreamWriter(NastaveniMnfPic.UserFile, false);
+            StreamWriter sw = new StreamWriter(NastaveniMnf.UserFile, false);
             foreach (var u in Uzivatele)
             {
                 sw.WriteLine(u.JmenoUzivatele);

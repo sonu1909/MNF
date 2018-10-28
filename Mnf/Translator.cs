@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace MnfPic
+namespace Mnf
 {
     public class Translator
     {

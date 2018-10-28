@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace MnfPic
+namespace Mnf
 {
     /// <summary>
     /// Interaction logic for MnfLogin.xaml

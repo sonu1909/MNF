@@ -5,18 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MnfPic"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="640">
+        Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TabControl x:Name="TC">
-            <TabItem Header="LogIn">
-               <local:MnfLogger x:Name="mnfLogger" />
-            </TabItem>
-            <TabItem Header="Game">
-                <local:MnfGame x:Name="mnfGame" />
-            </TabItem>
-            <TabItem Header="Settings">
-                
-            </TabItem>
-        </TabControl>
+        
     </Grid>
 </Window>

@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MnfPic
+namespace Mnf
 {
-    public static class NastaveniMnfPic
+    public static class NastaveniMnf
     {
-        static MujInitSoubor Ini = new MujInitSoubor("NastaveniMnfPic");
+        static MujInitSoubor Ini = new MujInitSoubor("NastaveniMnf");
 
         static Hodnota _MainFile = new HodnotaString() { Sekce = "Common", Jmeno = "MainFile", Value = "" };
         public static string MainFile
@@ -39,7 +39,7 @@ namespace MnfPic
             }
         }
         
-        static Hodnota _SaveImages = new HodnotaBool() { Sekce = "Lockers", Jmeno = "SaveImages", Value = false };
+        static Hodnota _SaveImages = new HodnotaBool() { Sekce = "Lockers", Jmeno = "SaveImages", Value = true };
         public static bool SaveImages
         {
             get { return (bool)_SaveImages.Value; }
@@ -67,7 +67,7 @@ namespace MnfPic
             }
         }
 
-        static Hodnota _SaveFriendList = new HodnotaBool() { Sekce = "Lockers", Jmeno = "SaveFriendList", Value = false };
+        static Hodnota _SaveFriendList = new HodnotaBool() { Sekce = "Lockers", Jmeno = "SaveFriendList", Value = true };
         public static bool SaveFriendList
         {
             get { return (bool)_SaveFriendList.Value; }

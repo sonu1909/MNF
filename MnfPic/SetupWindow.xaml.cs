@@ -10,19 +10,22 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace MnfPic
 {
     /// <summary>
-    /// Interakční logika pro MainWindow.xaml
+    /// Interakční logika pro SetupWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class SetupWindow : Window
     {
-        public MainWindow()
+        public string Ucet = "";
+        public string Postava = "";
+
+        public SetupWindow()
         {
             InitializeComponent();
+            
         }
     }
 }

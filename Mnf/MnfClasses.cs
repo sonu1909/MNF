@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MnfPic
+namespace Mnf
 {
 
     public class Uzivatel : ANotify
