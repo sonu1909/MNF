@@ -67,9 +67,19 @@ namespace Mnf
             }
         }
         public int ServersSelected = -1;
-        MnfServer mnfServer = new MnfServer();
+        MnfServer mnfServer
+        {
+            get { return _mnfServer; }
+            set
+            {
+                _mnfServer = value;
+                SI.DataContext = value;
+                OnPropertyChanged("mnfServer");
+            }
+        }
+        public MnfServer _mnfServer = new MnfServer();
 
-        WebClient wc = new WebClient();
+WebClient wc = new WebClient();
 
         public event EventHandler<MnfPlayer> NewUser;
         private void OnNewUser(MnfPlayer mp)
@@ -137,7 +147,7 @@ namespace Mnf
             {
                 var u = new Uzivatel();
                 u.JmenoUzivatele = ml.User.JmenoUzivatele;
-                u.HesloUzivatele = CalculateMD5Hash(ml.User.JmenoUzivatele + ml.User.HesloUzivatele).ToLower();
+                u.HesloUzivatele = CalculateMD5Hash(ml.User.JmenoUzivatele.ToLower() + ml.User.HesloUzivatele).ToLower();
                 Uzivatele.Add(u);
             }
         }
@@ -179,9 +189,6 @@ namespace Mnf
             responseNON = wc.DownloadString(MnfAddress.SiteMain("images/close_btn.gif"));
 
         }
-        public void GetLoad()
-        {
-        }
         /// <summary>
         /// pripoji se a nacte avatary
         /// </summary>
@@ -207,7 +214,7 @@ namespace Mnf
                 mnfUzivatel.LoginPaswCrypted = u.HesloUzivatele;
 
                 Console.WriteLine("Loging to game");
-                var response = wc.UploadValues(MnfAddress.SiteMain() + MnfAddress.SiteLogin, "POST", data);//&errors=00&user_id=1880483&premium=0&premium_notification=0&overcrowder=0&
+                var response = wc.UploadValues(MnfAddress.SiteMain() + MnfAddress.SiteLogin, "POST", data);//&errors=00&user_id=1658254&premium=0&premium_notification=0&overcrowder=0&
                 s = Encoding.UTF8.GetString(response, 0, response.Length);
                 if (UserParse(s)) { MessageBox.Show("Bad login\n" + s); return; }
                 Console.WriteLine("Loging ok");

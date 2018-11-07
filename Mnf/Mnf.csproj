@@ -123,7 +123,6 @@
       <DependentUpon>MnfLogin.xaml</DependentUpon>
     </Compile>
     <Compile Include="MnfAddress.cs" />
-    <Compile Include="MnfScan.cs" />
     <Compile Include="NastaveniMnf.cs" />
     <Compile Include="MnfClasses.cs" />
     <Compile Include="Translator.cs" />
@@ -195,9 +194,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Pzn.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.6.1 %28x86 a x64%29</ProductName>
@@ -208,9 +204,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Downloads.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

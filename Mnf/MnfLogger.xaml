@@ -11,6 +11,7 @@
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <GroupBox Header="User">
             <Grid>
@@ -43,16 +44,23 @@
             </Grid>
         </GroupBox>
         <GroupBox Header="Server" Grid.Column="2">
+                <ListBox x:Name="LBS" ItemsSource="{Binding Servers}" DisplayMemberPath="JmenoServeru" MouseDoubleClick="LBS_MouseDoubleClick" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+        </GroupBox>
+        <GroupBox Header="Server Info" Grid.Column="3" x:Name="SI">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="25"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-                <ListBox x:Name="LBS" ItemsSource="{Binding Servers}" DisplayMemberPath="JmenoServeru" MouseDoubleClick="LBS_MouseDoubleClick" Margin="0,0,0,5.853" Grid.ColumnSpan="2"/>
+                <StackPanel HorizontalAlignment="Center">
+                    <Label Content="Male" HorizontalContentAlignment="Center"/>
+                    <Label Content="{Binding PocetMuzu}" HorizontalContentAlignment="Center"/>
+                    <Separator Visibility="Hidden"/>
+                    <Label Content="Female" HorizontalContentAlignment="Center"/>
+                    <Label Content="{Binding PocetZen}" HorizontalContentAlignment="Center"/>
+                    <Separator Visibility="Hidden"/>
+                    <Label Content="Capacity" HorizontalContentAlignment="Center"/>
+                    <Label Content="{Binding Kapacita}" HorizontalContentAlignment="Center"/>
+                    <Separator Visibility="Hidden"/>
+                    <Label Content="IP" HorizontalContentAlignment="Center"/>
+                    <Label Content="{Binding AdresaIP}" HorizontalContentAlignment="Center"/>
+                </StackPanel>
             </Grid>
         </GroupBox>
     </Grid>

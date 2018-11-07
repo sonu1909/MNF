@@ -187,8 +187,6 @@ namespace Mnf
         private int _hide_petnis = 0;
         private int _icon_id = 0;
         /// <summary>
-        /// avatar_datas=2844033,YourSexDreams,2,1,2,8,3,26,33,2,3,2,2,1,6,2,1,5,3,2,2,2,4,2,252/201/176,0,0,-1,,0,0,1,0,0,1,0,0,0
-        /// avatar_datas=2844033,YourSexDreams,2,1,2,8,3,26,33,2,3,2,2,1,6,2,1,5,3,2,2,2,4,2,176/252/250,225,225,-1,,0,0,1,0,0,1,0,0,0,1
         /// </summary>
         /// <param name="s"></param>
         /// <returns>true = error</returns>
@@ -442,10 +440,11 @@ namespace Mnf
     /// <summary>
     /// dostupne servery
     /// </summary>
-    public class Server
+    public class Server:ANotify
     {
         public string JmenoServeru { get; set; }
-        public string AdresaIP { get; set; }
+        public string AdresaIP { get { return _AdresaIP; } set { _AdresaIP = value; OnPropertyChanged("AdresaIP"); } }
+        string _AdresaIP = "";
         public int PocetMuzu { get; set; }
         public int PocetZen { get; set; }
         public int Kapacita { get; set; }

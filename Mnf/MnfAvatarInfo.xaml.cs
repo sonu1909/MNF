@@ -42,7 +42,9 @@ namespace Mnf
         {
             if (MA == null) return;
             Console.WriteLine("Room invite is not supported!");
+            return;
             //TODO: room invite
+            //MG?.Write(MG?.MP.Server.TC_top, "<data><invite type=\"visit\" avatar_id=\"" + active_invitation.invitor_data.id + "\" area_name=\"" + active_invitation.area_name + "\" area_id=\"" + active_invitation.area_id + "\" swf_id=\"" + active_invitation.swf_id + "\" type_id=\"" + active_invitation.type_id + "\"/></data>");
         }
 
         private void Click_To_Chat(object sender, RoutedEventArgs e)

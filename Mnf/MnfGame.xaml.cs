@@ -324,6 +324,7 @@ namespace Mnf
                                 switch (vv[0])
                                 {
                                     case "message":
+                                        Console.WriteLine("C: msg " + v);
                                         break;
                                     case "emoticon":
                                         break;
@@ -335,7 +336,7 @@ namespace Mnf
                                         //avatar
                                         break;
                                     default:
-                                        Console.WriteLine("C: Unknowen name " + s);
+                                        Console.WriteLine("C: Unknown name " + s);
                                         break;
                                 }
                             }
@@ -385,7 +386,7 @@ namespace Mnf
                                 string[] vv = v.Split(' ');
                                 switch (vv[0])
                                 {
-                                    //<avatar id="5738678" points="576,479,553,441" />
+                                    //<avatar id="5733278" points="576,479,553,441" />
                                     //<avatar data="2427633,elizabeth_h,2,2,1,8,0,2,2,1,3,2,2,2,2,2,1,2,2,2,2,3,3,7,252/176/185,14135,13385,-1,,0,0,11,2,2,2,40,38,0,1" points="503,384,506,387" />
                                     case "avatar":
                                         XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
@@ -458,7 +459,7 @@ namespace Mnf
                                         SavePicture = false;
                                         break;
                                     default:
-                                        Console.WriteLine("A: Unknowen name" + XR.Name);
+                                        Console.WriteLine("A: Unknown name" + XR.Name);
                                         break;
                                 }
                             }
@@ -577,17 +578,43 @@ namespace Mnf
                                         }
                                         swfl.Close();
                                     }
+                                    //if(ImportFriends)
+                                    //{
+                                    //    XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(s)), settings);
+                                    //    StreamWriter swfl = new StreamWriter("FriendList.txt");
+                                    //    XR.Read();
+                                    //    while (XR.Name == "avatar")
+                                    //    {
+                                    //        swfl.WriteLine(XR.GetAttribute("data"));
+                                    //        XR.Read();
+                                    //    }
+                                    //    swfl.Close();
+                                    //}
                                     break;
                                 case "invite":
                                     //Write(MP.Server.TC_top, "<data><invite avatar_id=\"" + avatar.data.id + "\" status=\"canceled\"/></data>");
                                     //Write(MP.Server.TC_top, "<data private_message=\"send\" type=\"friendship_accept\" id_to=\"" + active_invitation.invitor_data.id + "\" />");
+
+                                    //var Typ = "";
+                                    //var AvatarID = "";
+                                    //if (MessageBox.Show("Invite type " + Typ + " from " + AvatarID) == MessageBoxResult.OK)
+                                    //{
+                                    //    //TODO: reply
+                                    //}
+                                    //else
+                                    //{
+                                    //    //Write(MP.Server.TC_top, "<data><invite type=\"" + Typ + "\" reply=\"ignored\" avatar_id=\"" + AvatarID + "\"/></data>");
+                                    //    Write(MP.Server.TC_top, "<data><invite avatar_id=\"" + AvatarID + "\" status=\"canceled\"/></data>");
+                                    //}
                                     break;
                                 case "invite_reply":
+                                    //XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(s)), settings);
+                                    //XR.Read();
                                     break;
                                 case "invite_canceled":
+                                    Console.WriteLine("Invitation has been canceled");
                                     break;
-                                case "avatar_details":
-                                    //avatar_details data="99742,VzoreCZEk,1,2,2,8,1,38,1,2,2,1,1,2,6,3,1,4,3,1,3,1,1,9,227/252/176,18686,2686,38,GirlsTrueLove,0,1,1,0,0,3,38,38,0,1" friend="false" status="offline" info="" is_ignoring_you="0" cash="0" dont_disturb="0" from="Czech Republic" about="I like sEXP! and chat                              
+                                case "avatar_details":                          
                                     XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(s)), settings);
                                     XR.Read();
                                     MnfAvatar ma = new MnfAvatar();
@@ -625,7 +652,6 @@ namespace Mnf
                                     }
                                     break;
                                 case "msg":
-                                    //<private_msg id="1152019023" id_from="2844033" id_to="99742" name_from="YourSexDreams" name_to="VzoreCZEk" date_time="09/23/17 8:54 am" read="0" type="" text="ahojik" />
                                     XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
                                     XR.Read();
                                     var msgID = XR.GetAttribute("id");
@@ -697,7 +723,6 @@ namespace Mnf
                                 case "private_messages":
                                 //break;
                                 case "private_msg":
-                                    //T: <private_msg id="1151074399" id_from="8946383" id_to="2844033" name_from="Tibik" name_to="YourSexDreams" date_time="09/22/17 9:19 pm" read="0" type="" text="hi" />
                                     XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
                                     XR.Read();
                                     if (XR.AttributeCount > 0)
@@ -775,7 +800,7 @@ namespace Mnf
                                     //< clean_area area_id = "2000500000" />
                                     break;
                                 case "boot_guests":
-                                    // < boot_guests area_id = "6407614727" />
+                                    // < boot_guests area_id = "640722547" />
                                     break;
                                 case "sex_poses_respond":
                                     break;
@@ -1120,6 +1145,10 @@ namespace Mnf
         public void GetAvatarDetails(int AvatarID)
         {
             Write(MP.Server.TC_top, "<data avatar_details=\"1\" id=\"" + AvatarID + "\" />");
+        }
+        public void InvitationReply(string type,string reply,int avatarID)
+        {
+            Write(MP.Server.TC_top, "<<data><invite type=\"" + type + "\" reply=\"" + reply + "\" avatar_id=\"" + avatarID + "\"/></data>");
         }
         public void GetAvatarFullDetails(int AvatarID)
         {
@@ -1468,9 +1497,5 @@ namespace Mnf
                 }
             }
         }
-        //"<avatar data=\"1168373,SissySlutEric,2,2,2,8,3,38,38,1,3,2,1,1,6,3,1,5,2,3,1,3,1,7,176/252/200,1217,1217,-1,,0,0,7,38,2,2,40,38,0,1\" points=\"987,1179,987,1181\" /><avatar data=\"2278205,Teranas,1,3,2,8,1,38,1,1,1,3,2,2,6,2,1,1,3,5,3,1,3,9,176/252/208,8120,620,-1,,0,1,1,0,0,3,38,0,0,1\" points=\"1130,721,1183,723\" /><avatar data=\"3898264,wolfkidd,1,3,1,7,2,35,9,2,2,1,2,2,6,3,1,5,3,1,1,1,1,3,239/176/252,5609,4859,-1,,0,0,11,35,9,3,38,1,0,1\" points=\"764,735,884,676\" /><avatar data=\"2515041,Casslut,2,2,5,5,0,37,37,1,1,3,1,2,7,1,1,4,3,2,1,3,3,7,202/176/252,2771,2021,-1,,0,0,1,0,0,1,0,0,0,1\" points=\"928,691\" />\0"
-        //"<avatar_out id=\"2515041\" />\0"
-        //"<avatar data=\"3969460,AmandaLove,2,1,1,2,1,24,37,3,3,2,1,2,2,3,1,5,1,4,2,3,4,2,228/176/252,1789,1039,-1,,0,0,10,37,32,1,0,0,0,1\" points=\"1071,689\" />\0<avatar_out id=\"3969460\" />\0<avatar_out id=\"3898264\" />\0<avatar data=\"99742,VzoreCZEk,1,2,2,8,1,38,39,2,2,1,1,2,6,3,1,4,3,1,3,1,1,10,177/176/252,11649,4149,38,GirlsTrueLove,0,1,13,38,39,1,0,0,0,1\" points=\"1092,726\" />\0<avatar id=\"99742\" points=\"1092,726,1354.3,701.65,1354.3,701.65,1337,506\" />\0<avatar id=\"99742\" points=\"1338.64,524.6,1315.3,469.1,1315.3,469.1,1186,333\" />\0<avatar id=\"99742\" points=\"1260.32,411.23,949,247\" />\0<avatar_out id=\"99742\" />\0"
-        //"<avatar id=\"1168373\" points=\"987,1181,986,1139\" />\0<avatar id=\"1168373\" points=\"986,1139,989,1121\" />\0<avatar data=\"3946816,Scumbag,1,1,9,2,4,40,1,1,2,1,1,1,5,3,1,3,1,2,3,1,1,8,252/176/194,4569,3819,-1,,0,0,1,0,0,1,0,0,0,1\" points=\"1664,680\" />\0<avatar data=\"2869957,Zephora,2,2,6,5,2,38,40,1,2,2,1,2,3,3,1,4,2,3,1,3,4,3,252/176/178,8269,7519,-1,,0,0,7,38,40,2,36,33,0,1\" points=\"1161,712\" />\0<avatar id=\"3946816\" points=\"1664,680,1197,802\" />\0<avatar id=\"3946816\" points=\"1494.75,724.22,1197,843\" />\0<avatar id=\"2869957\" points=\"1161,712,1064,692\" />\0<avatar id=\"2869957\" points=\"1064,692,972,680\" />\0<avatar id=\"2869957\" points=\"972,680,889,670\" />\0<avatar id=\"3946816\" points=\"1197,843,1208,1017\" />\0<avatar id=\"2869957\" points=\"889,670,815,696\" />\0<avatar id=\"2869957\" points=\"815,696,746,735\" />\0<avatar id=\"3946816\" points=\"1208,1017,1209,1190\" />\0"
     }
 }

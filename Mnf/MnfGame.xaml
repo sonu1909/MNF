@@ -32,7 +32,18 @@
                     </Grid.ColumnDefinitions>
                     <GroupBox Header="Avatars">
                         <Grid>
-                            <ListBox x:Name="lbChatPostavy" ItemsSource="{Binding ChatPostavy}" DisplayMemberPath="JmenoPostavy" SelectionChanged="ListBox_SelectionChanged" Margin="0,0,-0.4,30.6"/>
+                            <ListBox x:Name="lbChatPostavy" ItemsSource="{Binding ChatPostavy}" SelectionChanged="ListBox_SelectionChanged" Margin="0,0,0,30">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding UnReadedMsg}" Width="20"/>
+                                        <TextBlock Text="{Binding JmenoPostavy}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                             <Button Content="Remove" Height="25" VerticalAlignment="Bottom" Click="ChatRemoveClick"/>                            
                         </Grid>                        
                     </GroupBox>
@@ -82,6 +93,10 @@
                 <Grid>
                     <Button Content="Get list" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="getList"/>
 
+                </Grid>
+            </TabItem>
+            <TabItem Header="Items">
+                <Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Downloads">
