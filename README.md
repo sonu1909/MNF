@@ -13,8 +13,14 @@ Small game client for mnfclub.com
 Projects
  <ul>
   <li>Mnf - game client</li>
+  <ul>
+    <li>Undetectable features (precise paket sendings and structure, game files downloading)</li>
+  </ul>
   <li>MnfPic - picture downloader (from all servers)</li>
   <li>MnfPicReader - picture browser</li>
+  <ul>
+    <li>Obsolete - Win10 pict viewer is much better (try filtering via hashtags)</li>
+  </ul>
   <li>MnfFarmer - minigame farm bot</li>
   <ul>
     <li>Time managed scheduling</li>
