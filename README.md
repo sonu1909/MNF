@@ -42,7 +42,7 @@ Compilation
 <ul>
  <li>Download/Clone repository files</li>
  <li>Open Mnf.sln in Visual Studio</li>
- <li>Choose active project in top menu</li>
+ <li>Choose as active project in top menu</li>
  <li>Press "F5" or button like "Play"</li>
  <li>Compiled files are in *\Mnf\bin\Debug\Mnf.exe</li>
 </ul>
