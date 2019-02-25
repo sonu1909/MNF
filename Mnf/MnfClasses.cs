@@ -437,6 +437,13 @@ namespace Mnf
             }
         }
     }
+    public class MnfCloth
+    {
+        EMnfCloth Type = EMnfCloth.outfit;
+        int ID, Color1, Color2, Price;
+        string Name;
+        bool Premium;
+    }
     /// <summary>
     /// dostupne servery
     /// </summary>
@@ -539,6 +546,7 @@ namespace Mnf
         public Point PortLokace;
         public Point PortPresnost;
         public long IdLokace = 0;
+        public string[] PreLokace;
         public MnfLocation()
         {
 

@@ -882,7 +882,7 @@ namespace Mnf
             }
             e.Cancel = true;
         }
-
+        public double Balance = 0;
         private void GameBW_DoWork(object sender, DoWorkEventArgs e)
         {
             XmlReader XR = null;
@@ -931,6 +931,16 @@ namespace Mnf
                                         if (XR.GetAttribute("success") == "1")
                                             if (!GamesBW.IsBusy) GamesBW.RunWorkerAsync();
                                         break;
+                                    case "balance":
+                                        var str = vv[1].Split('=')[1].Replace("\'", "").Replace("/", "");
+                                        if (!double.TryParse(str.Replace(".", ","), out Balance))
+                                            if (!double.TryParse(str, out Balance))
+                                            {
+                                                int balance = 0;
+                                                if (int.TryParse(str, out balance)) Balance = (double)balance;
+                                                else Console.WriteLine("Cannot decode Balance " + v);
+                                            }
+                                        break;
                                     default:
                                         Console.WriteLine("G: Unknowen name" + XR.Name);
                                         break;
@@ -971,7 +981,28 @@ namespace Mnf
         {
             try
             {
-                if (GameID == 2)
+                if(GameID==1)//Rodeo
+                {
+                    Write(MP.Server.TC_game, "<data game_start=\"single\" />");
+                    int h = 0;
+                    while (!GamesBW.CancellationPending && h++ < 76)
+                    {
+                        var control_xmouse = 0;
+                        var gravi_move_draw = 0;
+                        var x_control = 0;
+                        var _loc8_ = 2 * (gravi_move_draw - 0.5);
+                        var _loc3_ = (1 + _loc8_ + x_control) / 2;
+                        var speed_actual = 0;
+                        Write(MP.Server.TC_game, "<data pr1=\"" + control_xmouse + "\" pr2=\"" + gravi_move_draw + "\" pr3=\"" + _loc3_ + "\" pr4=\"" + speed_actual + "\" />");
+
+                        //if (getTimer() - last_send_time >= 2000)
+                        //{
+                        //    _root.game_socket.send("<data eterate=\"1\" />");
+                        //    last_send_time = getTimer();
+                        //}
+                    }
+                }
+                else if (GameID == 2)//Beach
                 {
                     List<int> body = new List<int>() { 10, 15 };//, 20, 30 };//, 30, 45, 60, 80, 90, 100 };
                     Random r = new Random();
@@ -996,7 +1027,7 @@ namespace Mnf
                     }
                     if(GamesBW.CancellationPending)e.Cancel = true;
                 }
-                else if (GameID == 5)
+                else if (GameID == 5)//Flappy
                 {
                     while (!GamesBW.CancellationPending)
                     {
@@ -1211,6 +1242,135 @@ namespace Mnf
         {
             MulSendPMsg(AvatarID, "history");
         }
+        public void GetOutfits(int shopID, int sex)
+        {
+            Write(MP.Server.TC_top, "<data outfit_list=\"1\" />");
+            string s = sex == 1 ? "_man" : "_woman";
+            string group_name = "";
+            string ids = "";
+            switch (shopID)
+            {
+                case 0:
+                    group_name = "outfit" + s;
+                    break;
+                case 1:
+                    group_name = "outfit" + s;
+                    ids = "2,3";
+                    break;
+                case 2:
+                    group_name = "outfit" + s;
+                    ids = "5";
+                    break;
+                case 3:
+                    if (sex == 1)
+                    {
+                        group_name = "outfit" + s;
+                        ids = "4,6,9";
+                    }
+                    else
+                    {
+                        group_name = "outfit" + s;
+                        ids = "4,6,13,14";
+                    }
+                    break;
+                case 4:
+                    group_name = "hat" + s;
+                    ids = "2,3,5,6,7,8,9,10,12,23,28";
+                    break;
+                case 5:
+                    group_name = "glasses" + s;
+                    ids = "2,3,4,5,6,7,8,9,10,11,12,13";
+                    break;
+                case 6:
+                    group_name = "outfit" + s;
+                    ids = "7,8";
+                    break;
+                case 7:
+                    if (sex == 1)
+                    {
+                        group_name = "outfit" + s;
+                        ids = "11";
+                    }
+                    else
+                    {
+                        group_name = "outfit" + s;
+                        ids = "9";
+                    }
+                    break;
+                case 8:
+                    group_name = "outfit" + s;
+                    ids = "10";
+                    break;
+                case 9:
+                    group_name = "hat" + s;
+                    ids = "11,4,13,14,15,21,22,25,26";
+                    break;
+                case 10:
+                    group_name = "outfit" + s;
+                    ids = "11,19,20";
+                    break;
+                case 11:
+                    group_name = "hat" + s;
+                    ids = "16";
+                    break;
+                case 12:
+                    if (sex == 1)
+                    {
+                        group_name = "outfit" + s;
+                        ids = "12";
+                    }
+                    else
+                    {
+                        group_name = "outfit" + s;
+                        ids = "12,15,18";
+                    }
+                    break;
+                case 13:
+                    if (sex == 1)
+                    {
+                        group_name = "hat" + s;
+                        ids = "17,27";
+                    }
+                    else
+                    {
+                        group_name = "hat" + s;
+                        ids = "17,18,19,27";
+                    }
+                    break;
+                case 14:
+                    group_name = "hat" + s;
+                    ids = "20";
+                    break;
+                case 15:
+                    group_name = "hat" + s;
+                    ids = "24";
+                    break;
+                case 16:
+                    if (sex == 1)
+                    {
+                        group_name = "outfit" + s;
+                        ids = "13";
+                    }
+                    else
+                    {
+                        group_name = "outfit" + s;
+                        ids = "16,17";
+                    }
+                    break;
+            }
+            if (!string.IsNullOrEmpty(ids)) Write(MP.Server.TC_top, "<data price_list=\'1\' ids=\'" + ids + "\' group_name=\'" + group_name + "\'/>");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="outfitID"></param>
+        /// <param name="color1"></param>
+        /// <param name="color2"></param>
+        /// <param name="type">0-outfit, 1-hat, 2-glasses</param>
+        public void BuyItem(int outfitID, int color1, int color2, EMnfCloth type)
+        {
+            Write(MP.Server.TC_top, "<data buy_outfit_id=\"" + outfitID + "\" color1=\"" + color1 + "\" color2=\"" + color2 + "\" type=\"" + type.ToString() + "\" />");
+        }
 
         public Point LastPoint;
         public void GoToPoint(Point bod)
@@ -1380,6 +1540,40 @@ namespace Mnf
             throw new NotImplementedException();
             if (!GameBW.IsBusy) GameBW.RunWorkerAsync();
         }
+        public void RodeoGameClick(object sender, RoutedEventArgs e)
+        {
+            if (GameBW.IsBusy) return;
+            if (GameID == 1)
+            {//TODO: zmena lokace
+                GoToArea(MnfArea.Lokace[3]);
+                ChatBW.CancelAsync();
+                AreaBW.CancelAsync();
+                if (MP.Server.TC_area.Connected) MP.Server.TC_area.Close();
+                if (MP.Server.TC_chat.Connected) MP.Server.TC_chat.Close();
+            }
+            if (MP.Server.TC_game.Connected) MP.Server.TC_game.Close();
+            MP.Server.TC_game = new TcpClient();
+            MP.Server.TC_game.Connect(MP.Server.AdresaIP, MP.Server.game_socket);
+            lock (wcLocker)
+            {
+                AddHeaders();
+                wc.DownloadString(MnfAddress.SiteSWF("mini_game" + GameID + ".swf?1." + Properties.Settings.Default.Verze));
+                AddHeaders();
+                wc.DownloadString(MnfAddress.SiteSWF("multiplayer_manager.swf?1." + Properties.Settings.Default.Verze));
+                AddHeaders();
+                wc.DownloadString(MnfAddress.SiteSWF("outlined_font.swf?1." + Properties.Settings.Default.Verze));
+            }
+            AddHeaders();
+            lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("cash_display.swf?1." + Properties.Settings.Default.Verze));
+            Write(MP.Server.TC_top, "<data cash_display='1'/>");
+            Write(MP.Server.TC_game, "<data avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" game_id=\"" + GameID + "\" session_id=\"" + MP.Server.Session_id + "\" />");
+            Thread.Sleep(2000);
+            //TODO Write(MP.Server.TC_game, "<data start_game='1' />");
+
+            throw new NotImplementedException();
+            //if (!GameBW.IsBusy) GameBW.RunWorkerAsync();
+        }
+
 
         private void StopGameClick(object sender, RoutedEventArgs e)
         {

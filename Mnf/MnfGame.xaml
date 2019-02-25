@@ -79,10 +79,10 @@
                     <CheckBox Content="IsBusy" Width="100" Margin="121,120,0,0" IsChecked="{Binding GameBW.IsBusy,Mode=OneWay}" IsEnabled="False" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top"/>
                     <ComboBox HorizontalAlignment="Left" Margin="44,5,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="{Binding GameID}">
                         <ComboBoxItem>None</ComboBoxItem>
-                        <ComboBoxItem>Non</ComboBoxItem>
+                        <ComboBoxItem>None</ComboBoxItem>
                         <ComboBoxItem>Beach Game</ComboBoxItem>
-                        <ComboBoxItem>Non</ComboBoxItem>
-                        <ComboBoxItem>Non</ComboBoxItem>
+                        <ComboBoxItem>None</ComboBoxItem>
+                        <ComboBoxItem>None</ComboBoxItem>
                     </ComboBox>
                     <Label Content="Game:" HorizontalAlignment="Left" Margin="0,3,0,0" VerticalAlignment="Top"/>
                     <Label Content="Money:" HorizontalAlignment="Left" Margin="196,34,0,0" VerticalAlignment="Top"/>

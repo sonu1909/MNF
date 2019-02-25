@@ -111,6 +111,7 @@
       <DependentUpon>MnfAvatarInfo.xaml</DependentUpon>
     </Compile>
     <Compile Include="MnfColors.cs" />
+    <Compile Include="MnfEnum.cs" />
     <Compile Include="MnfFlag.cs" />
     <Compile Include="MnfGame.xaml.cs">
       <DependentUpon>MnfGame.xaml</DependentUpon>
