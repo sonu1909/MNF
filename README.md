@@ -47,6 +47,11 @@ Compilation
  <li>Compiled files are in *\Mnf\bin\Debug\Mnf.exe</li>
 </ul>
 
+Development
+<ul>
+ <li><a href="https://www.wireshark.org">Wireshark</a> - network protocol analyzer</li>
+ <li><a href="https://github.com/jindrapetrik/jpexs-decompiler">JPEXS Free Flash Decompiler</a> - SWF decompiler and editor</li>
+</ul>
 
 Temporary link for compiled Windows version: <b>On request</b>
 
