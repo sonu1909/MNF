@@ -51,6 +51,7 @@ Development
 <ul>
  <li><a href="https://www.wireshark.org">Wireshark</a> - network protocol analyzer</li>
  <li><a href="https://github.com/jindrapetrik/jpexs-decompiler">JPEXS Free Flash Decompiler</a> - SWF decompiler and editor</li>
+ <li><a href="https://github.com/Legomaniak/MNF/blob/master/Mnf/Downloads.txt">Actual swf files</a> - script for PowerShell</li>
 </ul>
 
 Temporary link for compiled Windows version: <b>On request</b>
