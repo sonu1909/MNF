@@ -19,7 +19,6 @@ namespace Mnf
 
         public MainWindow()
         {
-            NastaveniMnf.Load();
             InitializeComponent();
             Closed += MainWindow_Closed;
             Loaded += MainWindow_Loaded;

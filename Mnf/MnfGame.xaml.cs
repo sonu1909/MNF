@@ -38,10 +38,7 @@ namespace Mnf
         {
             InitializeComponent();
             DataContext = this;
-            foreach (var v in MnfArea.Lokace)
-            {
-                comboBoxArea.Items.Add(v.JmenoLokace);
-            }
+
             if (!File.Exists("MeetPPL.txt")) File.Create("MeetPPL.txt").Close();
             if (!File.Exists("ChatPPL.txt")) File.Create("ChatPPL.txt").Close();
             try
@@ -63,7 +60,7 @@ namespace Mnf
                     radek = sr.ReadLine();
                 }
                 sr.Close();
-                if (NastaveniMnf.SaveStrangers)
+                if (Properties.Settings.Default.SaveStrangers)
                 {
                     sr = new StreamReader("MeetPPL.txt");
                     radek = sr.ReadLine();
@@ -101,18 +98,13 @@ namespace Mnf
             GameBW.WorkerSupportsCancellation = true;
             GameBW.DoWork += GameBW_DoWork;
             GameBW.RunWorkerCompleted += GameBW_RunWorkerCompleted;
-
-
-            PictureBW.WorkerSupportsCancellation = true;
-            PictureBW.DoWork += PictureBW_DoWork;
-            //PictureBW.RunWorkerCompleted += GameBW_RunWorkerCompleted;
-
+            
             GamesBW.WorkerSupportsCancellation = true;
             GamesBW.DoWork += GamesBW_DoWork;
             GamesBW.RunWorkerCompleted += GamesBW_RunWorkerCompleted;
 
             MAIpeople.Init(this);
-            MAIlocation.Init(this);
+            MGL.Init(this);
 
         }
         public void AddHeaders()
@@ -131,8 +123,8 @@ namespace Mnf
             set { _MP = value; OnPropertyChanged("MP"); }
         }
         public object AreaLock = new object();
-        private MnfLocation _ActualArea;
-        public MnfLocation ActualArea
+        private MnfActiveLocation _ActualArea;
+        public MnfActiveLocation ActualArea
         {
             get { return _ActualArea; }
             set
@@ -148,7 +140,6 @@ namespace Mnf
             set
             {
                 if (value != _InfoAvatar) { _InfoAvatar = value; OnPropertyChanged("InfoAvatar");
-                    MAIlocation.Init(InfoAvatar);
                     MAIpeople.Init(InfoAvatar);
                 }
             }
@@ -161,17 +152,17 @@ namespace Mnf
             get { return _PotkanePostavy; }
             set { _PotkanePostavy = value; OnPropertyChanged("PotkanePostavy"); }
         }
-        private ObservableCollection<MnfAvatar> _AktualniPostavy = new ObservableCollection<MnfAvatar>();
-        public ObservableCollection<MnfAvatar> AktualniPostavy
-        {
-            get { return _AktualniPostavy; }
-            set { _AktualniPostavy = value; OnPropertyChanged("AktualniPostavy"); }
-        }
         private ObservableCollection<MnfAvatar> _ChatPostavy = new ObservableCollection<MnfAvatar>();
         public ObservableCollection<MnfAvatar> ChatPostavy
         {
             get { return _ChatPostavy; }
             set { _ChatPostavy = value; OnPropertyChanged("ChatPostavy"); }
+        }
+        private ObservableCollection<string> _ChatMsg = new ObservableCollection<string>();
+        public ObservableCollection<string> ChatMsg
+        {
+            get { return _ChatMsg; }
+            set { _ChatMsg = value; OnPropertyChanged("ChatMsg"); }
         }
         public object ChatPostavyLck = new object();
         private int _GameID = 2;
@@ -212,11 +203,10 @@ namespace Mnf
             get { return _SavedPictures; }
             set { if (_SavedPictures != value) { _SavedPictures = value; OnPropertyChanged("SavedPictures"); } }
         }
-        public int AvatarMaxID = 1100000;
+        public bool AvatarsDownload = false;
+        public StringBuilder AvatarsDownloadTo = new StringBuilder();
         BackgroundWorker _GameBW = new BackgroundWorker();
         public BackgroundWorker GameBW { get { return _GameBW; } private set { _GameBW = value; OnPropertyChanged("GameBW"); } }
-        BackgroundWorker _PictureBW = new BackgroundWorker();
-        public BackgroundWorker PictureBW { get { return _PictureBW; } private set { _PictureBW = value; OnPropertyChanged("PictureBW"); } }
         BackgroundWorker _TopBW = new BackgroundWorker();
         public BackgroundWorker TopBW { get { return _TopBW; } private set { _TopBW = value; OnPropertyChanged("TopBW"); } }
         BackgroundWorker _ChatBW = new BackgroundWorker();
@@ -265,7 +255,7 @@ namespace Mnf
                 sr.WriteLine(v.AvatarID + " " + v.JmenoPostavy);
             }
             sr.Close();
-            if (NastaveniMnf.SaveStrangers)
+            if (Properties.Settings.Default.SaveStrangers)
             {
                 sr = new StreamWriter("MeetPPL.txt");
                 foreach (var v in PotkanePostavy)
@@ -279,8 +269,8 @@ namespace Mnf
             AreaBW.CancelAsync();
             ChatBW.CancelAsync();
             GameBW.CancelAsync();
-            PictureBW.CancelAsync();
             GamesBW.CancelAsync();
+            downloader.Close();
 
             sw.Stop();
             Console.WriteLine("Elapsed time " + sw.Elapsed);
@@ -335,7 +325,7 @@ namespace Mnf
                                         //avatar
                                         break;
                                     default:
-                                        Console.WriteLine("C: Unknowen name " + s);
+                                        Console.WriteLine("C: Unknown name " + s);
                                         break;
                                 }
                             }
@@ -395,39 +385,71 @@ namespace Mnf
                                         if (data != null)
                                         {
                                             var avatar = new MnfAvatar();
-                                            avatar.ParseAvatar(data);
-                                            var aap = (from f in PotkanePostavy where f.AvatarID == avatar.AvatarID select f).ToArray();
-                                            if (aap.Length == 0)
-                                            {
-                                                Dispatcher.BeginInvoke(new Action(() =>
-                                                {
-                                                    PotkanePostavy.Add(avatar);
-                                                    if (!AktualniPostavy.Contains(avatar)) AktualniPostavy.Add(avatar);
-                                                }
-                                                ));
+                                            avatar.ParseMnfAvatar(v);
+                                            //avatar.ParseAvatar(data);
+                                            //avatar.ParsePozice(points);
 
-                                            }
-                                            else if (!AktualniPostavy.Contains(aap[0])) Dispatcher.BeginInvoke(new Action(() =>
+                                            Dispatcher.BeginInvoke(new Action(() =>
                                             {
-                                                AktualniPostavy.Add(aap[0]);
+                                                try
+                                                {
+                                                    if (ActualArea.AktualniPostavy.Where(x => x.AvatarID == avatar.AvatarID).Count() == 0) ActualArea.AktualniPostavy.Add(avatar);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    Console.WriteLine(ex);
+                                                }
+                                                //try
+                                                //{
+                                                //    //time critical!!
+                                                //    if (PotkanePostavy.Where(x => x.AvatarID == avatar.AvatarID).Count() == 0) PotkanePostavy.Add(avatar);
+                                                //}
+                                                //catch (Exception ex)
+                                                //{
+                                                //    Console.WriteLine(ex);
+                                                //}
                                             }
-                                               ));
+                                            ));
                                         }
                                         else
                                         {
                                             //avatar moved
-                                            var id = XR.GetAttribute("id");
+                                            var id = int.Parse(XR.GetAttribute("id"));
+                                            Dispatcher.BeginInvoke(new Action(() =>
+                                            {
+                                                try
+                                                {
+                                                    var a = ActualArea.AktualniPostavy.Where(x => x.AvatarID == id).First();
+                                                    if(a!=null)
+                                                    {
+                                                        a.ParsePozice(points);
+                                                    }
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    //avatar not found
+                                                    Console.WriteLine(ex);
+                                                }
+                                            }
+                                            ));
                                         }
                                         break;
                                     case "avatar_out":
                                         //<avatar_out id="3586824" />
                                         XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
                                         XR.Read();
-                                        var avatar_id = long.Parse(XR.GetAttribute("id"));
-                                        var ap = (from f in AktualniPostavy where f.AvatarID == avatar_id select f).ToArray();
-                                        foreach (var a in ap) if (AktualniPostavy.Contains(a)) Dispatcher.BeginInvoke(new Action(() =>
+                                        var avatar_id = int.Parse(XR.GetAttribute("id"));
+                                        Dispatcher.BeginInvoke(new Action(() =>
                                         {
-                                            AktualniPostavy.Remove(a);
+                                            try
+                                            {
+                                                ActualArea.AktualniPostavy.Remove(ActualArea.AktualniPostavy.Where(x => x.AvatarID == avatar_id).First());
+                                            }
+                                            catch(Exception ex)
+                                            {
+                                                //avatar not found
+                                                Console.WriteLine(ex);
+                                            }
                                         }));
                                         break;
                                     case "pictures":
@@ -440,10 +462,10 @@ namespace Mnf
                                             SpinWait.SpinUntil(() => ActualPicture == "", 1000);
                                             XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
                                             XR.Read();
-                                            if (Directory.Exists(NastaveniMnf.MainFile))
+                                            if (Directory.Exists(Properties.Settings.Default.MainFile))
                                             {
                                                 ActualPicture = XR.GetAttribute("url");
-                                                string oo = NastaveniMnf.MainFile + ActualPicture.Split('/')[5];
+                                                string oo = Properties.Settings.Default.MainFile + ActualPicture.Split('/')[5];
                                                 //<data get_picture_info='bb1828fc60e44e63ea6889a392b23097'/>//port2030
                                                 //<picture_info poster_name='PaulinaLira' rating='4.3' is_voted='0' />//resp 
                                                 //lock (MP.Server.LockerTop)
@@ -565,7 +587,7 @@ namespace Mnf
                                 //    break;
                                 case "friends_list":
                                 case "friends_page":
-                                    if (NastaveniMnf.SaveFriendList)
+                                    if (Properties.Settings.Default.SaveFriendList)
                                     {
                                         XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(s)), settings);
                                         StreamWriter swfl = new StreamWriter("FriendList.txt");
@@ -604,7 +626,7 @@ namespace Mnf
                                     if(AvatarsDownload)
                                     {
                                         AvatarsDownloadTo.AppendLine(ma.AvatarID + " " + ma.JmenoPostavy);
-                                        Console.WriteLine("AvatarDetails " + ma.AvatarID);
+                                        Console.WriteLine("DownloadAvatarDetails " + ma.AvatarID);
                                     }
 
                                     for (int p = 0; p < PotkanePostavy.Count; p++)
@@ -805,12 +827,12 @@ namespace Mnf
                                     break;
                                 case "picture_info":
                                 case "picture_info_new":
-                                    if (NastaveniMnf.SaveImages)
+                                    if (Properties.Settings.Default.SaveImages)
                                     {
                                         XR = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes("<" + v + ">")), settings);
                                         XR.Read();
                                         string oo = "";
-                                        string d = NastaveniMnf.MainFile + XR.GetAttribute("poster_name");
+                                        string d = Properties.Settings.Default.MainFile + XR.GetAttribute("poster_name");
                                         if (!Directory.Exists(d)) Directory.CreateDirectory(d);
                                         if (ActualPicture != "")
                                         {
@@ -1046,8 +1068,8 @@ namespace Mnf
             {
                 ChatBW.CancelAsync();
                 AreaBW.CancelAsync();
-                Dispatcher.BeginInvoke((Action)(() => { AktualniPostavy.Clear(); }));
-                ActualArea = area;
+                //Dispatcher.BeginInvoke((Action)(() => { AktualniPostavy.Clear(); }));
+                ActualArea = new MnfActiveLocation(area);
                 LastPoint = ActualArea.PortLokace;
                 //lock (MP.Server.LockerTop)
                 //    if (!MP.Server.TC_top.Connected) MP.Server.TC_top.Connect(MP.Server.AdresaIP, MP.Server.top_socket);
@@ -1069,12 +1091,13 @@ namespace Mnf
                 ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
                 SpinWait.SpinUntil(() => !ChatBW.IsBusy, 1000);
                 if (!ChatBW.IsBusy) ChatBW.RunWorkerAsync();
-                AddHeaders();
-                lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("click_trace.swf?1." + Properties.Settings.Default.Verze));//only first?
-                AddHeaders();
-                lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("petnis_mini.swf?1." + Properties.Settings.Default.Verze));
-                AddHeaders();
-                lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("avatar_mini.swf?1." + Properties.Settings.Default.Verze));
+                foreach (var item in ActualArea.DownloadSWF)
+                {
+                    DownloadStringSWF(item);
+                }
+                DownloadStringSWF("click_trace.swf?1.");//only first? order?
+                DownloadStringSWF("petnis_mini.swf?1.");
+                DownloadStringSWF("avatar_mini.swf?1.");
 
                 lock (MP.Server.LockerArea)
                 {
@@ -1086,16 +1109,20 @@ namespace Mnf
                 s = "<data type=\"area\" avatar_id=\"" + MP.Avatar.AvatarID + "\" password=\"" + MP.Uzivatel.LoginPaswCrypted + "\" area_id=\"" + ActualArea.IdLokace + "\" points=\"" + LastPoint.X + "," + LastPoint.Y + "\" bed_ids =\"\" pole_ids=\"\" session_id=\"" + MP.Server.Session_id + "\" />";
                 ns = MP.Server.TC_area.GetStream();
                 ns.Write(Encoding.ASCII.GetBytes(s), 0, s.Length);
-
+                ActualArea.ActualPoint = LastPoint;
             }
             SpinWait.SpinUntil(() => !AreaBW.IsBusy, 1000);
             if (!AreaBW.IsBusy) AreaBW.RunWorkerAsync();
         }
+        public void DownloadStringSWF(string s)
+        {
+            AddHeaders();
+            lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF(s + Properties.Settings.Default.Verze));
+        }
 
         public void GetMap()
         {
-            AddHeaders();
-            lock (wcLocker) wc.DownloadString(MnfAddress.SiteSWF("map.swf?1." + Properties.Settings.Default.Verze));
+            DownloadStringSWF("map.swf?1.");
         }
 
         public void WriteASCII(TcpClient tc, string s)
@@ -1195,12 +1222,6 @@ namespace Mnf
             LastPoint = bod;
         }
 
-        private void comboBoxArea_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (comboBoxArea.SelectedIndex < 0) return;
-            GoToArea(MnfArea.Lokace[comboBoxArea.SelectedIndex]);
-        }
-
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             spHistory.Children.Clear();
@@ -1257,18 +1278,6 @@ namespace Mnf
             sw.Close();
         }
 
-        private void AvatarInAreaSelected(object sender, SelectionChangedEventArgs e)
-        {
-            if (lbAktualniPostavy.SelectedIndex < 0) return;
-            MnfAvatar ma = AktualniPostavy[lbAktualniPostavy.SelectedIndex];
-            var v = (from f in PotkanePostavy where f.AvatarID == ma.AvatarID select f).ToArray();
-            if (v.Count() > 0)
-            {
-                InfoAvatar = v[0];
-                GetAvatarFullDetails(v[0].AvatarID);
-            }
-        }
-
         private void ListBoxAll_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lbPotkanePostavy.SelectedIndex < 0) return;
@@ -1284,7 +1293,7 @@ namespace Mnf
             ChatPostavy.Add(ma);
         }
 
-        private void getList(object sender, RoutedEventArgs e)
+        public void GetFriendList()
         {
             Write(MP.Server.TC_top, "<data friends_list=\"1\" />");
         }
@@ -1356,118 +1365,14 @@ namespace Mnf
         {
             GameBW?.CancelAsync();
         }
-        private void PictureBW_DoWork(object sender, DoWorkEventArgs e)
-        {
-            if (NastaveniMnf.SaveImages)
-            {
-                SavedPictures = 0;
-                GoToArea(MnfArea.Lokace[19]);
-                if (PictureBW.CancellationPending) return;
-                GoToArea(MnfArea.Lokace[20]);
-                if (PictureBW.CancellationPending) return;
-                SavePicture = true;
-                GoToArea(MnfArea.Lokace[21]);
-                if (PictureBW.CancellationPending) return;
-                SpinWait.SpinUntil(() => SavePicture == false || PictureBW.CancellationPending, 20000);
-                SavePicture = true;
-                GoToArea(MnfArea.Lokace[22]);
-                if (PictureBW.CancellationPending) return;
-                SpinWait.SpinUntil(() => SavePicture == false || PictureBW.CancellationPending, 20000);
-                SavePicture = true;
-                GoToArea(MnfArea.Lokace[23]);
-                if (PictureBW.CancellationPending) return;
-                SpinWait.SpinUntil(() => SavePicture == false || PictureBW.CancellationPending, 20000);
-                SavePicture = true;
-                GoToArea(MnfArea.Lokace[24]);
-                if (PictureBW.CancellationPending) return;
-                SpinWait.SpinUntil(() => SavePicture == false || PictureBW.CancellationPending, 20000);
-            }
-        }
-
-        public void GetAllPicture()
-        {
-            getPicture(null, null);
-        }
-
-        private void getPicture(object sender, RoutedEventArgs e)
-        {
-            if (NastaveniMnf.SaveImages) if (!PictureBW.IsBusy) PictureBW.RunWorkerAsync();
-        }
-
+        
         private void ChatRemoveClick(object sender, RoutedEventArgs e)
         {
             ChatPostavy.Remove(ActivChatAvatar);
         }
-        bool AvatarsDownload = false;
-        StringBuilder AvatarsDownloadTo;
-        private void getUsers(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
-            if(sfd.ShowDialog()==System.Windows.Forms.DialogResult.OK)
-            {
-                //TODO: read old file and start from the end
-                AvatarsDownloadTo = new StringBuilder();
-                string s = sfd.FileName;
-                AvatarsDownload = true;
-                try
-                {
-                    for (int i = 10000; i < AvatarMaxID; i++)
-                    {
-                        GetAvatarDetails(i);
-                        Thread.Sleep(30);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-                finally
-                {
-                    AvatarsDownload = false;
-                    File.WriteAllText(s, AvatarsDownloadTo.ToString());
-                }
-            }
-        }
 
-        private void getBackGroundsA(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                //TODO: read old file and start from the end
-                string s = fbd.SelectedPath;
-                for (int i = 0; i < AvatarMaxID; i++)
-                {
-                    try
-                    {
-                        var n = "64" + i.ToString("00000000");
-                        wc.DownloadFileAsync(new Uri(MnfAddress.SiteBG(n)), s + "//" + n + ".jpg");
-                        Console.WriteLine("Downloaded " + i);
-                    }
-                    catch { }
-                }
-            }
-        }
 
-        private void getBackGroundsS(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                //TODO: read old file and start from the end
-                string s = fbd.SelectedPath;
-                for (int i = 0; i < AvatarMaxID; i++)
-                {
-                    try
-                    {
-                        var n = "66" + i.ToString("00000000");
-                        wc.DownloadFileAsync(new Uri(MnfAddress.SiteBG(n)), s + "//" + n + ".jpg");
-                        Console.WriteLine("Downloaded " + i);
-                    }
-                    catch { }
-                }
-            }
-        }
+
         //"<avatar data=\"1168373,SissySlutEric,2,2,2,8,3,38,38,1,3,2,1,1,6,3,1,5,2,3,1,3,1,7,176/252/200,1217,1217,-1,,0,0,7,38,2,2,40,38,0,1\" points=\"987,1179,987,1181\" /><avatar data=\"2278205,Teranas,1,3,2,8,1,38,1,1,1,3,2,2,6,2,1,1,3,5,3,1,3,9,176/252/208,8120,620,-1,,0,1,1,0,0,3,38,0,0,1\" points=\"1130,721,1183,723\" /><avatar data=\"3898264,wolfkidd,1,3,1,7,2,35,9,2,2,1,2,2,6,3,1,5,3,1,1,1,1,3,239/176/252,5609,4859,-1,,0,0,11,35,9,3,38,1,0,1\" points=\"764,735,884,676\" /><avatar data=\"2515041,Casslut,2,2,5,5,0,37,37,1,1,3,1,2,7,1,1,4,3,2,1,3,3,7,202/176/252,2771,2021,-1,,0,0,1,0,0,1,0,0,0,1\" points=\"928,691\" />\0"
         //"<avatar_out id=\"2515041\" />\0"
         //"<avatar data=\"3969460,AmandaLove,2,1,1,2,1,24,37,3,3,2,1,2,2,3,1,5,1,4,2,3,4,2,228/176/252,1789,1039,-1,,0,0,10,37,32,1,0,0,0,1\" points=\"1071,689\" />\0<avatar_out id=\"3969460\" />\0<avatar_out id=\"3898264\" />\0<avatar data=\"99742,VzoreCZEk,1,2,2,8,1,38,39,2,2,1,1,2,6,3,1,4,3,1,3,1,1,10,177/176/252,11649,4149,38,GirlsTrueLove,0,1,13,38,39,1,0,0,0,1\" points=\"1092,726\" />\0<avatar id=\"99742\" points=\"1092,726,1354.3,701.65,1354.3,701.65,1337,506\" />\0<avatar id=\"99742\" points=\"1338.64,524.6,1315.3,469.1,1315.3,469.1,1186,333\" />\0<avatar id=\"99742\" points=\"1260.32,411.23,949,247\" />\0<avatar_out id=\"99742\" />\0"

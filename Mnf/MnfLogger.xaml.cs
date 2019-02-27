@@ -84,8 +84,8 @@ namespace Mnf
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             try
             {
-                if (!File.Exists(NastaveniMnf.UserFile)) File.Create(NastaveniMnf.UserFile).Close();
-                StreamReader sr = new StreamReader(NastaveniMnf.UserFile);
+                if (!File.Exists(Properties.Settings.Default.UserFile)) File.Create(Properties.Settings.Default.UserFile).Close();
+                StreamReader sr = new StreamReader(Properties.Settings.Default.UserFile);
                 var radek = sr.ReadLine();
                 while (radek != null)
                 {
@@ -106,7 +106,7 @@ namespace Mnf
         }
         public void Close()
         {
-            StreamWriter sw = new StreamWriter(NastaveniMnf.UserFile, false);
+            StreamWriter sw = new StreamWriter(Properties.Settings.Default.UserFile, false);
             foreach (var u in Uzivatele)
             {
                 sw.WriteLine(u.JmenoUzivatele);

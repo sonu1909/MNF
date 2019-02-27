@@ -1,6 +1,7 @@
 ﻿using App;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -103,49 +104,49 @@ namespace Mnf
     /// </summary>
     public class Avatar : ANotify
     {
-        public int AvatarID {get{return _AvatarID;}set{ _AvatarID = value; OnPropertyChanged("AvatarID");}}
+        public int AvatarID { get { return _AvatarID; } set { _AvatarID = value; OnPropertyChanged("AvatarID"); } }
         public string JmenoPostavy { get { return _JmenoPostavy; } set { _JmenoPostavy = value; OnPropertyChanged("_JmenoPostavy"); } }
-        public string petnis_name {get{return _petnis_name; }set{ _petnis_name = value; OnPropertyChanged("petnis_name");}}
-        public int sex {get{return _sex; }set{ _sex = value; OnPropertyChanged("sex"); Ssex = value > 1 ? "Girl" : "Boy"; } }
+        public string petnis_name { get { return _petnis_name; } set { _petnis_name = value; OnPropertyChanged("petnis_name"); } }
+        public int sex { get { return _sex; } set { _sex = value; OnPropertyChanged("sex"); Ssex = value > 1 ? "Girl" : "Boy"; } }
         public string Ssex { get { return _Ssex; } set { _Ssex = value; OnPropertyChanged("Ssex"); } }
         private string _Ssex = "None";
-        public int sexual_orientation {get{return _sexual_orientation; }set{ _sexual_orientation = value; OnPropertyChanged("sexual_orientation");}}
-        public int skin_color {get{return _skin_color; }set{ _skin_color = value; OnPropertyChanged("skin_color");}}
-        public int hair_color {get{return _hair_color; }set{ _hair_color = value; OnPropertyChanged("hair_color");}}
-        public int eyes_color {get{return _eyes_color; }set{ _eyes_color = value; OnPropertyChanged("eyes_color");}}
-        public int cloth_color1 {get{return _cloth_color1; }set{ _cloth_color1 = value; OnPropertyChanged("cloth_color1");}}
-        public int cloth_color2 {get{return _cloth_color2; }set{ _cloth_color2 = value; OnPropertyChanged("cloth_color2");}}
-        public int petnis_color {get{return _petnis_color; }set{ _petnis_color = value; OnPropertyChanged("petnis_color");}}
-        public int torso {get{return _torso; }set{ _torso = value; OnPropertyChanged("torso");}}
-        public int breast {get{return _breast; }set{ _breast = value; OnPropertyChanged("breast");}}
-        public int nipples {get{return _nipples; }set{ _nipples = value; OnPropertyChanged("nipples");}}
-        public int chest_hair {get{return _chest_hair; }set{ _chest_hair = value; OnPropertyChanged("chest_hair");}}
-        public int pubic_hair {get{return _pubic_hair; }set{ _pubic_hair = value; OnPropertyChanged("pubic_hair");}}
-        public int hair_style {get{return _hair_style; }set{ _hair_style = value; OnPropertyChanged("hair_style");}}
-        public int jaw {get{return _jaw; }set{ _jaw = value; OnPropertyChanged("jaw");}}
-        public int ears {get{return _ears; }set{ _ears = value; OnPropertyChanged("ears");}}
-        public int nose {get{return _nose; }set{ _nose = value; OnPropertyChanged("nose");}}
-        public int lips {get{return _lips; }set{ _lips = value; OnPropertyChanged("lips");}}
-        public int eyes {get{return _eyes; }set{ _eyes = value; OnPropertyChanged("eyes");}}
-        public int eye_brows {get{return _eye_brows; }set{ _eye_brows = value; OnPropertyChanged("eye_brows");}}
-        public int moustaches {get{return _moustaches; }set{ _moustaches = value; OnPropertyChanged("moustaches");}}
-        public int beard {get{return _beard; }set{ _beard = value; OnPropertyChanged("beard");}}
-        public int outfit {get{return _outfit; }set{ _outfit = value; OnPropertyChanged("outfit");}}
-        public string userCT {get{return _userCT; }set{ _userCT = value; OnPropertyChanged("userCT");}}
-        public int exp_gross {get{return _exp_gross; }set{ _exp_gross = value; OnPropertyChanged("exp_gross");}}
-        public int exp_available {get{return _exp_available; }set{ _exp_available = value; OnPropertyChanged("exp_available");}}
-        public int deleted {get{return _deleted; }set{ _deleted = value; OnPropertyChanged("deleted");}}
-        public int premium {get{return _premium; }set{ _premium = value; OnPropertyChanged("premium"); Spremium = value > 0 ? "Premium" : ""; } }
+        public int sexual_orientation { get { return _sexual_orientation; } set { _sexual_orientation = value; OnPropertyChanged("sexual_orientation"); } }
+        public int skin_color { get { return _skin_color; } set { _skin_color = value; OnPropertyChanged("skin_color"); } }
+        public int hair_color { get { return _hair_color; } set { _hair_color = value; OnPropertyChanged("hair_color"); } }
+        public int eyes_color { get { return _eyes_color; } set { _eyes_color = value; OnPropertyChanged("eyes_color"); } }
+        public int cloth_color1 { get { return _cloth_color1; } set { _cloth_color1 = value; OnPropertyChanged("cloth_color1"); } }
+        public int cloth_color2 { get { return _cloth_color2; } set { _cloth_color2 = value; OnPropertyChanged("cloth_color2"); } }
+        public int petnis_color { get { return _petnis_color; } set { _petnis_color = value; OnPropertyChanged("petnis_color"); } }
+        public int torso { get { return _torso; } set { _torso = value; OnPropertyChanged("torso"); } }
+        public int breast { get { return _breast; } set { _breast = value; OnPropertyChanged("breast"); } }
+        public int nipples { get { return _nipples; } set { _nipples = value; OnPropertyChanged("nipples"); } }
+        public int chest_hair { get { return _chest_hair; } set { _chest_hair = value; OnPropertyChanged("chest_hair"); } }
+        public int pubic_hair { get { return _pubic_hair; } set { _pubic_hair = value; OnPropertyChanged("pubic_hair"); } }
+        public int hair_style { get { return _hair_style; } set { _hair_style = value; OnPropertyChanged("hair_style"); } }
+        public int jaw { get { return _jaw; } set { _jaw = value; OnPropertyChanged("jaw"); } }
+        public int ears { get { return _ears; } set { _ears = value; OnPropertyChanged("ears"); } }
+        public int nose { get { return _nose; } set { _nose = value; OnPropertyChanged("nose"); } }
+        public int lips { get { return _lips; } set { _lips = value; OnPropertyChanged("lips"); } }
+        public int eyes { get { return _eyes; } set { _eyes = value; OnPropertyChanged("eyes"); } }
+        public int eye_brows { get { return _eye_brows; } set { _eye_brows = value; OnPropertyChanged("eye_brows"); } }
+        public int moustaches { get { return _moustaches; } set { _moustaches = value; OnPropertyChanged("moustaches"); } }
+        public int beard { get { return _beard; } set { _beard = value; OnPropertyChanged("beard"); } }
+        public int outfit { get { return _outfit; } set { _outfit = value; OnPropertyChanged("outfit"); } }
+        public string userCT { get { return _userCT; } set { _userCT = value; OnPropertyChanged("userCT"); } }
+        public int exp_gross { get { return _exp_gross; } set { _exp_gross = value; OnPropertyChanged("exp_gross"); } }
+        public int exp_available { get { return _exp_available; } set { _exp_available = value; OnPropertyChanged("exp_available"); } }
+        public int deleted { get { return _deleted; } set { _deleted = value; OnPropertyChanged("deleted"); } }
+        public int premium { get { return _premium; } set { _premium = value; OnPropertyChanged("premium"); Spremium = value > 0 ? "Premium" : ""; } }
         public string Spremium { get { return _Spremium; } set { _Spremium = value; OnPropertyChanged("Spremium"); } }
         private string _Spremium = "";
-        public int hat {get{return _hat; }set{ _hat = value; OnPropertyChanged("hat");}}
-        public int hat_color1 {get{return _hat_color1; }set{ _hat_color1 = value; OnPropertyChanged("hat_color1");}}
-        public int hat_color2 {get{return _hat_color2; }set{ _hat_color2 = value; OnPropertyChanged("hat_color2");}}
-        public int glasses {get{return _glasses; }set{ _glasses = value; OnPropertyChanged("glasses");}}
-        public int glasses_color1 {get{return _glasses_color1; }set{ _glasses_color1 = value; OnPropertyChanged("glasses_color1");}}
-        public int glasses_color2 {get{return _glasses_color2; }set{ _glasses_color2 = value; OnPropertyChanged("glasses_color2");}}
-        public int hide_petnis {get{return _hide_petnis; }set{ _hide_petnis = value; OnPropertyChanged("hide_petnis");}}
-        public int icon_id {get{return _icon_id; }set{ _icon_id = value; OnPropertyChanged("icon_id");}}
+        public int hat { get { return _hat; } set { _hat = value; OnPropertyChanged("hat"); } }
+        public int hat_color1 { get { return _hat_color1; } set { _hat_color1 = value; OnPropertyChanged("hat_color1"); } }
+        public int hat_color2 { get { return _hat_color2; } set { _hat_color2 = value; OnPropertyChanged("hat_color2"); } }
+        public int glasses { get { return _glasses; } set { _glasses = value; OnPropertyChanged("glasses"); } }
+        public int glasses_color1 { get { return _glasses_color1; } set { _glasses_color1 = value; OnPropertyChanged("glasses_color1"); } }
+        public int glasses_color2 { get { return _glasses_color2; } set { _glasses_color2 = value; OnPropertyChanged("glasses_color2"); } }
+        public int hide_petnis { get { return _hide_petnis; } set { _hide_petnis = value; OnPropertyChanged("hide_petnis"); } }
+        public int icon_id { get { return _icon_id; } set { _icon_id = value; OnPropertyChanged("icon_id"); } }
 
         private int _AvatarID = 0;
         private string _JmenoPostavy = "";
@@ -378,6 +379,19 @@ namespace Mnf
         public int PoziceX { get; set; }
         public int PoziceY { get; set; }
 
+        public void ParsePozice(string s)
+        {
+            try
+            {
+                string[] ss = s.Split(',');
+                PoziceX = int.Parse(ss[0].Split('=')[1]);
+                PoziceY = int.Parse(ss[1]);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
         /// <summary>
         /// avatar data="8781987,edgomez,1,2,10,8,4,40,1,3,2,3,1,1,5,3,1,1,1,4,3,2,4,2,218/252/176,0,0,-1,,0,0,1,0,0,1,0,0,0,1" points="1126,743" />
         /// </summary>
@@ -387,51 +401,53 @@ namespace Mnf
             try
             {
                 string[] ss = s.Split(' ');
-                int i = 0;
-                string[] data = ss[1].Replace("\"", "").Split(',');
-                AvatarID = int.Parse(data[i++].Split('=')[1]);
-                JmenoPostavy = data[i++];
-                sex = int.Parse(data[i++]);
-                sexual_orientation = int.Parse(data[i++]);
-                skin_color = int.Parse(data[i++]);
-                hair_color = int.Parse(data[i++]);
-                eyes_color = int.Parse(data[i++]);
-                cloth_color1 = int.Parse(data[i++]);
-                cloth_color2 = int.Parse(data[i++]);
-                torso = int.Parse(data[i++]);
-                breast = int.Parse(data[i++]);
-                nipples = int.Parse(data[i++]);
-                chest_hair = int.Parse(data[i++]);
-                pubic_hair = int.Parse(data[i++]);
-                hair_style = int.Parse(data[i++]);
-                jaw = int.Parse(data[i++]);
-                ears = int.Parse(data[i++]);
-                nose = int.Parse(data[i++]);
-                lips = int.Parse(data[i++]);
-                eyes = int.Parse(data[i++]);
-                eye_brows = int.Parse(data[i++]);
-                moustaches = int.Parse(data[i++]);
-                beard = int.Parse(data[i++]);
-                outfit = int.Parse(data[i++]);
-                userCT = data[i++];
-                exp_gross = int.Parse(data[i++]);
-                exp_available = int.Parse(data[i++]);
-                petnis_color = int.Parse(data[i++]);
-                petnis_name = data[i++];
-                deleted = int.Parse(data[i++]);
-                premium = int.Parse(data[i++]);
-                hat = int.Parse(data[i++]);
-                hat_color1 = int.Parse(data[i++]);
-                hat_color2 = int.Parse(data[i++]);
-                glasses = int.Parse(data[i++]);
-                glasses_color1 = int.Parse(data[i++]);
-                glasses_color2 = int.Parse(data[i++]);
-                hide_petnis = int.Parse(data[i++]);
-                icon_id = int.Parse(data[i++]);
+                //int i = 0;
+                //string[] data = ss[1].Replace("\"", "").Split(',');
+                ParseAvatar(ss[1].Replace("\"", ""));
+                //AvatarID = int.Parse(data[i++].Split('=')[1]);
+                //JmenoPostavy = data[i++];
+                //sex = int.Parse(data[i++]);
+                //sexual_orientation = int.Parse(data[i++]);
+                //skin_color = int.Parse(data[i++]);
+                //hair_color = int.Parse(data[i++]);
+                //eyes_color = int.Parse(data[i++]);
+                //cloth_color1 = int.Parse(data[i++]);
+                //cloth_color2 = int.Parse(data[i++]);
+                //torso = int.Parse(data[i++]);
+                //breast = int.Parse(data[i++]);
+                //nipples = int.Parse(data[i++]);
+                //chest_hair = int.Parse(data[i++]);
+                //pubic_hair = int.Parse(data[i++]);
+                //hair_style = int.Parse(data[i++]);
+                //jaw = int.Parse(data[i++]);
+                //ears = int.Parse(data[i++]);
+                //nose = int.Parse(data[i++]);
+                //lips = int.Parse(data[i++]);
+                //eyes = int.Parse(data[i++]);
+                //eye_brows = int.Parse(data[i++]);
+                //moustaches = int.Parse(data[i++]);
+                //beard = int.Parse(data[i++]);
+                //outfit = int.Parse(data[i++]);
+                //userCT = data[i++];
+                //exp_gross = int.Parse(data[i++]);
+                //exp_available = int.Parse(data[i++]);
+                //petnis_color = int.Parse(data[i++]);
+                //petnis_name = data[i++];
+                //deleted = int.Parse(data[i++]);
+                //premium = int.Parse(data[i++]);
+                //hat = int.Parse(data[i++]);
+                //hat_color1 = int.Parse(data[i++]);
+                //hat_color2 = int.Parse(data[i++]);
+                //glasses = int.Parse(data[i++]);
+                //glasses_color1 = int.Parse(data[i++]);
+                //glasses_color2 = int.Parse(data[i++]);
+                //hide_petnis = int.Parse(data[i++]);
+                //icon_id = int.Parse(data[i++]);
 
-                string[] pozice = ss[2].Replace("\"", "").Split(',');
-                PoziceX = int.Parse(pozice[0].Split('=')[1]);
-                PoziceY = int.Parse(pozice[1]);
+                //string[] pozice = ss[2].Replace("\"", "").Split(',');
+                ParsePozice(ss[2].Replace("\"", ""));
+                //PoziceX = int.Parse(pozice[0].Split('=')[1]);
+                //PoziceY = int.Parse(pozice[1]);
             }
             catch (Exception e)
             {
@@ -479,7 +495,7 @@ namespace Mnf
             return false;
         }
     }
-    public class MnfServer:Server
+    public class MnfServer : Server
     {
         public MnfServer()
         {
@@ -525,7 +541,7 @@ namespace Mnf
         public MnfAvatar Avatar;
         public MnfServer Server;
     }
-    public class MnfLocation:ANotify
+    public class MnfLocation : ANotify
     {
         string _JmenoLokace = "";
         public string JmenoLokace
@@ -537,9 +553,11 @@ namespace Mnf
                 OnPropertyChanged("JmenoLokace");
             }
         }
+        public System.Drawing.Bitmap Map;
         public Point PortLokace;
         public Point PortPresnost;
         public long IdLokace = 0;
+        public string[] DownloadSWF = new string[0];
         public MnfLocation()
         {
 
@@ -551,6 +569,36 @@ namespace Mnf
         public MnfLocation(string j, Point p, Point pp, long id)
         {
             JmenoLokace = j; PortLokace = p; IdLokace = id; PortPresnost = pp;
+        }
+    }
+    public class MnfActiveLocation : MnfLocation
+    {
+        public MnfActiveLocation()
+        {
+
+        }
+        public MnfActiveLocation(MnfLocation ml)
+        {
+            Map = ml.Map;
+            PortLokace = ml.PortLokace;
+            PortPresnost = ml.PortPresnost;
+            IdLokace = ml.IdLokace;
+        }
+        private ObservableCollection<MnfAvatar> _AktualniPostavy = new ObservableCollection<MnfAvatar>();
+        public ObservableCollection<MnfAvatar> AktualniPostavy
+        {
+            get { return _AktualniPostavy; }
+            set { _AktualniPostavy = value; OnPropertyChanged("AktualniPostavy"); }
+        }
+        Point _ActualPoint = new Point();
+        public Point ActualPoint
+        {
+            get { return _ActualPoint; }
+            set
+            {
+                _ActualPoint = value;
+                OnPropertyChanged("ActualPoint");
+            }
         }
     }
 }
