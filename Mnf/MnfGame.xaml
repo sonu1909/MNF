@@ -8,6 +8,9 @@
              d:DesignHeight="360" d:DesignWidth="640">
     <Grid>
         <TabControl>
+            <TabItem Header="MyInfo">
+                <local:MnfMyAvatarInfo x:Name="MyInfo"/>
+            </TabItem>
             <TabItem Header="Location">
                 <local:MnfGameLocation x:Name="MGL"/>
             </TabItem>

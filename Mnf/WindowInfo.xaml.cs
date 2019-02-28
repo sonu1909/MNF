@@ -10,32 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Mnf
 {
     /// <summary>
-    /// Interaction logic for MnfMyAvatarInfo.xaml
+    /// Interakční logika pro WindowInfo.xaml
     /// </summary>
-    public partial class MnfMyAvatarInfo : UserControl
+    public partial class WindowInfo : Window
     {
-        public MnfMyAvatarInfo()
+        public WindowInfo()
         {
             InitializeComponent();
         }
-
-        MnfGame MG = null;
-        MnfAvatar MA = null;
-
-        public void Init(MnfGame mg)
-        {
-            MG = mg;
-        }
-        public void Init(MnfAvatar ma)
-        {
-            DataContext = ma;
-            MA = ma;
-        }
-     }
+    }
 }

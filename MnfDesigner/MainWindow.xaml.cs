@@ -13,29 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Mnf
+namespace MnfDesigner
 {
     /// <summary>
-    /// Interaction logic for MnfMyAvatarInfo.xaml
+    /// Interakční logika pro MainWindow.xaml
     /// </summary>
-    public partial class MnfMyAvatarInfo : UserControl
+    public partial class MainWindow : Window
     {
-        public MnfMyAvatarInfo()
+        public MainWindow()
         {
             InitializeComponent();
         }
-
-        MnfGame MG = null;
-        MnfAvatar MA = null;
-
-        public void Init(MnfGame mg)
-        {
-            MG = mg;
-        }
-        public void Init(MnfAvatar ma)
-        {
-            DataContext = ma;
-            MA = ma;
-        }
-     }
+    }
 }

@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfAreaParser", "MnfAreaPar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfPic", "MnfPic\MnfPic.csproj", "{528CEA60-BE34-4A05-8E9B-01472FDD1AFD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfServer", "MnfServer\MnfServer.csproj", "{FAEBF1CA-30CA-4AB9-A595-27D9F8BEC118}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfDesigner", "MnfDesigner\MnfDesigner.csproj", "{5698A69F-817C-4915-A5E5-73403E8CE036}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{528CEA60-BE34-4A05-8E9B-01472FDD1AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{528CEA60-BE34-4A05-8E9B-01472FDD1AFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{528CEA60-BE34-4A05-8E9B-01472FDD1AFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAEBF1CA-30CA-4AB9-A595-27D9F8BEC118}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAEBF1CA-30CA-4AB9-A595-27D9F8BEC118}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAEBF1CA-30CA-4AB9-A595-27D9F8BEC118}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAEBF1CA-30CA-4AB9-A595-27D9F8BEC118}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5698A69F-817C-4915-A5E5-73403E8CE036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5698A69F-817C-4915-A5E5-73403E8CE036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5698A69F-817C-4915-A5E5-73403E8CE036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5698A69F-817C-4915-A5E5-73403E8CE036}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

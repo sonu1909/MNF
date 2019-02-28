@@ -111,6 +111,9 @@
     </Compile>
     <Compile Include="MnfAct.cs" />
     <Compile Include="MnfArea.cs" />
+    <Compile Include="MnfMyAvatarInfo.xaml.cs">
+      <DependentUpon>MnfMyAvatarInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MnfAvatarInfo.xaml.cs">
       <DependentUpon>MnfAvatarInfo.xaml</DependentUpon>
     </Compile>
@@ -135,6 +138,9 @@
     </Compile>
     <Compile Include="MnfClasses.cs" />
     <Compile Include="Translator.cs" />
+    <Compile Include="WindowInfo.xaml.cs">
+      <DependentUpon>WindowInfo.xaml</DependentUpon>
+    </Compile>
     <Page Include="ControlTranslator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -155,6 +161,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MnfMyAvatarInfo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MnfAvatarInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -176,6 +186,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Nastaveni.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
