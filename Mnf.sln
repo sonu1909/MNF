@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfPic", "MnfPic\MnfPic.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfServer", "MnfServer\MnfServer.csproj", "{FAEBF1CA-30CA-4AB9-A595-27D9F8BEC118}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfDesigner", "MnfDesigner\MnfDesigner.csproj", "{5698A69F-817C-4915-A5E5-73403E8CE036}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnfDesigner", "MnfDesigner\MnfDesigner.csproj", "{8261F98A-4E27-4C40-854A-9390408F53FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,10 @@ Global
 		{FAEBF1CA-30CA-4AB9-A595-27D9F8BEC118}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAEBF1CA-30CA-4AB9-A595-27D9F8BEC118}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAEBF1CA-30CA-4AB9-A595-27D9F8BEC118}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5698A69F-817C-4915-A5E5-73403E8CE036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5698A69F-817C-4915-A5E5-73403E8CE036}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5698A69F-817C-4915-A5E5-73403E8CE036}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5698A69F-817C-4915-A5E5-73403E8CE036}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8261F98A-4E27-4C40-854A-9390408F53FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8261F98A-4E27-4C40-854A-9390408F53FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8261F98A-4E27-4C40-854A-9390408F53FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8261F98A-4E27-4C40-854A-9390408F53FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
