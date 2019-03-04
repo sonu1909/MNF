@@ -47,9 +47,6 @@ Compilation
  <li>Compiled files are in *\Mnf\bin\Debug\Mnf.exe</li>
 </ul>
 
-
-Temporary link for compiled Windows version: <b>On request</b>
-
 # Tips&Trics
 <ul>
  <li>Identify non-friend person - send him money via bank, then find him in msg contacts</li>
