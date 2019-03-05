@@ -8,7 +8,7 @@ namespace MnfServer
 {
     public class Lokace
     {
-        List<ClientWorking> Clients = new List<ClientWorking>();
+        List<int> Clients = new List<int>();
 
     }
 }
