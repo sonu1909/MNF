@@ -24,11 +24,14 @@ namespace MnfServer
             DBserver = config.Get("DBserver");
 
             config = source.Configs["Server"];
-            PortIP = config.GetInt("PortIP");
             AdressIP = config.Get("AdressIP");
+            PortIP = config.GetInt("PortIP");
+            PortTop = config.GetInt("PortTop");
+            PortChat = config.GetInt("PortChat");
+            PortArea = config.GetInt("PortArea");
+            PortPolicy = config.GetInt("PortPolicy");
         }
         public static string DBserver, DBname, DBuser, DBpassw, AdressIP;
-        public static int PortIP;
-
+        public static int PortIP, PortTop, PortChat, PortArea, PortPolicy;
     }
 }

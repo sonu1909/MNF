@@ -53,12 +53,18 @@ namespace MnfServer
                 return;
             }
             #endregion
-            #region
+            #region Chat server
+            var bwChat = new BackgroundWorker();
+            bwChat.DoWork += BwChat_DoWork;
+            bwChat.RunWorkerCompleted += BwChat_RunWorkerCompleted;
+            bwChat.RunWorkerAsync();
             #endregion
-            #region Server start
+            #region Area server
+            #endregion
+            #region Top server
             try
             {
-                server = new TcpListener(IPAddress.Any, Nastaveni.PortIP);
+                server = new TcpListener(IPAddress.Any, Nastaveni.PortTop);
                 server.Start();
             }
             catch
@@ -72,7 +78,7 @@ namespace MnfServer
                 if (GetNumUsers() >= MaxUsers) return;
                 client.ReceiveTimeout = 10 * 60 * 1000;
                 client.SendTimeout = 10 * 60 * 1000;
-                var cw = new ClientWorking(client);
+                var cw = new ClientWorking(client, "");
                 lock (Users) Users.Add(cw);
                 var bw = new BackgroundWorker();
                 bw.RunWorkerCompleted += Bw_RunWorkerCompleted;
@@ -82,13 +88,85 @@ namespace MnfServer
             #endregion
         }
 
-        private static void Bw_DoWork(object sender, DoWorkEventArgs e)
-        {
-
-        }
-
         private static void Bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            throw new NotImplementedException();
+        }
+
+        private static void Bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            (sender as ClientWorking).DoSomethingWithClient();
+        }
+
+        private static void BwChat_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void BwChat_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                var server = new TcpListener(IPAddress.Any, Nastaveni.PortChat);
+                server.Start();
+            }
+            catch
+            {
+                Close("Error start chat server.");
+                return;
+            }
+            while (!Closing)
+            {
+                try
+                {
+                    var client = server.AcceptTcpClient();
+                    var clientStream = client.GetStream();
+                    XmlReader xr = XmlReader.Create(clientStream);
+
+                    try
+                    {
+                        xr.Read();
+                        if(xr.NodeType==XmlNodeType.Element)
+                        {
+                            xr.Read();
+                            var id = int.Parse(xr.Value);
+                            xr.Read();
+                            var text = xr.Value;
+                            var u = Users.Where(x => x.Avatar.AvatarID == id).ToList();
+                            var s = u[0].GetChatMsg(text);
+                            Console.WriteLine(s);
+                            client.Close();
+                            //Client validation!!
+                            foreach (var user in Users)
+                            {
+                                TcpClient tc = new TcpClient(((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString(), Nastaveni.PortChat);
+                                tc.ReceiveTimeout = 6000;
+                                tc.SendTimeout = 6000;
+                                XmlWriter xw = XmlWriter.Create(clientStream);
+                                xw.WriteString(s);
+                                tc.Close();
+                            }
+                        }
+                    }
+                    catch { }
+                    while (xr.Read())
+                    {
+                        switch (xr.NodeType)
+                        {
+                            case XmlNodeType.Element:
+                                switch (xr.Name)
+                                {
+
+                                }
+                                break;
+                        }
+                    }
+                }
+                catch
+                {
+
+                }
+            }
         }
 
         static void Close(string s)
@@ -104,17 +182,26 @@ namespace MnfServer
     {
         private Stream ClientStream;
         private TcpClient Client;
+        public Mnf.MnfAvatar Avatar;
+        private string Passw = "";
 
-        public ClientWorking(TcpClient Client)
+        public ClientWorking(TcpClient Client, string passw)
         {
             this.Client = Client;
             Client.ReceiveTimeout = 10 * 60 * 1000;
             Client.SendTimeout = 10 * 60 * 1000;
             ClientStream = Client.GetStream();
+            Avatar = new Mnf.MnfAvatar();
+            Passw = passw;
         }
 
         public void Init()
         {
+        }
+
+        public string GetChatMsg(string msg)
+        {
+            return "<message id=\"" + Avatar.AvatarID + "\" name=\"" + Avatar.JmenoPostavy + "\" color=\"" + Avatar.userCT + "\" text=\"" + msg + "\"></message>";            
         }
 
         public void DoSomethingWithClient()
@@ -126,6 +213,15 @@ namespace MnfServer
                 XmlReader xr = XmlReader.Create(ClientStream);
                 XmlWriter xw = XmlWriter.Create(ClientStream);
 
+                xr.Read();
+                if (xr.NodeType==XmlNodeType.Element)
+                {
+                    xr.Read();
+                    Avatar.AvatarID = int.Parse(xr.Value);
+                    xr.Read();
+                    var passw = xr.Value;
+                    if (Passw != passw) throw new Exception("Invalid password!");
+                }
 
 
                 while (true)
