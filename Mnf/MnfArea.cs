@@ -71,10 +71,12 @@ namespace Mnf
             new MnfLocation("Southern MnF",new Point(740.8,452.9),6000000000),//53
             new MnfLocation("Southern MnF / Jail",new Point(519.15,953.25),6100000000),//54
             new MnfLocation("Southern MnF / MNF National Bank",new Point(416.2,726),6200000000),//55
-            new MnfLocation("Southern MnF / Apartments",new Point(339.1,477.7),6400000000),//56
+            //new MnfLocation("Southern MnF / Apartments",new Point(339.1,477.7),6400000000),//56 //TODO: player zone
             new MnfLocation("Suburbs",new Point(126,351.7),6500000000),//57
-            new MnfLocation("2 Bedroom House",new Point(402.1,482.7),6600000000),//58
-            new MnfLocation("Shaman Tower",new Point(402.1,482.7),6700000000),//59//TODO: Point!
+            //new MnfLocation("2 Bedroom House",new Point(402.1,482.7),6600000000),//58 //TODO: player zone
+            new MnfLocation("Shaman Tower",new Point(296.9,1627.8),6700000000),//59
+            //new MnfLocation("Yacht",new Point(1770.2,344.75),6800000000),//60 //TODO: player zone
+            //new MnfLocation("Yacht Cockpit",new Point(290.5,270.15),6900000000),//61 //TODO: player zone
         };
         public static List<MnfLocation> LokaceS = new List<MnfLocation>()
         {

@@ -147,6 +147,8 @@ namespace Mnf
         public int glasses_color2 { get { return _glasses_color2; } set { _glasses_color2 = value; OnPropertyChanged("glasses_color2"); } }
         public int hide_petnis { get { return _hide_petnis; } set { _hide_petnis = value; OnPropertyChanged("hide_petnis"); } }
         public int icon_id { get { return _icon_id; } set { _icon_id = value; OnPropertyChanged("icon_id"); } }
+        public int lip_color { get { return _lip_color; } set { _lip_color = value; OnPropertyChanged("lip_color"); } }
+        public int eyeshade_color { get { return _eyeshade_color; } set { _eyeshade_color = value; OnPropertyChanged("eyeshade_color"); } }
 
         private int _AvatarID = 0;
         private string _JmenoPostavy = "";
@@ -187,9 +189,9 @@ namespace Mnf
         private int _glasses_color2 = 0;
         private int _hide_petnis = 0;
         private int _icon_id = 0;
+        private int _lip_color = 0;
+        private int _eyeshade_color = 0;
         /// <summary>
-        /// avatar_datas=2844033,YourSexDreams,2,1,2,8,3,26,33,2,3,2,2,1,6,2,1,5,3,2,2,2,4,2,252/201/176,0,0,-1,,0,0,1,0,0,1,0,0,0
-        /// avatar_datas=2844033,YourSexDreams,2,1,2,8,3,26,33,2,3,2,2,1,6,2,1,5,3,2,2,2,4,2,176/252/250,225,225,-1,,0,0,1,0,0,1,0,0,0,1
         /// </summary>
         /// <param name="s"></param>
         /// <returns>true = error</returns>
@@ -244,6 +246,8 @@ namespace Mnf
                 glasses_color2 = int.Parse(ss[36]);
                 hide_petnis = int.Parse(ss[37]);
                 icon_id = int.Parse(ss[38]);
+                lip_color = int.Parse(ss[39]);
+                eyeshade_color = int.Parse(ss[40]);
             }
             catch (Exception e)
             {
@@ -297,6 +301,8 @@ namespace Mnf
                 glasses_color2 = int.Parse(ss[36]);
                 hide_petnis = int.Parse(ss[37]);
                 icon_id = int.Parse(ss[38]);
+                lip_color = int.Parse(ss[39]);
+                eyeshade_color = int.Parse(ss[40]);
             }
             catch (Exception e)
             {
@@ -375,6 +381,8 @@ namespace Mnf
             glasses_color2 = a.glasses_color2;
             hide_petnis = a.hide_petnis;
             icon_id = a.icon_id;
+            lip_color = a.lip_color;
+            eyeshade_color = a.eyeshade_color;
         }
         public int PoziceX { get; set; }
         public int PoziceY { get; set; }

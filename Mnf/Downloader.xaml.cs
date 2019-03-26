@@ -110,22 +110,22 @@ namespace Mnf
         }
         private void getBackGroundsJ(object sender, RoutedEventArgs e)
         {
-            //System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-            //if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            //{
-            //    //TODO: read old file and start from the end
-            //    string s = fbd.SelectedPath;
-            //    for (int i = 0; i < AvatarMaxID; i++)
-            //    {
-            //        try
-            //        {
-            //            var n = "66" + i.ToString("00000000");
-            //            wc.DownloadFileAsync(new Uri(MnfAddress.SiteBG(n)), s + "//" + n + ".jpg");
-            //            Console.WriteLine("Downloaded " + i);
-            //        }
-            //        catch { }
-            //    }
-            //}
+            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                //TODO: read old file and start from the end
+                string s = fbd.SelectedPath;
+                for (int i = 0; i < Properties.Settings.Default.AvatarMaxID; i++)
+                {
+                    try
+                    {
+                        var n = "68" + i.ToString("00000000");
+                        WC.DownloadFileAsync(new Uri(MnfAddress.SiteBG(n)), s + "//" + n + ".jpg");
+                        Console.WriteLine("Downloaded " + i);
+                    }
+                    catch { }
+                }
+            }
         }
 
         BackgroundWorker PictureBW = new BackgroundWorker();
