@@ -105,6 +105,7 @@ namespace Mnf
 
             MAIpeople.Init(this);
             MGL.Init(this);
+            MyInfo.Init(this);
 
         }
         public void AddHeaders()
@@ -572,6 +573,7 @@ namespace Mnf
                                     Console.WriteLine("Session_id: " + MP.Server.Session_id);
                                     XR.GetAttribute("ignore_ids");
                                     XR.GetAttribute("avatar_data");
+                                    //details of MyAvatar?
                                     lock (AreaLock)
                                     {
                                         AddHeaders();
@@ -1143,6 +1145,10 @@ namespace Mnf
                 ns.Write(b, 0, b.Length);
             }
             catch (Exception e) { Console.WriteLine("W: " + e.Message); }
+        }
+        public void GetAvatarDetails(string name)
+        {
+            Write(MP.Server.TC_top, "<data avatar_data_by_name=\"" + name + "\" />");
         }
         public void GetAvatarDetails(int AvatarID)
         {
